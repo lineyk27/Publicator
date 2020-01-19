@@ -10,8 +10,16 @@ namespace Publicator.Infrastructure.Configurations
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
-            builder.HasOne(e => e.User).WithMany(e => e.UserCommunities).HasForeignKey(e => e.UserId);
-            builder.HasOne(e => e.Community).WithMany(e => e.UserCommunities).HasForeignKey(e => e.CommunityId);
+            builder
+                .HasOne(e => e.User)
+                .WithMany(e => e.UserCommunities)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
+                .HasOne(e => e.Community)
+                .WithMany(e => e.UserCommunities)
+                .HasForeignKey(e => e.CommunityId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Property(e => e.CreationDate).HasColumnType("smalldatetime");
         }
     }

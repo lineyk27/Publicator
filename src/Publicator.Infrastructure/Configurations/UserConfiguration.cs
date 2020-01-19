@@ -18,8 +18,8 @@ namespace Publicator.Infrastructure.Configurations
             builder.Property(e => e.PictureName).IsUnicode().HasMaxLength(64);
             builder.HasOne(e => e.State).WithMany(e => e.Users).HasForeignKey(e => e.StateId);
             builder.HasOne(e => e.Role).WithMany(e => e.Users).HasForeignKey(e => e.RoleId);
-            builder.HasMany(e => e.Subscriptions).WithOne(e => e.SubscriptionUser).HasForeignKey(e => e.SubscriptionUserId);
-            builder.HasMany(e => e.Subscribers).WithOne(e => e.SubscriberUser).HasForeignKey(e => e.SubscriberUserId);
+            builder.HasMany(e => e.Subscriptions).WithOne(e => e.SubscriberUser).HasForeignKey(e => e.SubscriberUserId);
+            builder.HasMany(e => e.Subscribers).WithOne(e => e.SubscriptionUser).HasForeignKey(e => e.SubscriptionUserId);
             builder.HasMany(e => e.Votes).WithOne(e => e.User).HasForeignKey(e => e.UserId);
             builder.HasMany(e => e.Comments).WithOne(e => e.User).HasForeignKey(e => e.UserId);
             builder.HasMany(e => e.Posts).WithOne(e => e.CreatorUser).HasForeignKey(e => e.CreatorUserId);

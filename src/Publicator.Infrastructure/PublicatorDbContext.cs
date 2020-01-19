@@ -1,7 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Publicator.Infrastructure.Entities;
 using Publicator.Infrastructure.Configurations;
 

@@ -27,7 +27,8 @@ namespace Publicator.Infrastructure.Configurations
             builder
                 .HasMany(e => e.SubscriptionNewPosts)
                 .WithOne(e => e.SubscriptionCommunity)
-                .HasForeignKey(e => e.SubscriptionCommunityId);
+                .HasForeignKey(e => e.SubscriptionCommunityId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

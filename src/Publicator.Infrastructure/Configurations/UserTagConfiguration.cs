@@ -10,7 +10,7 @@ namespace Publicator.Infrastructure.Configurations
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
-            builder.HasOne(e => e.Tag).WithMany(e => e.SubscribeTags).HasForeignKey(e => e.TagId);
+            builder.HasOne(e => e.Tag).WithMany(e => e.UserTags).HasForeignKey(e => e.TagId);
             builder.HasOne(e => e.User).WithMany(e => e.SubscribeTags).HasForeignKey(e => e.UserId);
         }
     }
