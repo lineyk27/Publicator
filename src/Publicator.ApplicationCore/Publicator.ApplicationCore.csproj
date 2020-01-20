@@ -9,4 +9,8 @@
     <Folder Include="Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Publicator.Infrastructure\Publicator.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
