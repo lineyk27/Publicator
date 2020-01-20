@@ -20,7 +20,7 @@ namespace Publicator.ApplicationCore.Contracts
         public void VoteAsync(Post post, bool up = false);
         public void AddCommentAsync(Post post, string text, Comment parentrepliedcomment);
         public void AddToBookmarkAsync(User user, Post post);
-        public bool? VotedUp(User user, Post post);
-        public void Create(string name, string content, User creatoruser, Community community, IEnumerable<Tag> tags);
+        public bool? VotedUpAsync(User user, Post post);
+        public void CreateAsync(string name, string content, User creatoruser, Community community, IEnumerable<Tag> tags);
     }
 }

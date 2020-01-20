@@ -13,7 +13,7 @@ namespace Publicator.ApplicationCore.Contracts
         public Task<IEnumerable<User>> GetByRoleAsync(Role role);
         public Task<IEnumerable<User>> GetByStateAsync(State state);
         public Task<IEnumerable<User>> GetBySearchAsync(string query);
-        public Task<User> GetByPost(Post post);
+        public Task<User> GetByPostAsync(Post post);
         public Task<IEnumerable<User>> GetSubscriptionsAsync(User subscriberuser);
         public Task<IEnumerable<User>> GetSubscribersAsync(User subscriptionuser);
         public Task<User> LoginAsync(string login, string password);

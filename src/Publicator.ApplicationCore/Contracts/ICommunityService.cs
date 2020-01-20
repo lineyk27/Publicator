@@ -7,9 +7,9 @@ namespace Publicator.ApplicationCore.Contracts
 {
     interface ICommunityService
     {
-        public Task<Community> GetById(Guid id);
-        public Task<IEnumerable<Community>> GetAll();
-        public Task<IEnumerable<Community>> GetBySearch(string query);
-        public Task<IEnumerable<Community>> GetBySubscriberUser(User subscriberuser);
+        public Task<Community> GetByIdAsync(Guid id);
+        public Task<IEnumerable<Community>> GetAllAsync();
+        public Task<IEnumerable<Community>> GetBySearchAsync(string query);
+        public Task<IEnumerable<Community>> GetBySubscriberUserAsync(User subscriberuser);
     }
 }
