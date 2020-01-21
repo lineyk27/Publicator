@@ -21,6 +21,7 @@ namespace Publicator.Presentation
                 );
 
             services.AddInfrastructureServices();
+            services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

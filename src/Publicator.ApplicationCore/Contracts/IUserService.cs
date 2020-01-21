@@ -9,6 +9,7 @@ namespace Publicator.ApplicationCore.Contracts
     {
         public Task<User> GetCurrentUserAsync();
         public Task<User> GetByUsernameAsync(string username);
+        public Task<User> GetByEmailAsync(string email);
         public Task<User> GetByIdAsync(Guid id);
         public Task<IEnumerable<User>> GetByRoleAsync(Role role);
         public Task<IEnumerable<User>> GetByStateAsync(State state);
@@ -18,6 +19,6 @@ namespace Publicator.ApplicationCore.Contracts
         public Task<IEnumerable<User>> GetSubscribersAsync(User subscriptionuser);
         public Task<User> LoginAsync(string login, string password);
         public void RegisterAsync(string username, string email, string password);
-        public void ConfirmAccountAsync(User user, string token);
+        public bool ConfirmAccountAsync(User user, string token);
     }
 }
