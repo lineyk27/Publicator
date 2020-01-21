@@ -29,6 +29,8 @@ namespace Publicator.Infrastructure
         {
             base.OnModelCreating(builder);
 
+            Seed.Seed.AddData(builder);
+
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new PostConfiguration());
             builder.ApplyConfiguration(new BookmarkConfiguration());

@@ -13,7 +13,7 @@ namespace Publicator.Infrastructure.Configurations
             builder.Property(e => e.Email).IsUnicode().HasMaxLength(128);
             builder.Property(e => e.Nickname).IsUnicode().HasMaxLength(64);
             builder.Property(e => e.JoinDate).HasColumnType("smalldatetime");
-            builder.Property(e => e.PasswordHash).IsUnicode().HasMaxLength(32);
+            builder.Property(e => e.PasswordHash).IsUnicode().HasMaxLength(64);
             builder.Property(e => e.EmailConfirmed).HasDefaultValue(false);
             builder.Property(e => e.PictureName).IsUnicode().HasMaxLength(64);
             builder.HasOne(e => e.State).WithMany(e => e.Users).HasForeignKey(e => e.StateId);
