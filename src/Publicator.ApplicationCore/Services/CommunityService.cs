@@ -32,6 +32,15 @@ namespace Publicator.ApplicationCore.Services
             throw new ResourceNotFoundException("Community not found");
         }
 
+        public async Task<Community> GetByPostAsync(Post post)
+        {
+            // TODO need to be reconsidered
+            return (await _unitOfWork
+                .CommunityRepository
+                .GetAsync(x => x.Posts.Contains(post)))
+                .FirstOrDefault();
+        }
+
         public async Task<IEnumerable<Community>> GetBySearchAsync(string query)
         {
             return await _unitOfWork

@@ -15,12 +15,11 @@ namespace Publicator.ApplicationCore.Contracts
         public Task<IEnumerable<Post>> GetBookmarks(User user);
         public Task<IEnumerable<Post>> GetByCommunity(Community community);
         public Task<IEnumerable<Post>> GetVotedByCreatorAsync(User creatorvoteuser);
-        public void AddSubscriptionNewPost(Post post);
-        public Task<int> GetCurrentRatingAsync(Post post);
-        public void VoteAsync(Post post, bool up = false);
-        public void AddCommentAsync(Post post, string text, Comment parentrepliedcomment);
-        public void AddToBookmarkAsync(User user, Post post);
-        public bool? VotedUpAsync(User user, Post post);
-        public void CreateAsync(string name, string content, User creatoruser, Community community, IEnumerable<Tag> tags);
+        public void AddSubscriptionNewPostAsync(Post post);
+        public Task<int> CalcCurrentRatingAsync(Post post);
+        public Task<Vote> VoteAsync(Post post, bool up = false);
+        public void AddToBookmarkAsync(Post post);
+        public Task<Vote> CurrentVoteAsync(User creatoruser, Post post);
+        public void CreateAsync(string name, string content, Community community, IEnumerable<Tag> tags);
     }
 }

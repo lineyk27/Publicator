@@ -5,7 +5,7 @@ using Publicator.Infrastructure.Entities;
 
 namespace Publicator.ApplicationCore.Contracts
 {
-    interface IUserService
+    public interface IUserService
     {
         public Task<User> GetCurrentUserAsync();
         public Task<User> GetByUsernameAsync(string username);

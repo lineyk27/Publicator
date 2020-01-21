@@ -4,9 +4,10 @@ using Publicator.Infrastructure.Entities;
 
 namespace Publicator.ApplicationCore.Contracts
 {
-    interface ITagService
+    public interface ITagService
     {
         public Task<Tag> GetByNameAsync(string name);
         public Task<IEnumerable<Tag>> GetByPostAsync(Post post);
+        public Task<Tag> Create(string name);
     }
 }

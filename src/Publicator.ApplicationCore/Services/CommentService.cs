@@ -15,7 +15,7 @@ namespace Publicator.ApplicationCore.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<Comment> GetById(Guid id)
+        public async Task<Comment> GetByIdAsync(Guid id)
         {
             var comment = await _unitOfWork
                 .CommentRepository
@@ -25,7 +25,7 @@ namespace Publicator.ApplicationCore.Services
             throw new ResourceNotFoundException("Comment not found exception");
         }
 
-        public async Task<IEnumerable<Comment>> GetByParentReplied(Comment parentrepliedcomment)
+        public async Task<IEnumerable<Comment>> GetByParentRepliedAsync(Comment parentrepliedcomment)
         {
             return await _unitOfWork
                 .CommentRepository
@@ -38,6 +38,20 @@ namespace Publicator.ApplicationCore.Services
             return await _unitOfWork
                 .CommentRepository
                 .GetAsync(x => x.PostId == post.Id,includeProperties:"ParentRepliedComment");
+        }
+        public void AddToPost(Post post, User creatoruser, string text, Comment parentreplied)
+        {
+            // TODO add logic for prevent xss atack
+            _unitOfWork
+                .CommentRepository
+                .Insert(new Comment()
+                {
+                    PostId = post.Id,
+                    UserId = creatoruser.Id,
+                    Content = text,
+                    CreationDate = DateTime.Now,
+                    ParentRepliedCommentId = parentreplied.Id
+                });
         }
     }
 }

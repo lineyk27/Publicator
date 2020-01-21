@@ -7,8 +7,9 @@ namespace Publicator.ApplicationCore.Contracts
 {
     interface ICommentService
     {
-        public Task<Comment> GetById(Guid id); 
+        public Task<Comment> GetByIdAsync(Guid id); 
         public Task<IEnumerable<Comment>> GetByPostAsync(Post post);
-        public Task<IEnumerable<Comment>> GetByParentReplied(Comment parentrepliedcomment);
+        public Task<IEnumerable<Comment>> GetByParentRepliedAsync(Comment parentrepliedcomment);
+        public void AddToPost(Post post, User creatoruser, string text, Comment parentreplied);
     }
 }

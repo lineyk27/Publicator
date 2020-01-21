@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Publicator.ApplicationCore.Contracts;
@@ -28,6 +29,26 @@ namespace Publicator.ApplicationCore.Services
                 .PostTagRepository
                 .GetAsync(x => x.PostId == post.Id))
                 .Select(x => x.Tag);
+        }
+
+        public async Task<Tag> Create(string name)
+        {
+            var found = await GetByNameAsync(name);
+            if(found == null)
+            {
+                var tag = new Tag()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = name
+                };
+                _unitOfWork.TagRepository.Insert(tag);
+                _unitOfWork.Save();
+                return tag;
+            }
+            else
+            {
+                return found;
+            }
         }
     }
 }
