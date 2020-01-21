@@ -18,7 +18,7 @@ namespace Publicator.ApplicationCore.Contracts
         public void AddSubscriptionNewPostAsync(Post post);
         public Task<int> CalcCurrentRatingAsync(Post post);
         public Task<Vote> VoteAsync(Post post, bool up = false);
-        public void AddToBookmarkAsync(Post post);
+        public Task<bool> AddToBookmarkAsync(Post post);
         public Task<Vote> CurrentVoteAsync(User creatoruser, Post post);
         public void CreateAsync(string name, string content, Community community, IEnumerable<Tag> tags);
     }
