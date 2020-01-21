@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Publicator.Infrastructure;
+using Publicator.ApplicationCore;
 
 namespace Publicator.Presentation
 {
@@ -21,6 +22,7 @@ namespace Publicator.Presentation
                 );
 
             services.AddInfrastructureServices();
+            services.AddApplicationCoreServices();
             services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
