@@ -5,7 +5,7 @@ using Publicator.Infrastructure.Entities;
 
 namespace Publicator.ApplicationCore.Contracts
 {
-    interface IPostService
+    public interface IPostService
     {
         public Task<IEnumerable<Post>> GetAllAsync();
         public Task<IEnumerable<Post>> GetByTagAsync(Tag tag);

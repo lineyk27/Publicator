@@ -14,6 +14,7 @@ namespace Publicator.Presentation
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
             services
                 .AddMvc(options => options.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
@@ -23,7 +24,6 @@ namespace Publicator.Presentation
 
             services.AddInfrastructureServices();
             services.AddApplicationCoreServices();
-            services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -36,10 +36,9 @@ namespace Publicator.Presentation
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
