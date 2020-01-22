@@ -7,6 +7,7 @@ using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.Exceptions;
 using Publicator.Infrastructure.Entities;
 using Publicator.Infrastructure.Interfaces;
+using System.Diagnostics;
 
 namespace Publicator.ApplicationCore.Services
 {
@@ -90,7 +91,7 @@ namespace Publicator.ApplicationCore.Services
         {
             var user = (await _unitOfWork
                 .UserRepository
-                .GetAsync(x => x.Nickname == username))
+                .GetAsync(x => x.Nickname == username,includeProperties:"Role"))
                 .FirstOrDefault();
             if (user == null)
                 throw new ResourceNotFoundException("User not found");
@@ -133,7 +134,7 @@ namespace Publicator.ApplicationCore.Services
         {
             return (await _unitOfWork
                 .UserRepository
-                .GetAsync(x => x.Email == email))
+                .GetAsync(x => x.Email == email,includeProperties:"Role"))
                 .FirstOrDefault();
         }
 
@@ -149,8 +150,9 @@ namespace Publicator.ApplicationCore.Services
                 return user;
             }
             else if (!user.EmailConfirmed)
-                throw new Exception("Account is not confirmes");
-            throw new Exception("Auth error");
+                throw new Exception("Account is not confirmed");
+            Debug.WriteLine($"{passwordhash} - {user.PasswordHash}");
+            throw new Exception("Login or password is not correct");
         }
 
         public string GetConfirmEmailText(Guid userid, string token)

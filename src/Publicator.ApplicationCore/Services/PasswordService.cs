@@ -12,8 +12,15 @@ namespace Publicator.ApplicationCore.Services
             algo.Initialize();
             byte[] bytes = Encoding.UTF8.GetBytes(text);
             byte[] hashed = algo.ComputeHash(bytes);
-            string strhash = Encoding.UTF8.GetString(hashed);
-            return strhash;
+            //string strhash = Encoding.UTF8.GetString(hashed);
+
+            StringBuilder hashbuilder = new StringBuilder(hashed.Length);
+            foreach(var i in hashed)
+            {
+                hashbuilder.Append(i.ToString("x2"));
+            }
+
+            return hashbuilder.ToString();
         }
 
         public bool IsEqual(string hash1, string hash2)
