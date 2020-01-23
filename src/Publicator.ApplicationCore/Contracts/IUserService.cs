@@ -18,7 +18,7 @@ namespace Publicator.ApplicationCore.Contracts
         public Task<IEnumerable<User>> GetSubscriptionsAsync(User subscriberuser);
         public Task<IEnumerable<User>> GetSubscribersAsync(User subscriptionuser);
         public Task<User> LoginAsync(string login, string password);
-        public void RegisterAsync(string username, string email, string password);
-        public bool ConfirmAccountAsync(User user, string token);
+        public Task RegisterAsync(string username, string email, string password);
+        public bool ConfirmAccount(User user, string token);
     }
 }

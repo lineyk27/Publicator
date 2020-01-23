@@ -17,18 +17,24 @@ namespace Publicator.ApplicationCore.Services
         IEmailService _emailService;
         IHttpContextAccessor _httpContextAccessor;
         IPasswordService _passwordService;
+        IRoleService _roleService;
+        IStateService _stateService;
         public UserService(
             IUnitOfWork unitOfWork, 
             IHttpContextAccessor httpContextAccessor,
             IEmailService emailService,
-            IPasswordService passwordService)
+            IPasswordService passwordService,
+            IRoleService roleService,
+            IStateService stateService)
         {
             _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
             _emailService = emailService;
             _passwordService = passwordService;
+            _roleService = roleService;
+            _stateService = stateService;
         }
-        public bool ConfirmAccountAsync(User user, string token)
+        public bool ConfirmAccount(User user, string token)
         {
             // TODO must be reconsidered
             Guid id;
@@ -168,16 +174,17 @@ namespace Publicator.ApplicationCore.Services
                 $"<a href=\"{cancellink}\">{cancellink}<a/><p/>";
         }
 
-        public void RegisterAsync(string username, string email, string password)
+        public async Task RegisterAsync(string username, string email, string password)
         {
-            var user = GetByUsernameAsync(username);
+            var user = await GetByUsernameAsync(username);
             if (user != null)
                 throw new Exception("User with the username is already exist");
-            user = GetByEmailAsync(email);
+            user = await GetByEmailAsync(email);
             if (user != null)
                 throw new Exception("User with the email is already exist");
             var id = Guid.NewGuid();
-            // TODO add logic for set role and state
+            var role = await _roleService.GetByNameAsync("Simple");
+            var state = await _stateService.GetByNameAsync("Active");
             var newuser = new User()
             {
                 Id = id,
@@ -185,7 +192,9 @@ namespace Publicator.ApplicationCore.Services
                 PasswordHash = _passwordService.Encrypt(password),
                 Nickname = username,
                 Email = email,
-                EmailConfirmed = false
+                EmailConfirmed = false,
+                RoleId = role.Id,
+                StateId = state.Id
             };
             _unitOfWork.UserRepository.Insert(newuser);
             _unitOfWork.Save();

@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.Presentation.Helpers;
 using Publicator.Presentation.RequestModels;
+using Publicator.Infrastructure.Entities;
 
 namespace Publicator.Presentation.Controllers
 {
@@ -27,7 +28,7 @@ namespace Publicator.Presentation.Controllers
         public async Task<IActionResult> Login([FromBody]LoginRequest model)
         {
             if (!ModelState.IsValid) {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             var user = await _userService.LoginAsync(model.Login, model.Password);
@@ -50,6 +51,36 @@ namespace Publicator.Presentation.Controllers
             var tokenkey = tokenhandler.WriteToken(token);
 
             return Ok(tokenkey);
+        }
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> Register(RegisterRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            
+            if (model.Password != model.ConfirmPassword)
+                return BadRequest(ModelState);
+
+            await _userService.RegisterAsync(model.Username, model.Email, model.Password);
+            
+            return Ok();
+        }
+        [Route("/confirm?userid={id}&token={token}")]
+        public async Task<IActionResult> ConfirmAccount([FromRoute]Guid id, [FromRoute]string token)
+        {
+            User user;
+            try
+            {
+                user = await _userService.GetByIdAsync(id);
+            }
+            catch
+            {
+                return StatusCode(400);
+            }
+            bool result = _userService.ConfirmAccount(user, token);
+
+            return Ok(new { Confirmed = result });
         }
     }
 }
