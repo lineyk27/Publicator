@@ -4,10 +4,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using System.Diagnostics;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 using Publicator.ApplicationCore.Contracts;
+using Publicator.ApplicationCore.DTO;
 using Publicator.Presentation.Helpers;
 using Publicator.Presentation.RequestModels;
 using Publicator.Infrastructure.Entities;
@@ -18,10 +21,12 @@ namespace Publicator.Presentation.Controllers
     {
         private IUserService _userService;
         private JWTSettings _jwtSettings;
-        public AccountController(IUserService userService, IOptions<JWTSettings> options)
+        private IMapper _mapper;
+        public AccountController(IUserService userService, IOptions<JWTSettings> options,IMapper mapper)
         {
             _userService = userService;
             _jwtSettings = options.Value;
+            _mapper = mapper;
         }
         [HttpPost]
         [Route("/login")]
@@ -81,6 +86,14 @@ namespace Publicator.Presentation.Controllers
             bool result = _userService.ConfirmAccount(user, token);
 
             return Ok(new { Confirmed = result });
+        }
+        [Authorize()]
+        [Route("api/current")]
+        public async Task<IActionResult> CurrentUser()
+        {
+            var user = await _userService.GetByUsernameAsync(HttpContext.User.Identity.Name);
+            var dto = _mapper.Map<User, UserDTO>(user);
+            return Ok(dto);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Publicator.ApplicationCore.DTO
 {
-    class TagDTO
+    public class TagDTO
     {
         public string Name { get; set; }
     }

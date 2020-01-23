@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Publicator.ApplicationCore.DTO
 {
-    class CommentDTO
+    public class CommentDTO
     {
         public Guid Id { get; set; }
         public string Content { get; set; }

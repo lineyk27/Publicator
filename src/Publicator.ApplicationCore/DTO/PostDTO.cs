@@ -2,7 +2,7 @@
 
 namespace Publicator.ApplicationCore.DTO
 {
-    class PostDTO
+    public class PostDTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
