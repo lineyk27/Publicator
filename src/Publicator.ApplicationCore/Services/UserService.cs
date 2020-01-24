@@ -176,30 +176,38 @@ namespace Publicator.ApplicationCore.Services
 
         public async Task RegisterAsync(string username, string email, string password)
         {
-            var user = await GetByUsernameAsync(username);
-            if (user != null)
-                throw new Exception("User with the username is already exist");
-            user = await GetByEmailAsync(email);
-            if (user != null)
-                throw new Exception("User with the email is already exist");
-            var id = Guid.NewGuid();
-            var role = await _roleService.GetByNameAsync("Simple");
-            var state = await _stateService.GetByNameAsync("Active");
-            var newuser = new User()
+            User user = new User();
+            try
             {
-                Id = id,
-                JoinDate = DateTime.Now,
-                PasswordHash = _passwordService.Encrypt(password),
-                Nickname = username,
-                Email = email,
-                EmailConfirmed = false,
-                RoleId = role.Id,
-                StateId = state.Id
-            };
-            _unitOfWork.UserRepository.Insert(newuser);
-            _unitOfWork.Save();
-            var emailtext = GetConfirmEmailText(id, id.ToString("D"));
-            _emailService.SendEmailAsync(email, "Publicator", emailtext);
+                user = await GetByUsernameAsync(username);
+                user = await GetByEmailAsync(email);
+            }
+            catch
+            {
+                var id = Guid.NewGuid();
+                var role = await _roleService.GetByNameAsync("Simple");
+                var state = await _stateService.GetByNameAsync("Active");
+                var newuser = new User()
+                {
+                    Id = id,
+                    JoinDate = DateTime.Now,
+                    PasswordHash = _passwordService.Encrypt(password),
+                    Nickname = username,
+                    Email = email,
+                    EmailConfirmed = false,
+                    RoleId = role.Id,
+                    StateId = state.Id
+                };
+                _unitOfWork.UserRepository.Insert(newuser);
+                _unitOfWork.Save();
+                var emailtext = GetConfirmEmailText(id, id.ToString("D"));
+                _emailService.SendEmailAsync(email, "Publicator", emailtext);
+            }
+            finally
+            {
+                if (user != null)
+                    throw new Exception("User with the username is already exist");
+            }
         }
     }
 }

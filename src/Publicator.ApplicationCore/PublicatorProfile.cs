@@ -12,6 +12,7 @@ namespace Publicator.ApplicationCore
             CreateMap<Post, PostDTO>();
             CreateMap<Tag, TagDTO>();
             CreateMap<Comment, CommentDTO>();
+            CreateMap<Role, RoleDTO>();
         }
     }
 }

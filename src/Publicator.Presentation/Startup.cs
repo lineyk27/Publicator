@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Publicator.Infrastructure;
 using Publicator.ApplicationCore;
+using Publicator.ApplicationCore.Helpers;
 using Publicator.Presentation.Helpers;
 using Microsoft.AspNetCore.Diagnostics;
 
@@ -37,6 +38,7 @@ namespace Publicator.Presentation
             services.AddApplicationCoreServices();
 
             services.Configure<JWTSettings>(_configuration.GetSection("JWTSettings"));
+            services.Configure<EmailSettings>(_configuration.GetSection("EmailSettings"));
             var jwtsettings = _configuration.GetSection("JWTSettings").Get<JWTSettings>();
             var key = Encoding.ASCII.GetBytes(jwtsettings.SecretKey);
             services.AddAuthentication(options =>
@@ -44,21 +46,20 @@ namespace Publicator.Presentation
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 }
-            ).AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = true;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters()
+                ).AddJwtBearer(options =>
                 {
-                    ValidateAudience = true,
-                    ValidAudience = jwtsettings.Audience,
-                    ValidateIssuer = true,
-                    ValidIssuer = jwtsettings.Issuer,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
-                };
-            });
-
+                    options.RequireHttpsMetadata = true;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateAudience = true,
+                        ValidAudience = jwtsettings.Audience,
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtsettings.Issuer,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key)
+                    };
+                });
 
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -22,7 +22,7 @@ namespace Publicator.Presentation.Controllers
         private IUserService _userService;
         private JWTSettings _jwtSettings;
         private IMapper _mapper;
-        public AccountController(IUserService userService, IOptions<JWTSettings> options,IMapper mapper)
+        public AccountController(IUserService userService, IOptions<JWTSettings> options, IMapper mapper)
         {
             _userService = userService;
             _jwtSettings = options.Value;
@@ -57,22 +57,24 @@ namespace Publicator.Presentation.Controllers
 
             return Ok(tokenkey);
         }
+        // POST: /register
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register(RegisterRequest model)
+        public async Task<IActionResult> Register([FromBody]RegisterRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
+
             if (model.Password != model.ConfirmPassword)
                 return BadRequest(ModelState);
 
             await _userService.RegisterAsync(model.Username, model.Email, model.Password);
-            
+
             return Ok();
         }
-        [Route("/confirm?userid={id}&token={token}")]
-        public async Task<IActionResult> ConfirmAccount([FromRoute]Guid id, [FromRoute]string token)
+        // GET: /confirm?id=231..54&token=351..35
+        [Route("confirm")]
+        public async Task<IActionResult> ConfirmAccount([FromQuery] Guid id, [FromQuery]string token)
         {
             User user;
             try
@@ -87,11 +89,12 @@ namespace Publicator.Presentation.Controllers
 
             return Ok(new { Confirmed = result });
         }
-        [Authorize()]
+        // GET: /api/current
+        [Authorize]
         [Route("api/current")]
         public async Task<IActionResult> CurrentUser()
         {
-            var user = await _userService.GetByUsernameAsync(HttpContext.User.Identity.Name);
+            var user = await _userService.GetCurrentUserAsync();
             var dto = _mapper.Map<User, UserDTO>(user);
             return Ok(dto);
         }

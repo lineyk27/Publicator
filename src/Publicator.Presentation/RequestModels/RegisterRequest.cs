@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Publicator.Presentation.RequestModels
 {
@@ -11,7 +7,7 @@ namespace Publicator.Presentation.RequestModels
         [Required]
         [MinLength(6)]
         // TODO add regexp for check is valid username
-        [RegularExpression("",ErrorMessage ="Wrong username format")]
+        [RegularExpression(@"[a-zA-Z0-9\-.]{1,32}", ErrorMessage ="Wrong username format")]
         public string Username { get; set; }
         [Required(AllowEmptyStrings = false)]
         [DataType(DataType.EmailAddress, ErrorMessage = "Wrong email format")]
