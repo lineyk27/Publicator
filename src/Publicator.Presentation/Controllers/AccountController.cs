@@ -17,6 +17,9 @@ using Publicator.Infrastructure.Entities;
 
 namespace Publicator.Presentation.Controllers
 {
+    /// <summary>
+    /// Controller for authentication and authorization process
+    /// </summary>
     public class AccountController : Controller
     {
         private IUserService _userService;
@@ -28,6 +31,11 @@ namespace Publicator.Presentation.Controllers
             _jwtSettings = options.Value;
             _mapper = mapper;
         }
+        /// <summary>
+        /// Logim method, authenticate user
+        /// </summary>
+        /// <param name="model">Model with login and password fields</param>
+        /// <returns>If auth succesfull, return auth token, either - error</returns>
         [HttpPost]
         [Route("/login")]
         public async Task<IActionResult> Login([FromBody]LoginRequest model)
@@ -57,6 +65,11 @@ namespace Publicator.Presentation.Controllers
 
             return Ok(tokenkey);
         }
+        /// <summary>
+        /// Register user method
+        /// </summary>
+        /// <param name="model">Model with user information needed for registration process</param>
+        /// <returns>If register succesfull then OkResult, either error</returns>
         // POST: /register
         [HttpPost]
         [Route("register")]
@@ -72,6 +85,12 @@ namespace Publicator.Presentation.Controllers
 
             return Ok();
         }
+        /// <summary>
+        /// Method for confirm account by email
+        /// </summary>
+        /// <param name="id">Id of user to confirm</param>
+        /// <param name="token">Token for user to confirm</param>
+        /// <returns>If user confirmed - true, else false of erroro if user not found</returns>
         // GET: /confirm?id=231..54&token=351..35
         [Route("confirm")]
         public async Task<IActionResult> ConfirmAccount([FromQuery] Guid id, [FromQuery]string token)
@@ -89,6 +108,10 @@ namespace Publicator.Presentation.Controllers
 
             return Ok(new { Confirmed = result });
         }
+        /// <summary>
+        /// Method to return current authenticated user
+        /// </summary>
+        /// <returns>UserDTO of authenricated user</returns>
         // GET: /api/current
         [Authorize]
         [Route("api/current")]
