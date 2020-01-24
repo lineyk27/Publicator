@@ -10,7 +10,7 @@ namespace Publicator.ApplicationCore.Contracts
         public int PageSize { get; set; }
         public int Page { get; set; }
         public HotPeriod Period { get; set; }
-        public Task<IEnumerable<Post>> GetAllAsync();
+        public Task<IEnumerable<Post>> GetNewAsync();
         public Task<IEnumerable<Post>> GetByTagAsync(Tag tag);
         public Task<Post> GetByIdAsync(Guid postid);
         public Task<IEnumerable<Post>> GetBySubscriptionAsync(User user);

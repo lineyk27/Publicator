@@ -7,7 +7,6 @@ using Publicator.ApplicationCore.Exceptions;
 using Publicator.Infrastructure.Entities;
 using Publicator.Infrastructure.Interfaces;
 
-
 namespace Publicator.ApplicationCore.Services
 {
     public class PostService : IPostService
@@ -190,11 +189,14 @@ namespace Publicator.ApplicationCore.Services
             _unitOfWork.Save();
         }
 
-        public async Task<IEnumerable<Post>> GetAllAsync()
+        public async Task<IEnumerable<Post>> GetNewAsync()
         {
-            return await _unitOfWork
+            return (await _unitOfWork
                 .PostRepository
-                .GetAsync(includeProperties: "PostTags.Tag");
+                .GetAsync(includeProperties: "PostTags.Tag"))
+                .OrderByDescending(x => x.CreationDate)
+                .Skip(GetStartPage())
+                .Take(PageSize);
         }
 
         public int GetStartPage()
