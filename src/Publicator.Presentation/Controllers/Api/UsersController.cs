@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Publicator.ApplicationCore.Contracts;
@@ -11,16 +12,40 @@ namespace Publicator.Presentation.Controllers.Api
     {
         IMapper _mapper;
         IUserService _userService;
-        public UsersController(IMapper mapper, IUserService userService)
+        IPostService _postService;
+        public UsersController(IMapper mapper,
+            IUserService userService,
+            IPostService postService)
         {
             _mapper = mapper;
             _userService = userService;
+            _postService = postService;
         }
+        /// <summary>
+        /// Gets user by username
+        /// </summary>
+        /// <param name="username">Username of user</param>
+        /// <returns>User found by username</returns>
+        // GET: api/users/john03
         [HttpGet]
         [Route("{username}")]
         public async Task<IActionResult> GetByUsername([FromRoute]string username)
         {
             var user = await _userService.GetByUsernameAsync(username);
+            var userDTO = _mapper.Map<User, UserDTO>(user);
+            return Ok(userDTO);
+        }
+        /// <summary>
+        /// Get user by post he created
+        /// </summary>
+        /// <param name="postid">Id of created post</param>
+        /// <returns>User that created post</returns>
+        // GET: api/users?postid=123..23
+        [HttpGet]
+        public async Task<IActionResult> GetByPost([FromQuery]Guid postid)
+        {
+            var post = await _postService.GetByIdAsync(postid);
+            var user = await _userService.GetByIdAsync(post.CreatorUserId);
             var userDTO = _mapper.Map<User, UserDTO>(user);
             return Ok(userDTO);
         }

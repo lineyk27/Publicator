@@ -127,9 +127,14 @@ namespace Publicator.Presentation.Controllers.Api
             var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
             return Ok(postsDTO);
         }
+        /// <summary>
+        /// Get posts posted in community
+        /// </summary>
+        /// <param name="model">Model represents paginated user posts posted in community</param>
+        /// <returns></returns>
         // GET: api/posts?communityid=123..32&page=3&pagesize=20
         [HttpGet]
-        public async Task<IActionResult> GetByCommunity(CommunityPostsRequest model)
+        public async Task<IActionResult> GetByCommunity([FromQuery]CommunityPostsRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
