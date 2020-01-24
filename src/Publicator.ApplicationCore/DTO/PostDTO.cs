@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Publicator.ApplicationCore.DTO
 {
@@ -8,5 +9,6 @@ namespace Publicator.ApplicationCore.DTO
         public string Name { get; set; }
         public string Content { get; set; }
         public DateTime CreationTime{ get;set; }
+        public IEnumerable<TagDTO> Tags { get; set; }
     }
 }

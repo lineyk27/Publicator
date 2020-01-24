@@ -16,6 +16,33 @@ namespace Publicator.ApplicationCore.Services
         private IUserService _userService;
         private ITagService _tagService;
         private ICommunityService _communityService;
+        private int _page;
+        private int _pageSize;
+        public int Page
+        {
+            get
+            {
+                return _page;
+            }
+            set
+            {
+                if (value > 0)
+                    _page = value;
+            }
+        }
+        public int PageSize
+        {
+            get
+            {
+                return _pageSize;
+            }
+            set
+            {
+                if (value > 0)
+                    _pageSize = value;
+            }
+        }
+        public HotPeriod Period{ get; set; }
         public PostService(
             IUnitOfWork unitOfWork, 
             IUserService userService, 
@@ -26,6 +53,8 @@ namespace Publicator.ApplicationCore.Services
             _userService = userService;
             _tagService = tagService;
             _communityService = communityService;
+            PageSize = 10;
+            Period = HotPeriod.Month;
         }
 
         public async void AddSubscriptionNewPostAsync(Post post)
@@ -165,36 +194,86 @@ namespace Publicator.ApplicationCore.Services
         {
             return await _unitOfWork
                 .PostRepository
-                .GetAsync(includeProperties: "Bookmarks,Votes");
+                .GetAsync(includeProperties: "PostTags.Tag");
+        }
+
+        public int GetStartPage()
+        {
+            return (Page - 1) * PageSize;
         }
 
         public async Task<IEnumerable<Post>> GetBookmarks(User user)
         {
             return (await _unitOfWork
                 .BookmarkRepository
-                .GetAsync(x => x.UserId == user.Id,includeProperties:"Post"))
-                .Select(x => x.Post);
+                .GetAsync(x => x.UserId == user.Id,includeProperties:"Post.PostTags.Tag"))
+                .Select(x => x.Post)
+                .OrderByDescending(x => x.CreationDate)
+                .Skip(GetStartPage())
+                .Take(PageSize);
+        }
+
+        public async Task<IEnumerable<Post>> GetHotAsync()
+        {
+            DateTime startDate;
+            var endDate = DateTime.Now;
+            switch (Period)
+            {
+                case HotPeriod.Day:
+                    startDate = endDate.AddDays(-1);
+                    break;
+                case HotPeriod.Week:
+                    startDate = endDate.AddDays(-7);
+                    break;
+                case HotPeriod.Year:
+                    startDate = endDate.AddYears(-1);
+                    break;
+                default:
+                    startDate = endDate.AddMonths(-1);
+                    break;
+            }
+            var periodDate = (endDate - startDate).TotalHours;
+
+            var startPage = (Page - 1) * PageSize;
+            var posts = (await _unitOfWork
+                .PostRepository
+                .GetAsync(includeProperties: "PostTags.Tag"))
+                .Where(x => x.CreationDate <= endDate && x.CreationDate >= startDate)
+                .OrderByDescending(x => (x.CurrentRating / periodDate))
+                .Skip(startPage)
+                .Take(PageSize);
+
+            return posts;
         }
 
         public async Task<IEnumerable<Post>> GetByCommunity(Community community)
         {
             return (await _unitOfWork
                 .CommunityRepository
-                .GetAsync(x => x.Id == community.Id, includeProperties: "Posts"))
+                .GetAsync(x => x.Id == community.Id, includeProperties: "Posts.PostTags.Tag"))
                 .FirstOrDefault()
-                .Posts;
+                .Posts
+                .OrderByDescending(x => x.CreationDate)
+                .Skip(GetStartPage())
+                .Take(PageSize);
         }
 
         public async Task<IEnumerable<Post>> GetByCreatorAsync(User creatoruser)
         {
-            return await _unitOfWork
+            return (await _unitOfWork
                 .PostRepository
-                .GetAsync(x => x.CreatorUserId == creatoruser.Id);
+                .GetAsync(x => x.CreatorUserId == creatoruser.Id,includeProperties:"PostTags.Tag"))
+                .OrderByDescending(x => x.CreationDate)
+                .Skip(GetStartPage())
+                .Take(PageSize);
         }
 
         public async Task<Post> GetByIdAsync(Guid postid)
         {
-            var post = await _unitOfWork.PostRepository.GetByIdAsync(postid);
+            var post = (await _unitOfWork
+                .PostRepository
+                .GetAsync(x => x.Id == postid,includeProperties:"PostTags.Tag"))
+                .FirstOrDefault();
             if (post == null)
                 throw new ResourceNotFoundException("Post not found");
             return post;
@@ -203,18 +282,23 @@ namespace Publicator.ApplicationCore.Services
         public async Task<IEnumerable<Post>> GetBySubscriptionAsync(User user)
         {
             return (await _unitOfWork
-                .UserSubscriptionRepository
-                .GetByIdAsync(user.Id))
-                .SubscriptionUser
-                .Posts;
+                .SubscriptionNewPostRepository
+                .GetAsync(x => x.SubscriptionUserId == user.Id, includeProperties: "Post.PostTags.Tag"))
+                .Select(x => x.Post)
+                .OrderByDescending(x => x.CreationDate)
+                .Skip(GetStartPage())
+                .Take(PageSize);
         }
 
         public async Task<IEnumerable<Post>> GetByTagAsync(Tag tag)
         {
             return (await _unitOfWork
                 .PostTagRepository
-                .GetAsync(x => x.TagId == tag.Id,includeProperties:"Post"))
-                .Select(x => x.Post);
+                .GetAsync(x => x.TagId == tag.Id,includeProperties:"Post.PostTags.Tag"))
+                .Select(x => x.Post)
+                .OrderByDescending(x => x.CreationDate)
+                .Skip(GetStartPage())
+                .Take(PageSize);
         }
 
         public async Task<int> CalcCurrentRatingAsync(Post post)
@@ -236,7 +320,10 @@ namespace Publicator.ApplicationCore.Services
         {
             return (await _unitOfWork
                 .PostRepository
-                .GetAsync(x => x.Votes.Any(t => t.UserId == creatorvoteuser.Id), includeProperties:"Votes"));
+                .GetAsync(x => x.Votes.Any(t => t.UserId == creatorvoteuser.Id), includeProperties:"Votes,PostTags.Tag"))
+                .OrderByDescending(x => x.CreationDate)
+                .Skip(GetStartPage())
+                .Take(PageSize);
         }
 
         public async Task<Vote> VoteAsync(Post post, bool up = false)

@@ -7,6 +7,9 @@ namespace Publicator.ApplicationCore.Contracts
 {
     public interface IPostService
     {
+        public int PageSize { get; set; }
+        public int Page { get; set; }
+        public HotPeriod Period { get; set; }
         public Task<IEnumerable<Post>> GetAllAsync();
         public Task<IEnumerable<Post>> GetByTagAsync(Tag tag);
         public Task<Post> GetByIdAsync(Guid postid);
@@ -16,6 +19,7 @@ namespace Publicator.ApplicationCore.Contracts
         public Task<IEnumerable<Post>> GetByCommunity(Community community);
         public Task<IEnumerable<Post>> GetVotedByCreatorAsync(User creatorvoteuser);
         public void AddSubscriptionNewPostAsync(Post post);
+        public Task<IEnumerable<Post>> GetHotAsync();
         public Task<int> CalcCurrentRatingAsync(Post post);
         public Task<Vote> VoteAsync(Post post, bool up = false);
         public Task<bool> AddToBookmarkAsync(Post post);
