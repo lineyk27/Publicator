@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +17,18 @@ namespace Publicator.Presentation.Controllers.Api
     {
         private IPostService _postService;
         private IUserService _userService;
+        private ICommunityService _communityService;
         private IMapper _mapper;
-        public PostsController(IPostService postService, IMapper mapper, IUserService userService)
+        public PostsController(
+            IPostService postService, 
+            IMapper mapper, 
+            IUserService userService,
+            ICommunityService communityService)
         {
             _postService = postService;
             _mapper = mapper;
             _userService = userService;
+            _communityService = communityService;
         }
         /// <summary>
         /// Method return hot posts with paging and filtering
@@ -35,9 +43,9 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _postService.PageSize = model?.PageSize ?? _postService.PageSize;
-            _postService.Page = model?.Page ?? _postService.Page;
-            _postService.Period = model?.Period ?? _postService.Period;
+            _postService.PageSize = model.PageSize;
+            _postService.Page = model.Page;
+            _postService.Period = model.Period;
 
             var posts = await _postService.GetHotAsync();
             var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
@@ -58,8 +66,8 @@ namespace Publicator.Presentation.Controllers.Api
 
             var user = await _userService.GetByUsernameAsync(model.UserName);
 
-            _postService.Page = model?.Page ?? _postService.Page;
-            _postService.PageSize = model?.PageSize ?? _postService.PageSize;
+            _postService.Page = model.Page;
+            _postService.PageSize = model.PageSize;
 
             var posts = await _postService.GetBySubscriptionAsync(user);
             var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
@@ -70,7 +78,7 @@ namespace Publicator.Presentation.Controllers.Api
         /// </summary>
         /// <param name="model">Pagination request</param>
         /// <returns>New posts</returns>
-        // GET: api/posts/subscription?page=3&pagesize=20
+        // GET: api/posts/new?page=3&pagesize=20
         [HttpGet]
         [Route("new")]
         public async Task<IActionResult> GetNew([FromQuery]PageRequest model)
@@ -78,8 +86,8 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _postService.Page = model?.Page ?? _postService.Page;
-            _postService.PageSize = model?.PageSize ?? _postService.PageSize;
+            _postService.Page = model.Page;
+            _postService.PageSize = model.PageSize;
 
             var posts = await _postService.GetNewAsync();
             var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
@@ -98,6 +106,38 @@ namespace Publicator.Presentation.Controllers.Api
             var post = await _postService.GetByIdAsync(id);
             var postDTO = _mapper.Map<Post, PostDTO>(post);
             return Ok(postDTO);
+        }
+        /// <summary>
+        /// Get posts created by user
+        /// </summary>
+        /// <param name="model"> Model represents paginated user posts by username</param>
+        /// <returns>Posts created by user</returns>
+        // GET: api/posts?username=john03&page=3&pagesize=20
+        [HttpGet]
+        public async Task<IActionResult> GetByCreatorUser([FromQuery]UserPostsRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            _postService.Page = model.Page;
+            _postService.PageSize = model.PageSize;
+
+            var user = await _userService.GetByUsernameAsync(model.Username);
+            var posts = await _postService.GetByCreatorAsync(user);
+            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+            return Ok(postsDTO);
+        }
+        // GET: api/posts?communityid=123..32&page=3&pagesize=20
+        [HttpGet]
+        public async Task<IActionResult> GetByCommunity(CommunityPostsRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var community = await _communityService.GetByIdAsync(model.CommunityId);
+            var posts = await _postService.GetByCommunity(community);
+            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+            return Ok(postsDTO);
         }
     }
 }
