@@ -1,13 +1,11 @@
-﻿using Publicator.ApplicationCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using Publicator.ApplicationCore;
 
 namespace Publicator.Presentation.RequestModels
 {
-    public class HotRequest : PageRequest
+    public class HotPostsRequest : PageRequest
     {
-        public HotPeriod? Period { get; set; }
+        [Required]
+        public HotPeriod Period { get; set; }
     }
 }

@@ -16,22 +16,27 @@ namespace Publicator.Presentation.Controllers.Api
     public class PostsController : BaseController
     {
         private IPostService _postService;
+        private IUserService _userService;
         private IMapper _mapper;
-        public PostsController(IPostService postService, IMapper mapper)
+        public PostsController(IPostService postService, IMapper mapper, IUserService userService)
         {
             _postService = postService;
             _mapper = mapper;
+            _userService = userService;
         }
         /// <summary>
-        /// Method return hot posts by paging and filtering paging
+        /// Method return hot posts with paging and filtering
         /// </summary>
-        /// <param name="model">Model for represent paging and filtering</param>
+        /// <param name="model">Model that represents hot request</param>
         /// <returns>Hot posts by period and page</returns>
         // GET: /api/posts/hot
         [HttpGet]
         [Route("hot")]
-        public async Task<IActionResult> GetHot([FromBody]HotRequest model)
+        public async Task<IActionResult> GetHot([FromBody]HotPostsRequest model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             _postService.PageSize = model?.PageSize ?? _postService.PageSize;
             _postService.Page = model?.Page ?? _postService.Page;
             _postService.Period = model?.Period ?? _postService.Period;
@@ -40,11 +45,27 @@ namespace Publicator.Presentation.Controllers.Api
             var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
             return Ok(postsDTO);
         }
-        [Authorize]
+        /// <summary>
+        /// Method return subscription posts with paging and filtering
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        // GET: api/posts/subscription
         [HttpGet]
-        public async Task<IActionResult> GetBySubscription()
+        [Route("subscription")]
+        public async Task<IActionResult> GetBySubscription([FromBody]SubscriptionPostsRequest model)
         {
-            return Ok();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userService.GetByUsernameAsync(model.UserName);
+
+            _postService.Page = model?.Page ?? _postService.Page;
+            _postService.PageSize = model?.PageSize ?? _postService.PageSize;
+
+            var posts = await _postService.GetBySubscriptionAsync(user);
+            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+            return Ok(postsDTO);
         }
     }
 }
