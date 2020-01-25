@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.DTO;
 using Publicator.Infrastructure.Entities;
+using Publicator.Presentation.RequestModels;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -30,9 +31,12 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/users/john03
         [HttpGet]
         [Route("{username}")]
-        public async Task<IActionResult> GetByUsername([FromRoute]string username)
+        public async Task<IActionResult> GetByUsername([FromRoute]UsernameRequest model)
         {
-            var user = await _userService.GetByUsernameAsync(username);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userService.GetByUsernameAsync(model.Username);
             var userDTO = _mapper.Map<User, UserDTO>(user);
             return Ok(userDTO);
         }
@@ -44,9 +48,9 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/users/post?postid=123..23
         [HttpGet]
         [Route("post")]
-        public async Task<IActionResult> GetByPost([FromQuery]Guid postid)
+        public async Task<IActionResult> GetByPost(IdRequest model)
         {
-            var post = await _postService.GetByIdAsync(postid);
+            var post = await _postService.GetByIdAsync(model.Id);
             var user = await _userService.GetByIdAsync(post.CreatorUserId);
             var userDTO = _mapper.Map<User, UserDTO>(user);
             return Ok(userDTO);
@@ -64,6 +68,20 @@ namespace Publicator.Presentation.Controllers.Api
             var user = await _userService.GetCurrentUserAsync();
             var userDTO = _mapper.Map<User, UserDTO>(user);
             return Ok(userDTO);
+        }
+        // GET: api/users/subscribe/123..23
+        [HttpGet]
+        [Authorize]
+        [Route("subscribe")]
+        public async Task<IActionResult> SubscribeUser([FromRoute]UsernameRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var subscription = await _userService.GetByUsernameAsync(model.Username);
+            var isSubscribed = await _userService.MakeSubscription(subscription);
+
+            return Ok(new { IsSubscribed = isSubscribed });
         }
     }
 }

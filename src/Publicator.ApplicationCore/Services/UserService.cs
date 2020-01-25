@@ -209,5 +209,32 @@ namespace Publicator.ApplicationCore.Services
                     throw new Exception("User with the username is already exist");
             }
         }
+
+        public async Task<bool> MakeSubscription(User subscription)
+        {
+            var current = await GetCurrentUserAsync();
+            var currsub = (await _unitOfWork
+                .UserSubscriptionRepository
+                .GetAsync(x => x.SubscriberUserId == current.Id && x.SubscriptionUserId == subscription.Id))
+                .FirstOrDefault();
+            if(currsub == null)
+            {
+                _unitOfWork
+                    .UserSubscriptionRepository
+                    .Insert(new UserSubscription()
+                    {
+                        SubscriberUserId = current.Id,
+                        SubscriptionUserId = subscription.Id
+                    });
+                _unitOfWork.Save();
+                return true;
+            }
+            else
+            {
+                _unitOfWork.UserSubscriptionRepository.Delete(currsub);
+                _unitOfWork.Save();
+                return false;
+            }
+        }
     }
 }

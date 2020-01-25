@@ -20,5 +20,6 @@ namespace Publicator.ApplicationCore.Contracts
         public Task<User> LoginAsync(string login, string password);
         public Task RegisterAsync(string username, string email, string password);
         public bool ConfirmAccount(User user, string token);
+        public Task<bool> MakeSubscription(User subscription);
     }
 }

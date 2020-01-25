@@ -93,7 +93,7 @@ namespace Publicator.Presentation
                     {
                         var ex = error.Error;
 
-                        await context.Response.WriteAsync(new ErrorDTO()
+                        await context.Response.WriteAsync(new Error()
                         {
                             Code = 400,
                             Message = ex.Message

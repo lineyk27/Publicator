@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Publicator.Infrastructure\Publicator.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ResponseModels\" />
+  </ItemGroup>
+
 </Project>
