@@ -7,6 +7,7 @@ using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.DTO;
 using Publicator.Infrastructure.Entities;
 using Publicator.Presentation.RequestModels;
+using Publicator.Presentation.ResponseModels;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -81,7 +82,7 @@ namespace Publicator.Presentation.Controllers.Api
             var subscription = await _userService.GetByUsernameAsync(model.Username);
             var isSubscribed = await _userService.MakeSubscription(subscription);
 
-            return Ok(new { IsSubscribed = isSubscribed });
+            return Ok(new CurrentStateResponse() { State = isSubscribed});
         }
     }
 }

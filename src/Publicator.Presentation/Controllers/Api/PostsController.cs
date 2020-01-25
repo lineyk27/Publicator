@@ -153,10 +153,10 @@ namespace Publicator.Presentation.Controllers.Api
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        // GET: api/posts/search?query="any query search"&startdate=2019-10-21&enddate=2019-12-31&page=3&pagesize=20
+        // GET: api/posts/search?query=any query search&startdate=2019-10-21&enddate=2019-12-31&page=3&pagesize=20
         [HttpGet]
         [Route("search")]
-        public async Task<IActionResult> GetBysearch([FromQuery]SearchRequest model)
+        public async Task<IActionResult> GetBySearch([FromQuery]SearchRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
