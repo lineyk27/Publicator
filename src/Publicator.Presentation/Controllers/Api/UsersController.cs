@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.DTO;
 using Publicator.Infrastructure.Entities;
@@ -40,12 +41,27 @@ namespace Publicator.Presentation.Controllers.Api
         /// </summary>
         /// <param name="postid">Id of created post</param>
         /// <returns>User that created post</returns>
-        // GET: api/users?postid=123..23
+        // GET: api/users/post?postid=123..23
         [HttpGet]
+        [Route("post")]
         public async Task<IActionResult> GetByPost([FromQuery]Guid postid)
         {
             var post = await _postService.GetByIdAsync(postid);
             var user = await _userService.GetByIdAsync(post.CreatorUserId);
+            var userDTO = _mapper.Map<User, UserDTO>(user);
+            return Ok(userDTO);
+        }
+        /// <summary>
+        /// Get current authorized user
+        /// </summary>
+        /// <returns>Current user</returns>
+        // GET: api/users/current
+        [HttpGet]
+        [Route("current")]
+        [Authorize]
+        public async Task<IActionResult> GetCurrent()
+        {
+            var user = await _userService.GetCurrentUserAsync();
             var userDTO = _mapper.Map<User, UserDTO>(user);
             return Ok(userDTO);
         }
