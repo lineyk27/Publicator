@@ -10,8 +10,8 @@ using Publicator.Infrastructure;
 namespace Publicator.Infrastructure.Migrations
 {
     [DbContext(typeof(PublicatorDbContext))]
-    [Migration("20200121211800_Bugfix")]
-    partial class Bugfix
+    [Migration("20200125194324_BugfixTextLength")]
+    partial class BugfixTextLength
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -47,10 +47,10 @@ namespace Publicator.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ef49b3bb-1c77-4347-9a12-744e0505d559"),
-                            CreationDate = new DateTime(2020, 1, 24, 23, 17, 59, 246, DateTimeKind.Local).AddTicks(5327),
-                            PostId = new Guid("9b9fe4fc-b300-4651-85ca-d92c4d599e18"),
-                            UserId = new Guid("3de9d387-4cf9-44e4-a0af-0395f4531c86")
+                            Id = new Guid("78985e67-8120-475e-83ba-7d7e1d7c872a"),
+                            CreationDate = new DateTime(2020, 1, 28, 21, 43, 23, 962, DateTimeKind.Local).AddTicks(2875),
+                            PostId = new Guid("5c22e9bb-d706-442c-93c4-0dee89cfe7d1"),
+                            UserId = new Guid("afbc4e51-5279-4d93-ab05-40cff74088b2")
                         });
                 });
 
@@ -89,20 +89,20 @@ namespace Publicator.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("67d1b6d8-e005-4573-b6c2-c64b29df652f"),
+                            Id = new Guid("e546d420-a130-4f8a-ac49-64fac2f32f82"),
                             Content = "<p>Hilarious, how it happened with you</p>",
-                            CreationDate = new DateTime(2020, 1, 22, 23, 17, 59, 246, DateTimeKind.Local).AddTicks(2469),
-                            PostId = new Guid("80b5abde-0ddd-4331-8fcd-44a93e3ddcd6"),
-                            UserId = new Guid("3de9d387-4cf9-44e4-a0af-0395f4531c86")
+                            CreationDate = new DateTime(2020, 1, 26, 21, 43, 23, 961, DateTimeKind.Local).AddTicks(9618),
+                            PostId = new Guid("63001e62-4a0d-42af-b701-bcbf1ed657e6"),
+                            UserId = new Guid("afbc4e51-5279-4d93-ab05-40cff74088b2")
                         },
                         new
                         {
-                            Id = new Guid("9c5c6d31-ca66-48a0-abd4-1086f900ed78"),
+                            Id = new Guid("2b425d64-3325-4585-9dc6-c01dc2f8841b"),
                             Content = "<p>It happened in 2016 year, i was 16 years old</p>",
-                            CreationDate = new DateTime(2020, 1, 23, 23, 17, 59, 246, DateTimeKind.Local).AddTicks(3915),
-                            ParentRepliedCommentId = new Guid("67d1b6d8-e005-4573-b6c2-c64b29df652f"),
-                            PostId = new Guid("80b5abde-0ddd-4331-8fcd-44a93e3ddcd6"),
-                            UserId = new Guid("011438e9-5080-451f-9149-559d658b7b25")
+                            CreationDate = new DateTime(2020, 1, 27, 21, 43, 23, 962, DateTimeKind.Local).AddTicks(1172),
+                            ParentRepliedCommentId = new Guid("e546d420-a130-4f8a-ac49-64fac2f32f82"),
+                            PostId = new Guid("63001e62-4a0d-42af-b701-bcbf1ed657e6"),
+                            UserId = new Guid("1372c680-c3ec-4d3a-b45c-306c1825d5b0")
                         });
                 });
 
@@ -140,17 +140,17 @@ namespace Publicator.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("34e68237-4a11-41ef-97fc-717ae3d13e6c"),
-                            CreationDate = new DateTime(2020, 1, 21, 23, 17, 59, 245, DateTimeKind.Local).AddTicks(2581),
-                            CreatorUserId = new Guid("3de9d387-4cf9-44e4-a0af-0395f4531c86"),
+                            Id = new Guid("ad88a4e6-2a41-427c-9a92-d08712547ba6"),
+                            CreationDate = new DateTime(2020, 1, 25, 21, 43, 23, 961, DateTimeKind.Local).AddTicks(1002),
+                            CreatorUserId = new Guid("afbc4e51-5279-4d93-ab05-40cff74088b2"),
                             Description = "Here users post stories about theirs lifes.",
                             Name = "Stories about Life"
                         },
                         new
                         {
-                            Id = new Guid("2b828160-0315-4341-aaa3-a971b72c2139"),
-                            CreationDate = new DateTime(2020, 1, 21, 23, 17, 59, 245, DateTimeKind.Local).AddTicks(4034),
-                            CreatorUserId = new Guid("3de9d387-4cf9-44e4-a0af-0395f4531c86"),
+                            Id = new Guid("30c42092-2bba-4dbb-917c-8bbb6c39c2ce"),
+                            CreationDate = new DateTime(2020, 1, 25, 21, 43, 23, 961, DateTimeKind.Local).AddTicks(2608),
+                            CreatorUserId = new Guid("afbc4e51-5279-4d93-ab05-40cff74088b2"),
                             Description = "Community about vehicles and all about it.",
                             Name = "Vehicle"
                         });
@@ -166,7 +166,7 @@ namespace Publicator.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
-                        .HasColumnType("ntext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("smalldatetime");
@@ -195,21 +195,21 @@ namespace Publicator.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("80b5abde-0ddd-4331-8fcd-44a93e3ddcd6"),
-                            CommunityId = new Guid("34e68237-4a11-41ef-97fc-717ae3d13e6c"),
+                            Id = new Guid("63001e62-4a0d-42af-b701-bcbf1ed657e6"),
+                            CommunityId = new Guid("ad88a4e6-2a41-427c-9a92-d08712547ba6"),
                             Content = "<p>In this post i want to tell you story of my life...</p>",
-                            CreationDate = new DateTime(2020, 1, 21, 23, 17, 59, 245, DateTimeKind.Local).AddTicks(6710),
-                            CreatorUserId = new Guid("3de9d387-4cf9-44e4-a0af-0395f4531c86"),
+                            CreationDate = new DateTime(2020, 1, 25, 21, 43, 23, 961, DateTimeKind.Local).AddTicks(4764),
+                            CreatorUserId = new Guid("afbc4e51-5279-4d93-ab05-40cff74088b2"),
                             CurrentRating = 0,
                             Name = "Post about my life"
                         },
                         new
                         {
-                            Id = new Guid("9b9fe4fc-b300-4651-85ca-d92c4d599e18"),
-                            CommunityId = new Guid("34e68237-4a11-41ef-97fc-717ae3d13e6c"),
+                            Id = new Guid("5c22e9bb-d706-442c-93c4-0dee89cfe7d1"),
+                            CommunityId = new Guid("ad88a4e6-2a41-427c-9a92-d08712547ba6"),
                             Content = "<p>Once upon a time in Ukraine, village Sokal i studied in school...</p>",
-                            CreationDate = new DateTime(2020, 1, 21, 23, 17, 59, 246, DateTimeKind.Local).AddTicks(280),
-                            CreatorUserId = new Guid("011438e9-5080-451f-9149-559d658b7b25"),
+                            CreationDate = new DateTime(2020, 1, 25, 21, 43, 23, 961, DateTimeKind.Local).AddTicks(7272),
+                            CreatorUserId = new Guid("1372c680-c3ec-4d3a-b45c-306c1825d5b0"),
                             CurrentRating = 0,
                             Name = "Happened in Sokal"
                         });
@@ -238,15 +238,15 @@ namespace Publicator.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("869170b6-3a1a-471a-8059-9a3a49672821"),
-                            PostId = new Guid("80b5abde-0ddd-4331-8fcd-44a93e3ddcd6"),
-                            TagId = new Guid("eab2c81c-cd7e-4f7d-ba79-686a3dd8a61e")
+                            Id = new Guid("eb3db4ca-1161-4e99-9414-085ce3e5e9b3"),
+                            PostId = new Guid("63001e62-4a0d-42af-b701-bcbf1ed657e6"),
+                            TagId = new Guid("a29b5428-55b0-4518-a3de-1dfa6dbbba5b")
                         },
                         new
                         {
-                            Id = new Guid("fad7973a-7b3a-4fd2-ba91-029e16818ff8"),
-                            PostId = new Guid("80b5abde-0ddd-4331-8fcd-44a93e3ddcd6"),
-                            TagId = new Guid("d6ab3a80-9321-46a9-829d-388e0a6c47d5")
+                            Id = new Guid("34e2ad48-31d4-43b4-9339-e679a46f974e"),
+                            PostId = new Guid("63001e62-4a0d-42af-b701-bcbf1ed657e6"),
+                            TagId = new Guid("6ba013f1-1690-4804-b666-a426419b6a34")
                         });
                 });
 
@@ -267,17 +267,17 @@ namespace Publicator.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ceec90a5-821f-485d-a812-847be50260b4"),
+                            Id = new Guid("e6afcebe-eb6b-425a-bee2-835497b9ac99"),
                             Name = "Administrator"
                         },
                         new
                         {
-                            Id = new Guid("282db597-0df6-4f49-9832-3dedd27ee818"),
+                            Id = new Guid("76170001-5c3d-453c-a2c8-89617d61d0d2"),
                             Name = "Moderator"
                         },
                         new
                         {
-                            Id = new Guid("88d99ed8-8e71-4123-b235-d179db86ccdd"),
+                            Id = new Guid("2677745d-48c4-424b-b5d2-98bc47b47aa3"),
                             Name = "Simple"
                         });
                 });
@@ -299,12 +299,12 @@ namespace Publicator.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d9eafe03-b6cb-4bf8-bc19-197621eed68e"),
+                            Id = new Guid("30f367c3-7b13-4d5a-b9a1-fb57aca165c5"),
                             Name = "Active"
                         },
                         new
                         {
-                            Id = new Guid("32cf6a4d-241e-4138-9927-7cee554024fe"),
+                            Id = new Guid("9b44ae28-17ab-4663-b397-3860a83a5284"),
                             Name = "Freezed"
                         });
                 });
@@ -362,22 +362,22 @@ namespace Publicator.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("eab2c81c-cd7e-4f7d-ba79-686a3dd8a61e"),
+                            Id = new Guid("a29b5428-55b0-4518-a3de-1dfa6dbbba5b"),
                             Name = "Life"
                         },
                         new
                         {
-                            Id = new Guid("f5625976-84c0-4ece-ae08-fdf975417951"),
+                            Id = new Guid("e87ce936-94ba-42d0-a780-ca622920e2ac"),
                             Name = "Motorcycle"
                         },
                         new
                         {
-                            Id = new Guid("5d6de9ac-6c8e-4c15-b0bb-bd9020c7f325"),
+                            Id = new Guid("eb044179-5072-49cf-ac94-4c2b66e3f791"),
                             Name = "Car"
                         },
                         new
                         {
-                            Id = new Guid("d6ab3a80-9321-46a9-829d-388e0a6c47d5"),
+                            Id = new Guid("6ba013f1-1690-4804-b666-a426419b6a34"),
                             Name = "Politic"
                         });
                 });
@@ -439,29 +439,29 @@ namespace Publicator.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3de9d387-4cf9-44e4-a0af-0395f4531c86"),
-                            BeginStateDate = new DateTime(2020, 1, 21, 23, 17, 59, 244, DateTimeKind.Local).AddTicks(6066),
+                            Id = new Guid("afbc4e51-5279-4d93-ab05-40cff74088b2"),
+                            BeginStateDate = new DateTime(2020, 1, 25, 21, 43, 23, 960, DateTimeKind.Local).AddTicks(4198),
                             Email = "lineyk27gg@gmail.com",
                             EmailConfirmed = false,
                             EndStateDate = new DateTime(2050, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            JoinDate = new DateTime(2020, 1, 21, 23, 17, 59, 239, DateTimeKind.Local).AddTicks(4199),
+                            JoinDate = new DateTime(2020, 1, 25, 21, 43, 23, 954, DateTimeKind.Local).AddTicks(8070),
                             Nickname = "lineyk27gg",
                             PasswordHash = "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f",
-                            RoleId = new Guid("88d99ed8-8e71-4123-b235-d179db86ccdd"),
-                            StateId = new Guid("d9eafe03-b6cb-4bf8-bc19-197621eed68e")
+                            RoleId = new Guid("2677745d-48c4-424b-b5d2-98bc47b47aa3"),
+                            StateId = new Guid("30f367c3-7b13-4d5a-b9a1-fb57aca165c5")
                         },
                         new
                         {
-                            Id = new Guid("011438e9-5080-451f-9149-559d658b7b25"),
-                            BeginStateDate = new DateTime(2020, 1, 21, 23, 17, 59, 245, DateTimeKind.Local).AddTicks(510),
+                            Id = new Guid("1372c680-c3ec-4d3a-b45c-306c1825d5b0"),
+                            BeginStateDate = new DateTime(2020, 1, 25, 21, 43, 23, 960, DateTimeKind.Local).AddTicks(8702),
                             Email = "lineyk27@yandex.ru",
                             EmailConfirmed = false,
                             EndStateDate = new DateTime(2050, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            JoinDate = new DateTime(2020, 1, 21, 23, 17, 59, 245, DateTimeKind.Local).AddTicks(475),
+                            JoinDate = new DateTime(2020, 1, 25, 21, 43, 23, 960, DateTimeKind.Local).AddTicks(8661),
                             Nickname = "lineyk27",
                             PasswordHash = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
-                            RoleId = new Guid("88d99ed8-8e71-4123-b235-d179db86ccdd"),
-                            StateId = new Guid("d9eafe03-b6cb-4bf8-bc19-197621eed68e")
+                            RoleId = new Guid("2677745d-48c4-424b-b5d2-98bc47b47aa3"),
+                            StateId = new Guid("30f367c3-7b13-4d5a-b9a1-fb57aca165c5")
                         });
                 });
 
@@ -512,9 +512,9 @@ namespace Publicator.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8edeb646-d687-4b84-acf7-836c54a0befd"),
-                            SubscriberUserId = new Guid("3de9d387-4cf9-44e4-a0af-0395f4531c86"),
-                            SubscriptionUserId = new Guid("011438e9-5080-451f-9149-559d658b7b25")
+                            Id = new Guid("3470e86b-9a6d-4612-92b3-4cbc4dbe297f"),
+                            SubscriberUserId = new Guid("afbc4e51-5279-4d93-ab05-40cff74088b2"),
+                            SubscriptionUserId = new Guid("1372c680-c3ec-4d3a-b45c-306c1825d5b0")
                         });
                 });
 

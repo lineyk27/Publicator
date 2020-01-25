@@ -112,8 +112,9 @@ namespace Publicator.Presentation.Controllers.Api
         /// </summary>
         /// <param name="model"> Model represents paginated user posts by username</param>
         /// <returns>Posts created by user</returns>
-        // GET: api/posts?username=john03&page=3&pagesize=20
+        // GET: api/posts/user?username=john03&page=3&pagesize=20
         [HttpGet]
+        [Route("user")]
         public async Task<IActionResult> GetByCreatorUser([FromQuery]UserPostsRequest model)
         {
             if (!ModelState.IsValid)
@@ -132,8 +133,9 @@ namespace Publicator.Presentation.Controllers.Api
         /// </summary>
         /// <param name="model">Model represents paginated user posts posted in community</param>
         /// <returns></returns>
-        // GET: api/posts?communityid=123..32&page=3&pagesize=20
+        // GET: api/posts/community?communityid=123..32&page=3&pagesize=20
         [HttpGet]
+        [Route("community")]
         public async Task<IActionResult> GetByCommunity([FromQuery]CommunityPostsRequest model)
         {
             if (!ModelState.IsValid)
@@ -141,6 +143,34 @@ namespace Publicator.Presentation.Controllers.Api
 
             var community = await _communityService.GetByIdAsync(model.CommunityId);
             var posts = await _postService.GetByCommunity(community);
+            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+            return Ok(postsDTO);
+        }
+        /// <summary>
+        /// Get posts by search search
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        // GET: api/posts/search?query="any query search"&startdate=2019-10-21&enddate=2019-12-31&page=3&pagesize=20
+        [HttpGet]
+        [Route("search")]
+        public async Task<IActionResult> GetBysearch([FromQuery]SearchRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            _postService.Page = model.Page;
+            _postService.PageSize = model.PageSize;
+
+            var community = model.CommunityId != null ? await _communityService.GetByIdAsync((Guid)model.CommunityId) : null;
+            
+            var posts = await _postService.GetBySearchAsync(
+                model.Query,
+                model.StartDate,
+                model.EndDate,
+                model.MinimumRating,
+                community,
+                null);
+
             var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
             return Ok(postsDTO);
         }

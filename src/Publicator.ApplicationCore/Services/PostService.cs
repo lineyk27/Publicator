@@ -369,5 +369,42 @@ namespace Publicator.ApplicationCore.Services
                 .GetAsync(x => x.UserId == user.Id && x.PostId == post.Id))
                 .FirstOrDefault();
         }
+
+        public async Task<IEnumerable<Post>> GetBySearchAsync(
+            string query, 
+            DateTime? startDate, 
+            DateTime? endDate,
+            int? minRating,
+            Community community,
+            User creatorUser)
+        {
+            var result = await _unitOfWork
+                .PostRepository
+                .GetAsync(x => x.Name.ToLower().Contains(query) ||
+                x.Content.ToLower().Contains(query),includeProperties:"Community,PostTags.Tag");
+
+            if(community != null)
+            {
+                result = result.Where(x => x.CommunityId == community.Id);
+            }
+            if(startDate != null)
+            {
+                result = result.Where(x => startDate <= x.CreationDate);
+            }
+            if (endDate != null)
+            {
+                result = result.Where(x => x.CreationDate <= endDate);
+            }
+            if (minRating != null)
+            {
+                result = result.Where(x => x.CurrentRating >= minRating);
+            }
+            if(creatorUser != null)
+            {
+                result = result.Where(x => x.CreatorUserId == creatorUser.Id);
+            }
+            return result.Skip(GetStartPage()).Take(PageSize).OrderByDescending(x => x.CreationDate);
+
+        }
     }
 }
