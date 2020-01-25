@@ -18,17 +18,20 @@ namespace Publicator.Presentation.Controllers.Api
         private IPostService _postService;
         private IUserService _userService;
         private ICommunityService _communityService;
+        private ITagService _tagService;
         private IMapper _mapper;
         public PostsController(
             IPostService postService, 
             IMapper mapper, 
             IUserService userService,
-            ICommunityService communityService)
+            ICommunityService communityService,
+            ITagService tagService)
         {
             _postService = postService;
             _mapper = mapper;
             _userService = userService;
             _communityService = communityService;
+            _tagService = tagService;
         }
         /// <summary>
         /// Method return hot posts with paging and filtering
@@ -175,6 +178,30 @@ namespace Publicator.Presentation.Controllers.Api
 
             var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
             return Ok(postsDTO);
+        }
+        /// <summary>
+        /// Post created post
+        /// </summary>
+        /// <param name="model">Model with post info</param>
+        /// <returns>Ok if all ok</returns>
+        // GET: api/posts/create
+        [Authorize]
+        [HttpPost]
+        [Route("create")]
+        public async Task<IActionResult> CreatePost([FromBody]CreatePostRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            // TODO: must be recinsidered
+            var community = model.CommunityId != null ? await _communityService.GetByIdAsync((Guid)model.CommunityId) : null;
+
+            var tags = new List<Tag>();
+            foreach (var i in model.Tags)
+                tags.Add(await _tagService.CreateAsync(i));
+            
+            _postService.CreateAsync(model.Name, model.Content, community, tags);
+
+            return Ok();
         }
     }
 }

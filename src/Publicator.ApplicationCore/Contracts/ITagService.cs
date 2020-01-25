@@ -8,6 +8,6 @@ namespace Publicator.ApplicationCore.Contracts
     {
         public Task<Tag> GetByNameAsync(string name);
         public Task<IEnumerable<Tag>> GetByPostAsync(Post post);
-        public Task<Tag> Create(string name);
+        public Task<Tag> CreateAsync(string name);
     }
 }

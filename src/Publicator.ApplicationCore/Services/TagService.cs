@@ -31,7 +31,7 @@ namespace Publicator.ApplicationCore.Services
                 .Select(x => x.Tag);
         }
 
-        public async Task<Tag> Create(string name)
+        public async Task<Tag> CreateAsync(string name)
         {
             var found = await GetByNameAsync(name);
             if(found == null)
