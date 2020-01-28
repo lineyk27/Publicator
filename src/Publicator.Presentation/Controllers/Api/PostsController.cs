@@ -192,7 +192,7 @@ namespace Publicator.Presentation.Controllers.Api
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            // TODO: must be recinsidered
+
             var community = model.CommunityId != null ? await _communityService.GetByIdAsync((Guid)model.CommunityId) : null;
 
             var tags = new List<Tag>();
