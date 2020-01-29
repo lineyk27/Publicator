@@ -53,6 +53,7 @@ namespace Publicator.ApplicationCore.Services
             _tagService = tagService;
             _communityService = communityService;
             PageSize = 10;
+            Page = 1;
             Period = HotPeriod.Month;
         }
 
@@ -179,7 +180,7 @@ namespace Publicator.ApplicationCore.Services
         {
             foreach(var i in tags)
             {
-                var tag = _tagService.Create(i.Name);
+                var tag = await _tagService.CreateAsync(i.Name);
                 _unitOfWork.PostTagRepository.Insert(new PostTag()
                 {
                     PostId = post.Id,
