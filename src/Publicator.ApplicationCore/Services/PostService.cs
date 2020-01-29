@@ -176,7 +176,7 @@ namespace Publicator.ApplicationCore.Services
             AddTagsToPostAsync(post, tags);
         }
 
-        public void AddTagsToPostAsync(Post post, IEnumerable<Tag> tags)
+        public async void AddTagsToPostAsync(Post post, IEnumerable<Tag> tags)
         {
             foreach(var i in tags)
             {
