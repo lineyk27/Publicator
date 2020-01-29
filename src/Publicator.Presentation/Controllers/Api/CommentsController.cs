@@ -7,6 +7,7 @@ using Publicator.ApplicationCore.Contracts;
 using Publicator.Presentation.RequestModels;
 using Publicator.Infrastructure.Entities;
 using Publicator.ApplicationCore.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -41,6 +42,29 @@ namespace Publicator.Presentation.Controllers.Api
             var comments = await _commentsService.GetByPostAsync(post);
             var commentsDTO = _mapper.Map<IEnumerable<Comment>, IEnumerable<CommentDTO>>(comments);
             return Ok(commentsDTO);
+        }
+        /// <summary>
+        /// Create comment to post
+        /// </summary>
+        /// <param name="model">Model with comment info</param>
+        /// <returns>Ok if all is ok</returns>
+        // POST: api/comments/create
+        [Authorize]
+        [HttpPost]
+        [Route("create")]
+        public async Task<IActionResult> CreateComment(CreateCommentRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var post = await _postService.GetByIdAsync(model.PostId);
+            var parent = model.ParentCommentId != null
+                ? await _commentsService.GetByIdAsync((Guid)model.ParentCommentId)
+                : null;
+
+            _commentsService.AddToPost(post, model.Text, parent);
+
+            return Ok();
         }
     }
 }

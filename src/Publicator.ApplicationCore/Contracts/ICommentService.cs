@@ -12,6 +12,6 @@ namespace Publicator.ApplicationCore.Contracts
         public Task<Comment> GetByIdAsync(Guid id); 
         public Task<IEnumerable<Comment>> GetByPostAsync(Post post);
         public Task<IEnumerable<Comment>> GetByParentRepliedAsync(Comment parentrepliedcomment);
-        public void AddToPost(Post post, User creatoruser, string text, Comment parentreplied);
+        public void AddToPost(Post post, string text, Comment parentreplied);
     }
 }

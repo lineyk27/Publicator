@@ -12,6 +12,7 @@ namespace Publicator.ApplicationCore.Services
     class CommentService : ICommentService
     {
         private IUnitOfWork _unitOfWork;
+        private IUserService _userService;
         private int _page;
         private int _pageSize;
         public int Page
@@ -38,9 +39,10 @@ namespace Publicator.ApplicationCore.Services
                     _pageSize = value;
             }
         }
-        public CommentService(IUnitOfWork unitOfWork)
+        public CommentService(IUnitOfWork unitOfWork, IUserService userService)
         {
             _unitOfWork = unitOfWork;
+            _userService = userService;
             Page = 1;
             PageSize = 10;
         }
@@ -76,19 +78,21 @@ namespace Publicator.ApplicationCore.Services
                 .Take(PageSize)
                 .OrderByDescending(x => x.CreationDate);
         }
-        public void AddToPost(Post post, User creatoruser, string text, Comment parentreplied)
+        public async void AddToPost(Post post, string text, Comment parentreplied)
         {
             // TODO add logic for prevent xss atack
+            var user = await _userService.GetCurrentUserAsync();
             _unitOfWork
                 .CommentRepository
                 .Insert(new Comment()
                 {
                     PostId = post.Id,
-                    UserId = creatoruser.Id,
+                    UserId = user.Id,
                     Content = text,
                     CreationDate = DateTime.Now,
-                    ParentRepliedCommentId = parentreplied.Id
+                    ParentRepliedCommentId = parentreplied?.Id
                 });
+            _unitOfWork.Save();
         }
     }
 }
