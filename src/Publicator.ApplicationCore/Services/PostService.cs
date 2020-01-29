@@ -205,8 +205,9 @@ namespace Publicator.ApplicationCore.Services
             return (Page - 1) * PageSize;
         }
 
-        public async Task<IEnumerable<Post>> GetBookmarks(User user)
+        public async Task<IEnumerable<Post>> GetBookmarks()
         {
+            var user = await _userService.GetCurrentUserAsync();
             return (await _unitOfWork
                 .BookmarkRepository
                 .GetAsync(x => x.UserId == user.Id,includeProperties:"Post.PostTags.Tag"))

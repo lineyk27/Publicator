@@ -15,7 +15,7 @@ namespace Publicator.ApplicationCore.Contracts
         public Task<Post> GetByIdAsync(Guid postid);
         public Task<IEnumerable<Post>> GetBySubscriptionAsync(User user);
         public Task<IEnumerable<Post>> GetByCreatorAsync(User creatoruser);
-        public Task<IEnumerable<Post>> GetBookmarks(User user);
+        public Task<IEnumerable<Post>> GetBookmarks();
         public Task<IEnumerable<Post>> GetByCommunity(Community community);
         public Task<IEnumerable<Post>> GetVotedByCreatorAsync(User creatorvoteuser);
         public void AddSubscriptionNewPostAsync(Post post);
