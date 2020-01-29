@@ -21,7 +21,7 @@ namespace Publicator.Presentation.Controllers.Api
             _mapper = mapper;
         }
         /// <summary>
-        /// Get user bookmarks psots
+        /// Get user bookmarks posts
         /// </summary>
         /// <returns>Bookmarks posts</returns>
         // GET: api/bookmarks
