@@ -363,8 +363,9 @@ namespace Publicator.ApplicationCore.Services
             }
         }
 
-        public async Task<Vote> CurrentVoteAsync(User user, Post post)
+        public async Task<Vote> CurrentVoteAsync(Post post)
         {
+            var user = await _userService.GetCurrentUserAsync();
             return (await _unitOfWork
                 .VoteRepository
                 .GetAsync(x => x.UserId == user.Id && x.PostId == post.Id))
