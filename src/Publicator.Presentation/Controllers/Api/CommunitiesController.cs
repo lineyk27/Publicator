@@ -11,6 +11,9 @@ using Publicator.Presentation.ResponseModels;
 
 namespace Publicator.Presentation.Controllers.Api
 {
+    /// <summary>
+    /// Communities controller
+    /// </summary>
     public class CommunitiesController : BaseController
     {
         private ICommunityService _communityService;
@@ -56,6 +59,11 @@ namespace Publicator.Presentation.Controllers.Api
             var response = new NewResourceResponse() { Id = id };
             return Ok(response);
         }
+        /// <summary>
+        /// Get community by id
+        /// </summary>
+        /// <param name="model">Id of community model</param>
+        /// <returns>Community by id</returns>
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetById([FromRoute]IdRequest model)
