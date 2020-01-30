@@ -125,5 +125,17 @@ namespace Publicator.Presentation.Controllers
             var dto = _mapper.Map<User, UserDTO>(user);
             return Ok(dto);
         }
+        // PUT: api/account/picture
+        [HttpPut]
+        [Authorize]
+        [Route("picture")]
+        public IActionResult ChangeUserPicture(ChangePictureRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            _userService.ChangeUserPicture(model.Url);
+            return Ok();
+        }
     }
 }

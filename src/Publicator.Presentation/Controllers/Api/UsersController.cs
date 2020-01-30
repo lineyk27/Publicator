@@ -70,6 +70,11 @@ namespace Publicator.Presentation.Controllers.Api
             var userDTO = _mapper.Map<User, UserDTO>(user);
             return Ok(userDTO);
         }
+        /// <summary>
+        /// Subscribe on user
+        /// </summary>
+        /// <param name="model">User to subscribe model</param>
+        /// <returns>Current subscription state(subscribed or not)</returns>
         // GET: api/users/subscribe/123..23
         [HttpGet]
         [Authorize]

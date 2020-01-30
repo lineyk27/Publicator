@@ -16,6 +16,39 @@ namespace Publicator.ApplicationCore.Services
         {
             _unitOfWork = unitOfWork;
         }
+
+        public void ChangePicture(Community community, string url)
+        {
+            community.PictureName = url;
+            _unitOfWork.CommunityRepository.Update(community);
+            _unitOfWork.Save();
+        }
+
+        public async Task<Guid> CreateNewAsync(string name, string description, string imageUrl)
+        {
+            var current = (await _unitOfWork
+                .CommunityRepository
+                .GetAsync(x => x.Name.ToLower() == name.ToLower()))
+                .FirstOrDefault();
+            if(current == null)
+            {
+                var newcomm = new Community()
+                {
+                    Name = name,
+                    Description = description,
+                    PictureName = imageUrl,
+                    CreationDate = DateTime.Now
+                };
+                _unitOfWork.CommunityRepository.Insert(newcomm);
+                _unitOfWork.Save();
+                return newcomm.Id;
+            }
+            else
+            {
+                throw new Exception("Community with the name is already exist");
+            }
+        }
+
         public async Task<IEnumerable<Community>> GetAllAsync()
         {
             return await _unitOfWork

@@ -236,5 +236,13 @@ namespace Publicator.ApplicationCore.Services
                 return false;
             }
         }
+
+        public async void ChangeUserPicture(string url)
+        {
+            var user = await GetCurrentUserAsync();
+            user.PictureName = url;
+            _unitOfWork.UserRepository.Update(user);
+            _unitOfWork.Save();
+        }
     }
 }

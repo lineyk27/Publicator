@@ -12,5 +12,7 @@ namespace Publicator.ApplicationCore.Contracts
         public Task<IEnumerable<Community>> GetBySearchAsync(string query);
         public Task<IEnumerable<Community>> GetBySubscriberUserAsync(User subscriberuser);
         public Task<Community> GetByPostAsync(Post post);
+        public void ChangePicture(Community community, string url);
+        public Task<Guid> CreateNewAsync(string name, string description, string imageUrl);
     }
 }
