@@ -58,15 +58,21 @@ namespace Publicator.ApplicationCore.Services
 
         public async Task<User> GetByIdAsync(Guid id)
         {
-            return await _unitOfWork.UserRepository.GetByIdAsync(id);
+            var user = (await _unitOfWork
+                .UserRepository
+                .GetAsync(x => x.Id == id))
+                .FirstOrDefault();
+            if (user == null)
+                throw new ResourceNotFoundException("User not found");
+            return user;
         }
 
         public async Task<User> GetByPostAsync(Post post)
         {
-
-            return await _unitOfWork
+            return (await _unitOfWork
                 .UserRepository
-                .GetByIdAsync(post.CreatorUserId);
+                .GetAsync(x => x.Id == post.CreatorUserId,includeProperties:"Role"))
+                .FirstOrDefault();
         }
         public async Task<IEnumerable<User>> GetByRoleAsync(Role role)
         {
