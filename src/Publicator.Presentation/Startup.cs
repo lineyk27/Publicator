@@ -14,6 +14,7 @@ using Publicator.ApplicationCore;
 using Publicator.ApplicationCore.Helpers;
 using Publicator.Presentation.Helpers;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 
 namespace Publicator.Presentation
 {
@@ -60,6 +61,10 @@ namespace Publicator.Presentation
                         IssuerSigningKey = new SymmetricSecurityKey(key)
                     };
                 });
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/build";
+            });
 
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -68,17 +73,31 @@ namespace Publicator.Presentation
             {
                 app.UseDeveloperExceptionPage();
             }
+            // TODO: add http
+            //app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseRouting();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}");
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
 
             app.UseExceptionHandler(errorApp =>
