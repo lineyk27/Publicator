@@ -27,7 +27,7 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/bookmarks
         [Authorize]
         [HttpGet]
-        [Route("/")]
+        [Route("current")]
         public async Task<IActionResult> GetBookmarks()
         {
             var posts = await _postService.GetBookmarks();
