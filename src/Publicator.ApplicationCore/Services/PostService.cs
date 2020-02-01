@@ -9,6 +9,7 @@ using Publicator.Infrastructure.Interfaces;
 
 namespace Publicator.ApplicationCore.Services
 {
+    // TODO: !!! Change dto !!!
     public class PostService : IPostService
     {
         private IUnitOfWork _unitOfWork;
@@ -194,7 +195,7 @@ namespace Publicator.ApplicationCore.Services
         {
             return (await _unitOfWork
                 .PostRepository
-                .GetAsync(includeProperties: "PostTags.Tag"))
+                .GetAsync(includeProperties: "PostTags.Tag, CreatorUser"))
                 .OrderByDescending(x => x.CreationDate)
                 .Skip(GetStartPage())
                 .Take(PageSize);
@@ -210,7 +211,7 @@ namespace Publicator.ApplicationCore.Services
             var user = await _userService.GetCurrentUserAsync();
             return (await _unitOfWork
                 .BookmarkRepository
-                .GetAsync(x => x.UserId == user.Id,includeProperties:"Post.PostTags.Tag"))
+                .GetAsync(x => x.UserId == user.Id,includeProperties: "Post.PostTags.Tag, Post.CreatorUser"))
                 .Select(x => x.Post)
                 .OrderByDescending(x => x.CreationDate)
                 .Skip(GetStartPage())
@@ -241,7 +242,7 @@ namespace Publicator.ApplicationCore.Services
             var startPage = (Page - 1) * PageSize;
             var posts = (await _unitOfWork
                 .PostRepository
-                .GetAsync(includeProperties: "PostTags.Tag"))
+                .GetAsync(includeProperties: "PostTags.Tag, CreatorUser"))
                 .Where(x => x.CreationDate <= endDate && x.CreationDate >= startDate)
                 .OrderByDescending(x => (x.CurrentRating / periodDate))
                 .Skip(startPage)
@@ -254,7 +255,7 @@ namespace Publicator.ApplicationCore.Services
         {
             return (await _unitOfWork
                 .CommunityRepository
-                .GetAsync(x => x.Id == community.Id, includeProperties: "Posts.PostTags.Tag"))
+                .GetAsync(x => x.Id == community.Id, includeProperties: "Posts.PostTags.Tag, Posts.CreatorUser"))
                 .FirstOrDefault()
                 .Posts
                 .OrderByDescending(x => x.CreationDate)
@@ -266,7 +267,7 @@ namespace Publicator.ApplicationCore.Services
         {
             return (await _unitOfWork
                 .PostRepository
-                .GetAsync(x => x.CreatorUserId == creatoruser.Id,includeProperties:"PostTags.Tag"))
+                .GetAsync(x => x.CreatorUserId == creatoruser.Id,includeProperties: "PostTags.Tag, CreatorUser"))
                 .OrderByDescending(x => x.CreationDate)
                 .Skip(GetStartPage())
                 .Take(PageSize);
@@ -276,7 +277,7 @@ namespace Publicator.ApplicationCore.Services
         {
             var post = (await _unitOfWork
                 .PostRepository
-                .GetAsync(x => x.Id == postid,includeProperties:"PostTags.Tag"))
+                .GetAsync(x => x.Id == postid,includeProperties: "PostTags.Tag, CreatorUser"))
                 .FirstOrDefault();
             if (post == null)
                 throw new ResourceNotFoundException("Post not found");
@@ -287,7 +288,7 @@ namespace Publicator.ApplicationCore.Services
         {
             return (await _unitOfWork
                 .SubscriptionNewPostRepository
-                .GetAsync(x => x.SubscriptionUserId == user.Id, includeProperties: "Post.PostTags.Tag"))
+                .GetAsync(x => x.SubscriptionUserId == user.Id, includeProperties: "Post.PostTags.Tag, Post.CreatorUser"))
                 .Select(x => x.Post)
                 .OrderByDescending(x => x.CreationDate)
                 .Skip(GetStartPage())
@@ -298,7 +299,7 @@ namespace Publicator.ApplicationCore.Services
         {
             return (await _unitOfWork
                 .PostTagRepository
-                .GetAsync(x => x.TagId == tag.Id,includeProperties:"Post.PostTags.Tag"))
+                .GetAsync(x => x.TagId == tag.Id,includeProperties: "Post.PostTags.Tag, Post.CreatorUser"))
                 .Select(x => x.Post)
                 .OrderByDescending(x => x.CreationDate)
                 .Skip(GetStartPage())
@@ -324,7 +325,7 @@ namespace Publicator.ApplicationCore.Services
         {
             return (await _unitOfWork
                 .PostRepository
-                .GetAsync(x => x.Votes.Any(t => t.UserId == creatorvoteuser.Id), includeProperties:"Votes,PostTags.Tag"))
+                .GetAsync(x => x.Votes.Any(t => t.UserId == creatorvoteuser.Id), includeProperties: "Votes, PostTags.Tag, CreatorUser"))
                 .OrderByDescending(x => x.CreationDate)
                 .Skip(GetStartPage())
                 .Take(PageSize);
@@ -384,7 +385,7 @@ namespace Publicator.ApplicationCore.Services
             var result = await _unitOfWork
                 .PostRepository
                 .GetAsync(x => x.Name.ToLower().Contains(query) ||
-                x.Content.ToLower().Contains(query),includeProperties:"Community,PostTags.Tag");
+                x.Content.ToLower().Contains(query),includeProperties: "Community, PostTags.Tag, CreatorUser");
 
             if(community != null)
             {
