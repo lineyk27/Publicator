@@ -32,7 +32,7 @@ namespace Publicator.Presentation.Controllers.Api
         [Authorize(Roles = "Admin, Moderator")]
         [HttpPut]
         [Route("picture")]
-        public async Task<IActionResult> ChangeCommunityPicture([FromQuery]ChangeCommunityPictureRequest model)
+        public async Task<IActionResult> ChangeCommunityPicture([FromBody]ChangeCommunityPictureRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest();

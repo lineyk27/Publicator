@@ -39,7 +39,7 @@ namespace Publicator.Presentation.Controllers
         /// </summary>
         /// <param name="model">Model with login and password fields</param>
         /// <returns>If auth succesfull, return auth token, either - error</returns>
-        // POST: api/login
+        // POST: api/account/login
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody]LoginRequest model)
@@ -74,7 +74,7 @@ namespace Publicator.Presentation.Controllers
         /// </summary>
         /// <param name="model">Model with user information needed for registration process</param>
         /// <returns>If register succesfull then OkResult, either error</returns>
-        // POST: api/register
+        // POST: api/account/register
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody]RegisterRequest model)
@@ -95,7 +95,7 @@ namespace Publicator.Presentation.Controllers
         /// <param name="id">Id of user to confirm</param>
         /// <param name="token">Token for user to confirm</param>
         /// <returns>If user confirmed - true, else false of erroro if user not found</returns>
-        // GET: api/confirm?id=231..54&token=351..35
+        // GET: api/account/confirm?id=231..54&token=351..35
         [Route("confirm")]
         public async Task<IActionResult> ConfirmAccount([FromQuery] Guid id, [FromQuery]string token)
         {
@@ -116,7 +116,7 @@ namespace Publicator.Presentation.Controllers
         /// Method to return current authenticated user
         /// </summary>
         /// <returns>UserDTO of authenricated user</returns>
-        // GET: /api/current
+        // GET: /api/account/current
         [Authorize]
         [Route("current")]
         public async Task<IActionResult> CurrentUser()

@@ -1,17 +1,17 @@
 import React from 'react';
 import './App.css';
-import {BrowserRouter as Router, Link} from "react-router-dom";
+import {Navbar} from "./Navbar";
+import {BrowserRouter as Router} from "react-router-dom";
 
-const App = () => {
-  return (
-    <div className="App">
-      <Router>
-        <Link to="/home">
+class App extends React.Component {
 
-        </Link>
-      </Router>
-    </div>
-  );
+  render() {
+    return (
+        <Router>
+          <Navbar />
+        </Router>
+      );
+  }
 }
 
 export default App;

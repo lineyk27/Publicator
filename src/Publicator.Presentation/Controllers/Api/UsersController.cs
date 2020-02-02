@@ -75,8 +75,8 @@ namespace Publicator.Presentation.Controllers.Api
         /// </summary>
         /// <param name="model">User to subscribe model</param>
         /// <returns>Current subscription state(subscribed or not)</returns>
-        // GET: api/users/subscribe/123..23
-        [HttpGet]
+        // PUT: api/users/subscribe/123..23
+        [HttpPut]
         [Authorize]
         [Route("subscribe")]
         public async Task<IActionResult> SubscribeUser([FromRoute]UsernameRequest model)
