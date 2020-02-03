@@ -139,13 +139,15 @@ namespace Publicator.ApplicationCore.Services
                 .GetAsync(x => x.SubscriberUserId == subscriberuser.Id, includeProperties: "SubscriptionUser"))
                 .Select(x => x.SubscriberUser);
         }
-
         public async Task<User> GetByEmailAsync(string email)
         {
-            return (await _unitOfWork
+            var user = (await _unitOfWork
                 .UserRepository
                 .GetAsync(x => x.Email == email,includeProperties:"Role"))
                 .FirstOrDefault();
+            if(user == null)
+                throw new ResourceNotFoundException("User not found");
+            return user;
         }
 
         public async Task<User> LoginAsync(string login, string password)
