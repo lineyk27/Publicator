@@ -73,8 +73,11 @@ namespace Publicator.Presentation
             {
                 app.UseDeveloperExceptionPage();
             }
-            // TODO: add http
-            //app.UseHttpsRedirection();
+            else
+            {
+                app.UseHsts();
+            }
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
