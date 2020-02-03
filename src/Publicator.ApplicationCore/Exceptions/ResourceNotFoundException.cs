@@ -2,7 +2,7 @@
 
 namespace Publicator.ApplicationCore.Exceptions
 {
-    class ResourceNotFoundException : Exception
+    public class ResourceNotFoundException : Exception
     {
         public ResourceNotFoundException() : base() 
         {

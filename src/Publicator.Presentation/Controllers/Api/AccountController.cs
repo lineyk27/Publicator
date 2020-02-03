@@ -125,6 +125,11 @@ namespace Publicator.Presentation.Controllers
             var dto = _mapper.Map<User, UserDTO>(user);
             return Ok(dto);
         }
+        /// <summary>
+        /// Change user pic
+        /// </summary>
+        /// <param name="model">Model with image url</param>
+        /// <returns>Ok if all ok</returns>
         // PUT: api/account/picture
         [HttpPut]
         [Authorize]

@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Options;
 using Publicator.ApplicationCore.Contracts;
+using Publicator.ApplicationCore.Exceptions;
 using Publicator.ApplicationCore.Helpers;
 
 namespace Publicator.ApplicationCore.Services
@@ -29,8 +31,14 @@ namespace Publicator.ApplicationCore.Services
             smtpClient.Port = 587;
             smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
             smtpClient.EnableSsl = true;
-            await smtpClient.SendMailAsync(mail);
-
+            try
+            {
+                await smtpClient.SendMailAsync(mail);
+            }
+            catch (InvalidOperationException e)
+            {
+                throw new ResourceException(e.Message);
+            }
         }
     }
 }

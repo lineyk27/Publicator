@@ -13,8 +13,8 @@ using Publicator.Infrastructure;
 using Publicator.ApplicationCore;
 using Publicator.ApplicationCore.Helpers;
 using Publicator.Presentation.Helpers;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Publicator.Presentation.Handlers;
 
 namespace Publicator.Presentation
 {
@@ -78,6 +78,8 @@ namespace Publicator.Presentation
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -97,26 +99,6 @@ namespace Publicator.Presentation
                 }
             });
 
-            app.UseExceptionHandler(errorApp =>
-            {
-                errorApp.Run(async context =>
-                {
-                    context.Response.StatusCode = 400;
-                    context.Response.ContentType = "application/json";
-
-                    var error = context.Features.Get<IExceptionHandlerFeature>();
-                    if (error != null)
-                    {
-                        var ex = error.Error;
-
-                        await context.Response.WriteAsync(new Error()
-                        {
-                            Code = 400,
-                            Message = ex.Message
-                        }.ToString(), Encoding.UTF8);
-                    }
-                });
-            });
         }
     }
 }

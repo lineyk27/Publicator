@@ -45,7 +45,7 @@ namespace Publicator.ApplicationCore.Services
             }
             else
             {
-                throw new Exception("Community with the name is already exist");
+                throw new ResourceException("Community with the name is already exist");
             }
         }
 

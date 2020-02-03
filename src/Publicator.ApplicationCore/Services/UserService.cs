@@ -113,7 +113,6 @@ namespace Publicator.ApplicationCore.Services
 
         public async Task<User> GetCurrentUserAsync()
         {
-            // TODO must be reconsidered
             var username = _httpContextAccessor.HttpContext.User?.Identity.Name;
             if(username != null)
             {
@@ -121,8 +120,7 @@ namespace Publicator.ApplicationCore.Services
             }
             else
             {
-                // TODO create custom exception
-                throw new Exception("User is not authenticated");
+                throw new AuthentificationException("User is not authenticated");
             }
         }
 
@@ -162,7 +160,7 @@ namespace Publicator.ApplicationCore.Services
                 return user;
             }
             else if (!user.EmailConfirmed)
-                throw new Exception("Account is not confirmed");
+                throw new AuthentificationException("Account is not confirmed");
             Debug.WriteLine($"{passwordhash} - {user.PasswordHash}");
             throw new Exception("Login or password is not correct");
         }
@@ -212,7 +210,7 @@ namespace Publicator.ApplicationCore.Services
             finally
             {
                 if (user != null)
-                    throw new Exception("User with the username is already exist");
+                    throw new ResourceException("User with the username is already exist");
             }
         }
 

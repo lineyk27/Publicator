@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Publicator.ApplicationCore.Contracts;
+using Publicator.ApplicationCore.Exceptions;
 using Publicator.Infrastructure.Entities;
 using Publicator.Infrastructure.Interfaces;
 
@@ -17,10 +18,13 @@ namespace Publicator.ApplicationCore.Services
         }
         public async Task<Tag> GetByNameAsync(string name)
         {
-            return (await _unitOfWork
+            var tag = (await _unitOfWork
                 .TagRepository
                 .GetAsync(x => x.Name.ToLower() == name.ToLower()))
                 .FirstOrDefault();
+            if (tag == null)
+                throw new ResourceNotFoundException("Tag not found");
+            return tag;
         }
 
         public async Task<IEnumerable<Tag>> GetByPostAsync(Post post)
