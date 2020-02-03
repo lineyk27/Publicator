@@ -1,16 +1,16 @@
 import React from 'react';
 import './App.css';
-import {Navbar} from "./Navbar";
-import {BrowserRouter as Router} from "react-router-dom";
+import LoginForm from './LoginForm';
+import store from "../store";
 
 class App extends React.Component {
 
   render() {
+    <Provider > 
     return (
-        <Router>
-          <Navbar />
-        </Router>
+        <LoginForm />
       );
+    </Provider>
   }
 }
 

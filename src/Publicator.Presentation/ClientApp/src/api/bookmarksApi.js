@@ -2,7 +2,7 @@ import requests from ".";
 
 const BASE_URL = "/api/bookmarks";
 
-export var BookmarksAPI = {
+export default BookmarksAPI = {
     byCurrent : () => {
         return requests.get(`${BASE_URL}/current`);
     },

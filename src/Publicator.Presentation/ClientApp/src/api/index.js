@@ -9,4 +9,8 @@ const getToken = () => {
     return window.localStorage.getItem("Authorization");
 };
 
+export const setToken = (token) => {
+    window.localStorage.setItem("Authorization", token);
+}
+
 export default requests;

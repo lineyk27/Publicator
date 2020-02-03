@@ -2,7 +2,7 @@ import requests from ".";
 
 const BASE_URL = "/api/account";
 
-export var AccountAPI = {
+export default AccountAPI = {
     current: () =>{
         return requests.get(`${BASE_URL}/current`)
     },
