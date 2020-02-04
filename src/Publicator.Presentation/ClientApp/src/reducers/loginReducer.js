@@ -1,4 +1,8 @@
-import { LOGIN_BEGIN,LOGIN_FAILURE, LOGIN_SUCCESFULL } from "../actionTypes";
+import { 
+    LOGIN_BEGIN,
+    LOGIN_FAILURE, 
+    LOGIN_SUCCESFULL 
+} from "../actionTypes";
 
 const initialState = {isAuthorized: false, userInfo: null, loading: false, error: false};
 
