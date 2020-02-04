@@ -14,7 +14,7 @@ const postViewSuccesfull = (post) => ({
     payload: post
 });
 
-const psotViewFailure = () => ({
+const postViewFailure = () => ({
     type: POST_VIEW_FAILURE
 });
 
