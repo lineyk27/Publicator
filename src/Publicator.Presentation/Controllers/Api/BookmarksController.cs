@@ -15,23 +15,31 @@ namespace Publicator.Presentation.Controllers.Api
     {
         IPostService _postService;
         IMapper _mapper;
-        public BookmarksController(IPostService postService, IMapper mapper)
+        IAggregationService _aggregationService;
+        IUserService _userService;
+        public BookmarksController(IPostService postService, 
+            IMapper mapper, 
+            IAggregationService aggregationService,
+            IUserService userService)
         {
             _postService = postService;
             _mapper = mapper;
+            _aggregationService = aggregationService;
+            _userService = userService;
         }
         /// <summary>
         /// Get user bookmarks posts
         /// </summary>
         /// <returns>Bookmarks posts</returns>
-        // GET: api/bookmarks
+        // GET: api/bookmarks/current
         [Authorize]
         [HttpGet]
         [Route("current")]
         public async Task<IActionResult> GetBookmarks()
         {
             var posts = await _postService.GetBookmarks();
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+            var curruser = await _userService.TryGetCurrentAsync();
+            var postsDTO = _aggregationService.AggregateWithBookmarkVote(posts, curruser);
             return Ok(postsDTO);
         }
         /// <summary>
@@ -39,7 +47,7 @@ namespace Publicator.Presentation.Controllers.Api
         /// </summary>
         /// <param name="model">Post tha must be bookmarked</param>
         /// <returns>Curent state of bookmark(exist or not)</returns>
-        // PUT: api/bookmarks/create?postid=123..23
+        // PUT: api/bookmarks/create
         [Authorize]
         [HttpPut]
         [Route("create")]
