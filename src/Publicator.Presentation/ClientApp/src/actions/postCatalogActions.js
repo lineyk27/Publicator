@@ -4,7 +4,10 @@ import {
     POST_CATALOG_SUCCESFULL,
     POST_CATALOG_TYPE_SUBSCRIPTION,
     POST_CATALOG_TYPE_NEW,
-    POST_CATALOG_TYPE_HOT
+    POST_CATALOG_TYPE_HOT,
+    POST_CATALOG_TYPE_BY_COMMUNITY,
+    POST_CATALOG_TYPE_BY_SEARCH,
+    POST_CATALOG_TYPE_USER_SUBSCRIPTION
 } from "../actionTypes";
 import PostsAPI from "../api/postsApi";
 
@@ -42,6 +45,47 @@ function loadPostCatalog(catalogType, page, pageSize, period){
     }
 }
 
+function loadBySubscriptionPostCatalog(username, page, pageSize){
+    return dispatch => {
+        dispatch(postCatalogBegin(POST_CATALOG_TYPE_USER_SUBSCRIPTION));
+        return PostsAPI.bySubscription(username, page, pageSize)
+            .then(response => {
+                let posts = response.data;
+                dispatch(postCatalogSuccess(posts, POST_CATALOG_TYPE_USER_SUBSCRIPTION));
+            }).catch(error => {
+                console.log(error.status, error.data.message);
+            });
+    }
+}
+
+function loadByCommunityPostCatalog(communityId, page, pageSize){
+    return dispatch => {
+        dispatch(postCatalogBegin(POST_CATALOG_TYPE_BY_COMMUNITY));
+        return PostsAPI.byCommunity(communityId, page, pageSize)
+            .then(response => {
+                let posts = response.data;
+                dispatch(postCatalogSuccess(posts, POST_CATALOG_TYPE_BY_COMMUNITY));
+            }).catch( error => {
+                dispatch(postCatalogFailure(POST_CATALOG_TYPE_BY_COMMUNITY));
+                console.log(error.status, error.data.message);
+            });
+    }
+}
+
+function loadBySearchPostCatalog(query, startdate, enddate, page, pageSize){
+    return dispatch => {
+        dispatch(postCatalogBegin(POST_CATALOG_TYPE_BY_SEARCH));
+        return PostsAPI.bySearch(query, startdate, enddate, page, pageSize)
+            .then(response => {
+                let posts = response.data;
+                dispatch(postCatalogSuccess(posts, POST_CATALOG_TYPE_BY_SEARCH));
+            }).catch(error => {
+                console.log(error.status, error.data.message);
+                dispatch(postCatalogFailure(POST_CATALOG_TYPE_BY_SEARCH));
+            });
+    };
+}
+
 function methodByCatalogType(catalogType){
     switch(catalogType){
         case POST_CATALOG_TYPE_NEW:
@@ -56,5 +100,8 @@ function methodByCatalogType(catalogType){
 }
 
 export {
-    loadPostCatalog
+    loadPostCatalog,
+    loadBySearchPostCatalog,
+    loadBySubscriptionPostCatalog,
+    loadByCommunityPostCatalog
 }

@@ -49,7 +49,7 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/users/post?postid=123..23
         [HttpGet]
         [Route("post")]
-        public async Task<IActionResult> GetByPost(IdRequest model)
+        public async Task<IActionResult> GetByPost([FromRoute]IdRequest model)
         {
             var post = await _postService.GetByIdAsync(model.Id);
             var user = await _userService.GetByIdAsync(post.CreatorUserId);
@@ -75,11 +75,11 @@ namespace Publicator.Presentation.Controllers.Api
         /// </summary>
         /// <param name="model">User to subscribe model</param>
         /// <returns>Current subscription state(subscribed or not)</returns>
-        // PUT: api/users/subscribe/123..23
+        // PUT: api/users/subscribe
         [HttpPut]
         [Authorize]
         [Route("subscribe")]
-        public async Task<IActionResult> SubscribeUser([FromRoute]UsernameRequest model)
+        public async Task<IActionResult> SubscribeUser([FromBody]UsernameRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

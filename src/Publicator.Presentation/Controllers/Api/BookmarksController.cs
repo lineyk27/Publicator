@@ -43,7 +43,7 @@ namespace Publicator.Presentation.Controllers.Api
         [Authorize]
         [HttpPut]
         [Route("create")]
-        public async Task<IActionResult> CreateBookmark([FromQuery]BookmarkRequest model)
+        public async Task<IActionResult> CreateBookmark([FromBody]BookmarkRequest model)
         {
             if (ModelState.IsValid)
                 return BadRequest(ModelState);
