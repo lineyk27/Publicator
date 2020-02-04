@@ -46,7 +46,7 @@ function setCurrent(){
                 dispatch(loginSuccesfull(userInfo));
             })
             .catch(error => {
-                console.log(error.status, error.data.Message)
+                console.log(error.response.status, error.response.data.Message)
                 dispatch(loginFailure());
             })
     }

@@ -26,7 +26,7 @@ function loadPostView(postId){
                 let post = response.data;
                 dispatch(postViewSuccesfull(post));
             }).catch(error => {
-                console.log(error.status, error.data.message);
+                console.log(error.response.status, error.response.data.message);
                 dispatch(postViewFailure());
             });
     }

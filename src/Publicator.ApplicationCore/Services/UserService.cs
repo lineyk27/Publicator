@@ -199,33 +199,40 @@ namespace Publicator.ApplicationCore.Services
             try
             {
                 user = await GetByUsernameAsync(username);
-                user = await GetByEmailAsync(email);
             }
             catch
             {
-                var id = Guid.NewGuid();
-                var role = await _roleService.GetByNameAsync("Simple");
-                var state = await _stateService.GetByNameAsync("Active");
-                var newuser = new User()
+                try
                 {
-                    Id = id,
-                    JoinDate = DateTime.Now,
-                    PasswordHash = _passwordService.Encrypt(password),
-                    Nickname = username,
-                    Email = email,
-                    EmailConfirmed = false,
-                    RoleId = role.Id,
-                    StateId = state.Id
-                };
-                _unitOfWork.UserRepository.Insert(newuser);
-                _unitOfWork.Save();
-                var emailtext = GetConfirmEmailText(id, id.ToString("D"));
-                _emailService.SendEmailAsync(email, "Publicator", emailtext);
+                    user = await GetByEmailAsync(email);
+                }
+                catch(ResourceException e)
+                {
+                    var id = Guid.NewGuid();
+                    var role = await _roleService.GetByNameAsync("Simple");
+                    var state = await _stateService.GetByNameAsync("Active");
+                    var newuser = new User()
+                    {
+                        Id = id,
+                        JoinDate = DateTime.Now,
+                        PasswordHash = _passwordService.Encrypt(password),
+                        Nickname = username,
+                        Email = email,
+                        EmailConfirmed = false,
+                        RoleId = role.Id,
+                        StateId = state.Id
+                    };
+                    _unitOfWork.UserRepository.Insert(newuser);
+                    _unitOfWork.Save();
+                    var emailtext = GetConfirmEmailText(id, id.ToString("D"));
+                    _emailService.SendEmailAsync(email, "Publicator", emailtext);
+                    return;
+                }
+                throw new ResourceException("User with the email is already exist");
             }
             finally
             {
-                if (user != null)
-                    throw new ResourceException("User with the username is already exist");
+                throw new ResourceException("User with the username is already exist");
             }
         }
 

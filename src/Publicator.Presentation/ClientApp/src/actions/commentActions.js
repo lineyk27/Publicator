@@ -46,7 +46,7 @@ function loadComments(postId, page, pageSize){
                 if(comments.length == 0) dispatch(getCommentsEmpty());
                 else dispatch(getCommentsSuccesfull(comments));
             }).catch(error => {
-                console.log(error.status, error.data.message);
+                console.log(error.response.status, error.response.data.message);
                 dispatch(getCommentsEmpty());
             });
     }
@@ -60,7 +60,7 @@ function createComment(postId, text, parentCommentId){
                 let comment = response.data;
                 dispatch(createCommentSuccesfull(replyCommentId, comment));
             }).catch(error => {
-                console.log(error.status, error.data.message);
+                console.log(error.response.status, error.response.data.message);
                 dispatch(createCommentFailure(parentCommentId));
             });
     }

@@ -39,7 +39,7 @@ function loadPostCatalog(catalogType, page, pageSize, period){
             })
             .catch(error => {
                 // TODO must be reconsidered
-                console.log(error.status, error.data.message);
+                console.log(error.response.status, error.response.data.message);
                 dispatch(postCatalogFailure(catalogType));
             })
     }
@@ -53,7 +53,8 @@ function loadBySubscriptionPostCatalog(username, page, pageSize){
                 let posts = response.data;
                 dispatch(postCatalogSuccess(posts, POST_CATALOG_TYPE_USER_SUBSCRIPTION));
             }).catch(error => {
-                console.log(error.status, error.data.message);
+                console.log(error.response.status, error.response.data.message);
+                dispatch(postCatalogFailure(POST_CATALOG_TYPE_USER_SUBSCRIPTION));
             });
     }
 }
@@ -66,8 +67,8 @@ function loadByCommunityPostCatalog(communityId, page, pageSize){
                 let posts = response.data;
                 dispatch(postCatalogSuccess(posts, POST_CATALOG_TYPE_BY_COMMUNITY));
             }).catch( error => {
+                console.log(error.response.status, error.response.data.message);
                 dispatch(postCatalogFailure(POST_CATALOG_TYPE_BY_COMMUNITY));
-                console.log(error.status, error.data.message);
             });
     }
 }
@@ -80,7 +81,7 @@ function loadBySearchPostCatalog(query, startdate, enddate, page, pageSize){
                 let posts = response.data;
                 dispatch(postCatalogSuccess(posts, POST_CATALOG_TYPE_BY_SEARCH));
             }).catch(error => {
-                console.log(error.status, error.data.message);
+                console.log(error.response.status, error.response.data.message);
                 dispatch(postCatalogFailure(POST_CATALOG_TYPE_BY_SEARCH));
             });
     };
