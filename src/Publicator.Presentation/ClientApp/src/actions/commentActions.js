@@ -43,9 +43,11 @@ function loadComments(postId, page, pageSize){
         CommentsAPI.byPost(postId, page, pageSize)
             .then(response => {
                 let comments = response.data;
-                dispatch(createCommentSuccesfull(comments));
+                if(comments.length == 0) dispatch(getCommentsEmpty());
+                else dispatch(getCommentsSuccesfull(comments));
             }).catch(error => {
                 console.log(error.status, error.data.message);
+                dispatch(getCommentsEmpty());
             });
     }
 }
