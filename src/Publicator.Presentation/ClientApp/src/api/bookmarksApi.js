@@ -1,9 +1,9 @@
 import {requests} from "./index";
 
-const BASE_URL = "/api/bookmatrks";
+const BASE_URL = "/api/bookmarks";
 
 const BookmarksAPI = {
-    current: () => {
+    bookmarks: () => {
         return requests.get(`${BASE_URL}/current`);
     },
     create: (postId) => {
