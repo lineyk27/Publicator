@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Publicator.ApplicationCore.DTO
+﻿namespace Publicator.ApplicationCore.DTO
 {
     public class VoteDTO
     {

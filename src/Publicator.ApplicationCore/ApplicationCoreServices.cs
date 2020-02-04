@@ -20,6 +20,7 @@ namespace Publicator.ApplicationCore
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IStateService, StateService>();
             services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IAggregationService, AggregationService>();
             return services;
         }
     }

@@ -21,6 +21,8 @@ namespace Publicator.ApplicationCore
             CreateMap<Vote, VoteDTO>()
                 .ForMember(dto => dto.Up, e => e.MapFrom(x => x.Up == true))
                 .ForMember(dto => dto.Down, e => e.MapFrom(x => x.Up == false));
+            CreateMap<Bookmark, BookmarkDTO>()
+                .ForMember(dto => dto.Bookmarked, e => e.NullSubstitute(false));
         }
     }
 }
