@@ -65,3 +65,8 @@ function createComment(postId, text, parentCommentId){
             });
     }
 }
+
+export {
+    loadComments,
+    createComment
+};

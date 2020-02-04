@@ -44,12 +44,17 @@ function loadPostCatalog(catalogType, page, pageSize, period){
 
 function methodByCatalogType(catalogType){
     switch(catalogType){
-        default:
-        case POST_CATALOG_TYPE_HOT:
-            return PostsAPI.hot;
         case POST_CATALOG_TYPE_NEW:
             return PostsAPI.new;
         case POST_CATALOG_TYPE_SUBSCRIPTION:
             return PostsAPI.bySubscription;
+        case POST_CATALOG_TYPE_HOT:
+        default:
+            return PostsAPI.hot;
+
     }
+}
+
+export {
+    loadPostCatalog
 }
