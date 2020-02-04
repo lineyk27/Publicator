@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -192,7 +190,7 @@ namespace Publicator.Presentation.Controllers.Api
         /// Post created post
         /// </summary>
         /// <param name="model">Model with post info</param>
-        /// <returns>Ok if all ok</returns>
+        /// <returns>Ok post if all ok</returns>
         // GET: api/posts/create
         [Authorize]
         [HttpPost]
@@ -208,9 +206,9 @@ namespace Publicator.Presentation.Controllers.Api
             foreach (var i in model.Tags)
                 tags.Add(await _tagService.CreateAsync(i));
             
-            _postService.CreateAsync(model.Name, model.Content, community, tags);
-
-            return Ok();
+            var post = await _postService.CreateAsync(model.Name, model.Content, community, tags);
+            var postDTO = _mapper.Map<Post, PostDTO>(post);
+            return Ok(postDTO);
         }
     }
 }

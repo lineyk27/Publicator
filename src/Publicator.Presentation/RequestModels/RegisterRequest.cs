@@ -6,7 +6,6 @@ namespace Publicator.Presentation.RequestModels
     {
         [Required]
         [MinLength(6)]
-        // TODO add regexp for check is valid username
         [RegularExpression(@"[a-zA-Z0-9\-.]{1,32}", ErrorMessage ="Wrong username format")]
         public string Username { get; set; }
         [Required(AllowEmptyStrings = false)]

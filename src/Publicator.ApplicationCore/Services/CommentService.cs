@@ -80,7 +80,6 @@ namespace Publicator.ApplicationCore.Services
         }
         public async Task<Comment> AddToPost(Post post, string text, Comment parentreplied)
         {
-            // TODO add logic for prevent xss atack
             var user = await _userService.GetCurrentUserAsync();
             var id = Guid.NewGuid();
             _unitOfWork

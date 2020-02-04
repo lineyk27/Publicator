@@ -9,7 +9,6 @@ using Publicator.Infrastructure.Interfaces;
 
 namespace Publicator.ApplicationCore.Services
 {
-    // TODO: !!! Change dto !!!
     public class PostService : IPostService
     {
         private IUnitOfWork _unitOfWork;
@@ -162,7 +161,7 @@ namespace Publicator.ApplicationCore.Services
                 .FirstOrDefault() != null;
         }
 
-        public async void CreateAsync(string name, string content, Community community, IEnumerable<Tag> tags)
+        public async Task<Post> CreateAsync(string name, string content, Community community, IEnumerable<Tag> tags)
         {
             var user = await _userService.GetCurrentUserAsync();
             var post = new Post()
@@ -175,6 +174,7 @@ namespace Publicator.ApplicationCore.Services
             };
             _unitOfWork.PostRepository.Insert(post);
             AddTagsToPostAsync(post, tags);
+            return post;
         }
 
         public async void AddTagsToPostAsync(Post post, IEnumerable<Tag> tags)

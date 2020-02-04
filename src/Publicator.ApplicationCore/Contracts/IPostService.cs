@@ -25,6 +25,6 @@ namespace Publicator.ApplicationCore.Contracts
         public Task<Vote> VoteAsync(Post post, bool up = false);
         public Task<bool> AddToBookmarkAsync(Post post);
         public Task<Vote> CurrentVoteAsync(Post post);
-        public void CreateAsync(string name, string content, Community community, IEnumerable<Tag> tags);
+        public Task<Post> CreateAsync(string name, string content, Community community, IEnumerable<Tag> tags);
     }
 }
