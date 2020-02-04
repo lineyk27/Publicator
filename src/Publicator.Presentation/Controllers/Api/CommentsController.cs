@@ -62,9 +62,9 @@ namespace Publicator.Presentation.Controllers.Api
                 ? await _commentsService.GetByIdAsync((Guid)model.ParentCommentId)
                 : null;
 
-            _commentsService.AddToPost(post, model.Text, parent);
-
-            return Ok();
+            var comment = await _commentsService.AddToPost(post, model.Text, parent);
+            var commentDTO = _mapper.Map<Comment, CommentDTO>(comment);
+            return Ok(comment);
         }
     }
 }

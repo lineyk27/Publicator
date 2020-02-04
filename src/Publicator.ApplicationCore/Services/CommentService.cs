@@ -78,14 +78,16 @@ namespace Publicator.ApplicationCore.Services
                 .Take(PageSize)
                 .OrderByDescending(x => x.CreationDate);
         }
-        public async void AddToPost(Post post, string text, Comment parentreplied)
+        public async Task<Comment> AddToPost(Post post, string text, Comment parentreplied)
         {
             // TODO add logic for prevent xss atack
             var user = await _userService.GetCurrentUserAsync();
+            var id = Guid.NewGuid();
             _unitOfWork
                 .CommentRepository
                 .Insert(new Comment()
                 {
+                    Id = id,
                     PostId = post.Id,
                     UserId = user.Id,
                     Content = text,
@@ -93,6 +95,7 @@ namespace Publicator.ApplicationCore.Services
                     ParentRepliedCommentId = parentreplied?.Id
                 });
             _unitOfWork.Save();
+            return await GetByIdAsync(id);
         }
     }
 }

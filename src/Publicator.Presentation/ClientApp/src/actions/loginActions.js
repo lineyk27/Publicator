@@ -40,7 +40,7 @@ function login(login, password){
 function setCurrent(){
     return dispatch => {
         dispatch(loginBegin());
-        AccountAPI.current()
+        return AccountAPI.current()
             .then( response => {
                 let userInfo = response.data;
                 dispatch(loginSuccesfull(userInfo));

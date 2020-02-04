@@ -25,10 +25,10 @@ const postCatalogFailure = (catalogType) => ({
 });
 
 function loadPostCatalog(catalogType, page, pageSize, period){
-    dispatch(postCatalogBegin(catalogType));
     return dispatch => {
+        dispatch(postCatalogBegin(catalogType));
         let method = methodByCatalogType(catalogType);
-        method(page=page, pageSize=pageSize, period=period)
+        return method(page=page, pageSize=pageSize, period=period)
             .then(response => {
                 // TODO must be reconsidered
                 let posts = response.data;
