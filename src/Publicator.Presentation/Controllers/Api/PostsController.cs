@@ -20,13 +20,16 @@ namespace Publicator.Presentation.Controllers.Api
         private ICommunityService _communityService;
         private ITagService _tagService;
         private IMapper _mapper;
+        IAggregationService _aggregationService;
         public PostsController(
             IPostService postService, 
             IMapper mapper, 
             IUserService userService,
             ICommunityService communityService,
-            ITagService tagService)
+            ITagService tagService,
+            IAggregationService aggregationService)
         {
+            _aggregationService = aggregationService;
             _postService = postService;
             _mapper = mapper;
             _userService = userService;
@@ -51,7 +54,8 @@ namespace Publicator.Presentation.Controllers.Api
             _postService.Period = model.Period;
 
             var posts = await _postService.GetHotAsync();
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+            var user = await _userService.TryGetCurrentAsync();
+            var postsDTO = _aggregationService.AggregateWithBookmarkVote(posts, user);
             return Ok(postsDTO);
         }
         /// <summary>
@@ -73,7 +77,8 @@ namespace Publicator.Presentation.Controllers.Api
             _postService.PageSize = model.PageSize;
 
             var posts = await _postService.GetBySubscriptionAsync(user);
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+            var curruser = await _userService.TryGetCurrentAsync();
+            var postsDTO = _aggregationService.AggregateWithBookmarkVote(posts, curruser);
             return Ok(postsDTO);
         }
         /// <summary>
@@ -93,7 +98,8 @@ namespace Publicator.Presentation.Controllers.Api
             _postService.PageSize = model.PageSize;
 
             var posts = await _postService.GetNewAsync();
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+            var curruser = await _userService.TryGetCurrentAsync();
+            var postsDTO = _aggregationService.AggregateWithBookmarkVote(posts, curruser);
             return Ok(postsDTO);
         }
         /// <summary>
@@ -130,7 +136,8 @@ namespace Publicator.Presentation.Controllers.Api
 
             var user = await _userService.GetByUsernameAsync(model.Username);
             var posts = await _postService.GetByCreatorAsync(user);
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+            var curruser = await _userService.TryGetCurrentAsync();
+            var postsDTO = _aggregationService.AggregateWithBookmarkVote(posts, curruser);
             return Ok(postsDTO);
         }
         /// <summary>
@@ -148,7 +155,8 @@ namespace Publicator.Presentation.Controllers.Api
 
             var community = await _communityService.GetByIdAsync(model.CommunityId);
             var posts = await _postService.GetByCommunity(community);
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+            var curruser = await _userService.TryGetCurrentAsync();
+            var postsDTO = _aggregationService.AggregateWithBookmarkVote(posts, curruser);
             return Ok(postsDTO);
         }
         /// <summary>
@@ -176,7 +184,8 @@ namespace Publicator.Presentation.Controllers.Api
                 community,
                 null);
 
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+            var curruser = await _userService.TryGetCurrentAsync();
+            var postsDTO = _aggregationService.AggregateWithBookmarkVote(posts, curruser);
             return Ok(postsDTO);
         }
         /// <summary>

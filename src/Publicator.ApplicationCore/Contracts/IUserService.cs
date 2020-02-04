@@ -22,5 +22,6 @@ namespace Publicator.ApplicationCore.Contracts
         public bool ConfirmAccount(User user, string token);
         public Task<bool> MakeSubscription(User subscription);
         public void ChangeUserPicture(string url);
+        public Task<User> TryGetCurrentAsync();
     }
 }

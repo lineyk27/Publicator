@@ -124,6 +124,19 @@ namespace Publicator.ApplicationCore.Services
             }
         }
 
+        public async Task<User> TryGetCurrentAsync()
+        {
+            try
+            {
+                var user = await GetCurrentUserAsync();
+                return user;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public async Task<IEnumerable<User>> GetSubscribersAsync(User subscriptionuser)
         {
             return (await _unitOfWork

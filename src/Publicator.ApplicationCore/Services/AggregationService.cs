@@ -7,7 +7,7 @@ using Publicator.Infrastructure.Entities;
 
 namespace Publicator.ApplicationCore.Services
 {
-    class AggregationService : IAggregationService
+    public class AggregationService : IAggregationService
     {
         IMapper _mapper;
         public AggregationService(IMapper mapper)
