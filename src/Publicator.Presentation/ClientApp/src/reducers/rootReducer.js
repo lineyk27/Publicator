@@ -5,6 +5,7 @@ import loginReducer from "./loginReducer";
 import postCatalogReducer from "./postCatalogReducer";
 import postViewReducer from "./postViewReducer";
 import userViewReducer from "./userViewReducer";
+import postCreateReducer from "./postCreateReducer";
 
 const rootReducer = combineReducers({
     comment: commentReducer,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     login: loginReducer,
     postCatalog: postCatalogReducer,
     postView: postViewReducer,
-    userView: userViewReducer
+    userView: userViewReducer,
+    postCreate: postCreateReducer
 });
 
 export default rootReducer;
