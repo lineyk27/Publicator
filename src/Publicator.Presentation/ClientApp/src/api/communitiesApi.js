@@ -5,6 +5,10 @@ const BASE_URL = "/api/communities"
 const CommunitiesAPI = {
     byId: (communityId) => {
         return requests.get(`${BASE_URL}/${communityId}`);
+    },
+    bySearch: (query) => {
+        return requests.get(`${BASE_URL}/search`, {params: {query}});
     }
 }
+
 export default CommunitiesAPI;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -74,6 +75,23 @@ namespace Publicator.Presentation.Controllers.Api
             var community = await _communityService.GetByIdAsync(model.Id);
             var communityDTO = _mapper.Map<Community, CommunityDTO>(community);
             return Ok(communityDTO);
+        }
+        // GET: api/communities/search?query="politic"
+        [HttpGet]
+        [Route("search")]
+        public async Task<IActionResult> GetBySearch([FromQuery]string query)
+        {
+            IEnumerable<Community> communities;
+            if(!String.IsNullOrEmpty(query))
+            {
+                communities = await _communityService.GetBySearchAsync(query);
+            }
+            else
+            {
+                communities = await _communityService.GetAllAsync();
+            }
+            var commsDTO = _mapper.Map<IEnumerable<Community>, IEnumerable<CommunityDTO>>(communities);
+            return Ok(commsDTO);
         }
     }
 }
