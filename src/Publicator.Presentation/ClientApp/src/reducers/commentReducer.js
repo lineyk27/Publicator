@@ -97,3 +97,4 @@ function searchCommentById(commentId, commentTree){
     }
 }
 
+export default commentReducer;

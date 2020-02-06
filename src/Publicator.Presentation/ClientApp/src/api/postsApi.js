@@ -33,7 +33,7 @@ const PostsAPI = {
     },
     bySearch: (query, startDate, endDate, page, pageSize) => {
         return requests.get(`${BASE_URL}/search`, {
-            params: {query, startdate, enddate, page, pageSize}
+            params: {query, startDate, endDate, page, pageSize}
         });
     },
     createNew: (name, content, communityId, tags) => {
