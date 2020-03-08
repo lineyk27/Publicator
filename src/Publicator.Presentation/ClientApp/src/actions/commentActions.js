@@ -1,24 +1,24 @@
 import {
-    GET_COMMENTS_BEGIN,
-    GET_COMMENTS_EMPTY,
-    GET_COMMENTS_SUCCESFULL,
+    GET_COMMENTS_LOAD,
+    GET_COMMENTS_UNLOAD,
+    GET_COMMENTS_END,
     CREATE_COMMENT_FAILURE,
     CREATE_COMMENT_BEGIN,
     CREATE_COMMENT_SUCCESFULL
 } from "../actionTypes";
 import CommentsAPI from "../api/commentsApi";
 
-const getCommentsEmpty = () => ({
-    type: GET_COMMENTS_EMPTY
+const getCommentsUnload = () => ({
+    type: GET_COMMENTS_UNLOAD
 });
 
-const getCommentsBegin = () => ({
-    type: GET_COMMENTS_BEGIN
+const getCommentsEnd = () => ({
+    type: GET_COMMENTS_END
 });
 
-const getCommentsSuccesfull = (comments) => ({
-    type: GET_COMMENTS_SUCCESFULL,
-    payload: comments
+const getCommentsLoad = (comments) => ({
+    type: GET_COMMENTS_LOAD,
+    comments: comments
 });
 
 const createCommentBegin = (replyCommentId) => ({
@@ -39,15 +39,15 @@ const createCommentSuccesfull = (replyCommentId, comment) => ({
 
 function loadComments(postId, page, pageSize){
     return dispatch => {
-        dispatch(getCommentsBegin());
+        // loading ui
         CommentsAPI.byPost(postId, page, pageSize)
             .then(response => {
                 let comments = response.data;
-                if(comments.length == 0) dispatch(getCommentsEmpty());
-                else dispatch(getCommentsSuccesfull(comments));
+                if(comments.length == 0) dispatch(getCommentsEnd());
+                else dispatch(getCommentsLoad(comments));
             }).catch(error => {
                 console.log(error.response.status, error.response.data.message);
-                dispatch(getCommentsEmpty());
+                dispatch(getCommentsUnload());
             });
     }
 }
@@ -66,7 +66,14 @@ function createComment(postId, text, parentCommentId){
     }
 }
 
+function unloadComments(){
+    return dispatch => {
+        dispatch(getCommentsUnload());
+    }
+}
+
 export {
     loadComments,
-    createComment
+    createComment,
+    unloadComments
 };

@@ -1,28 +1,18 @@
 import {
-    COMMUNITY_VIEW_BEGIN,
-    COMMUNITY_VIEW_FAILURE,
-    COMMUNITY_VIEW_SUCCESFULL
+    COMMUNITY_VIEW_LOAD,
+    COMMUNITY_VIEW_UNLOAD,
 } from '../actionTypes';
 
-const initialState = {loading: false, community: null};
+const initialState = {communityInfo: null};
 
 function communityReducer(state=initialState, action){
     switch(action.type){
-        case COMMUNITY_VIEW_BEGIN:
+        case COMMUNITY_VIEW_LOAD:
             return {
-                ...state,
-                loading: true
+                communityInfo: action.communityInfo
             };
-        case COMMUNITY_VIEW_SUCCESFULL:
-            return {
-                community: action.payload,
-                loading: false
-            };
-        case COMMUNITY_VIEW_FAILURE:
-            return {
-                ...state,
-                loading: false
-            };
+        case COMMUNITY_VIEW_UNLOAD:
+            return initialState;
         default:
             return state;
     }

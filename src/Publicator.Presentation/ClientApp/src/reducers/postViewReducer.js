@@ -1,28 +1,18 @@
 import {
-    POST_VIEW_BEGIN,
-    POST_VIEW_FAILURE,
-    POST_VIEW_SUCCESFULL
+    POST_VIEW_LOAD,
+    POST_VIEW_UNLOAD,
 } from "../actionTypes";
 
-const initialState = {post: null, loading: false};
+const initialState = {postInfo: null};
 
 function postViewReducer(state=initialState, action){
     switch(action.type){
-        case POST_VIEW_BEGIN:
+        case POST_VIEW_LOAD:
             return {
-                ...state,
-                loading: true
+                postInfo: action.postInfo
             };
-        case POST_VIEW_SUCCESFULL:
-            return {
-                post: action.payload,
-                loading: false
-            };
-        case POST_VIEW_FAILURE:
-            return {
-                post: null,
-                loading: false
-            };
+        case POST_VIEW_UNLOAD:
+            return initialState;
         default:
             return state;
     }

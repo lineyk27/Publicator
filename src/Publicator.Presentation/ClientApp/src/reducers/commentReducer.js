@@ -1,7 +1,6 @@
 import {
-    GET_COMMENTS_BEGIN,
-    GET_COMMENTS_EMPTY,
-    GET_COMMENTS_SUCCESFULL,
+    GET_COMMENTS_END,
+    GET_COMMENTS_LOAD,
     CREATE_COMMENT_BEGIN,
     CREATE_COMMENT_FAILURE,
     CREATE_COMMENT_SUCCESFULL
@@ -35,26 +34,21 @@ import {
 
 */
 
-const initialState = {loading: false, comments: [], result: null, replyCommentId: null, replyCommentLoading: false}
+const initialState = {loading: false, lastPage: null, comments: [], end: null, replyCommentId: null, replyCommentLoading: false}
 
 function commentReducer(state=initialState, action){
     switch(action.type){
-        case GET_COMMENTS_BEGIN:
+        case GET_COMMENTS_LOAD:
+            return {
+                comments: [...(state.comments), ...(action.comments)]
+            };
+        case GET_COMMENTS_END:
             return {
                 ...state,
-                loading: true
+                end: true
             };
-        case GET_COMMENTS_SUCCESFULL:
-            return {
-                loading: false,
-                comments: [...(state.comments), ...(action.payload)]
-            };
-        case GET_COMMENTS_EMPTY:
-            return {
-                ...state,
-                loading: false,
-                result: GET_COMMENTS_EMPTY
-            };
+        case GET_COMMENTS_UNLOAD:
+            return initialState;
         case CREATE_COMMENT_BEGIN:
             return {
                 ...state,

@@ -1,37 +1,39 @@
 import { 
-    POST_VIEW_BEGIN,
-    POST_VIEW_SUCCESFULL,
-    POST_VIEW_FAILURE
+    POST_VIEW_LOAD,
+    POST_VIEW_UNLOAD
 } from "../actionTypes";
 import PostsAPI from "../api/postsApi";
 
-const postViewBegin = () => ({
-    type: POST_VIEW_BEGIN
+const postViewLoad = (post) => ({
+    type: POST_VIEW_LOAD,
+    postInfo: post
 });
 
-const postViewSuccesfull = (post) => ({
-    type: POST_VIEW_SUCCESFULL,
-    payload: post
-});
-
-const postViewFailure = () => ({
-    type: POST_VIEW_FAILURE
+const postViewUnload = () => ({
+    type: POST_VIEW_UNLOAD
 });
 
 function loadPostView(postId){
     return dispatch => {
-        dispatch(postViewBegin());
+        //TODO: add any loading ui/ux
         return PostsAPI.byId(postId)
             .then(response => {
                 let post = response.data;
-                dispatch(postViewSuccesfull(post));
+                dispatch(postViewLoad(post));
             }).catch(error => {
                 console.log(error.response.status, error.response.data.message);
-                dispatch(postViewFailure());
+                dispatch(postViewUnload());
             });
     }
 };
 
+function unloadPostView(){
+    return dispatch => {
+        dispatch(postViewUnload());
+    }
+}
+
 export {
-    loadPostView
+    loadPostView,
+    unloadPostView
 };

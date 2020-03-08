@@ -1,24 +1,18 @@
 import {
-    USER_VIEW_BEGIN,
-    USER_VIEW_FAILURE,
-    USER_VIEW_SUCCESFULL
+    USER_VIEW_LOAD,
+    USER_VIEW_UNLOAD,
 } from "../actionTypes";
 
-const initialState = {user: null, loading: false};
+const initialState = {userInfo: null, loading: false};
 
 function userViewReducer(state=initialState, action){
     switch(action.type){
-        case USER_VIEW_BEGIN:
+        case USER_VIEW_LOAD:
             return {
-                ...state,
-                loading: true
-            };
-        case USER_VIEW_SUCCESFULL:
-            return {
-                user: action.payload,
+                userInfo: action.userInfo,
                 loading: false
             };
-        case USER_VIEW_FAILURE:
+        case USER_VIEW_UNLOAD:
         default:
             return state;
     }

@@ -1,90 +1,116 @@
 import { 
-    POST_CATALOG_BEGIN,
-    POST_CATALOG_FAILURE,
-    POST_CATALOG_SUCCESFULL,
     POST_CATALOG_TYPE_SUBSCRIPTION,
     POST_CATALOG_TYPE_NEW,
     POST_CATALOG_TYPE_HOT,
     POST_CATALOG_TYPE_BY_COMMUNITY,
     POST_CATALOG_TYPE_BY_SEARCH,
-    POST_CATALOG_TYPE_USER_SUBSCRIPTION
+    POST_CATALOG_TYPE_USER_SUBSCRIPTION,
+    POST_CATALOG_LOAD,
+    POST_CATALOG_UNLOAD,
+    POST_CATALOG_END
 } from "../actionTypes";
 import PostsAPI from "../api/postsApi";
 
-const postCatalogBegin = (catalogType) => ({
-    type: POST_CATALOG_BEGIN,
-    catalogType: catalogType
-});
-
-const postCatalogSuccess = (posts, catalogType) => ({
-    type: POST_CATALOG_SUCCESFULL,
+const postCatalogLoad = (posts, catalogType, page) => ({
+    type: POST_CATALOG_LOAD,
     catalogType: catalogType,
-    payload: posts
+    posts: posts,
+    page: page
 });
 
-const postCatalogFailure = (catalogType) => ({
-    type: POST_CATALOG_FAILURE,
-    catalogType: catalogType
+const postCatalogUnload = () => ({
+    type: POST_CATALOG_UNLOAD
 });
+
+const postCatalogEnd = () => ({
+    type: POST_CATALOG_END
+})
 
 function loadPostCatalog(catalogType, page, pageSize, period){
     return dispatch => {
-        dispatch(postCatalogBegin(catalogType));
+        // TODO: add load to ui/ux
         let method = methodByCatalogType(catalogType);
         return method(page=page, pageSize=pageSize, period=period)
             .then(response => {
                 // TODO must be reconsidered
                 let posts = response.data;
-                dispatch(postCatalogSuccess(posts, catalogType));
+                // check here is empty
+                if(response.data.length !== 0){
+                    dispatch(postCatalogLoad(posts, catalogType, page));
+                }
+                else{
+                    dispatch(postCatalogEnd());
+                }
             })
             .catch(error => {
                 // TODO must be reconsidered
                 console.log(error.response.status, error.response.data.message);
-                dispatch(postCatalogFailure(catalogType));
+                dispatch(postCatalogUnload());
             })
     }
 }
 
 function loadBySubscriptionPostCatalog(username, page, pageSize){
     return dispatch => {
-        dispatch(postCatalogBegin(POST_CATALOG_TYPE_USER_SUBSCRIPTION));
+        // TODO: add load to ui/ux
         return PostsAPI.bySubscription(username, page, pageSize)
             .then(response => {
                 let posts = response.data;
-                dispatch(postCatalogSuccess(posts, POST_CATALOG_TYPE_USER_SUBSCRIPTION));
+                if(response.data.length !== 0){
+                    dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_USER_SUBSCRIPTION, page));
+                }
+                else{
+                    dispatch(postCatalogEnd());
+                }
             }).catch(error => {
                 console.log(error.response.status, error.response.data.message);
-                dispatch(postCatalogFailure(POST_CATALOG_TYPE_USER_SUBSCRIPTION));
+                dispatch(postCatalogUnload());
             });
     }
 }
 
 function loadByCommunityPostCatalog(communityId, page, pageSize){
     return dispatch => {
-        dispatch(postCatalogBegin(POST_CATALOG_TYPE_BY_COMMUNITY));
+        // TODO: add load to ui/ux
         return PostsAPI.byCommunity(communityId, page, pageSize)
             .then(response => {
                 let posts = response.data;
-                dispatch(postCatalogSuccess(posts, POST_CATALOG_TYPE_BY_COMMUNITY));
+                if(response.data.length !== 0){
+                    dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_BY_COMMUNITY, page));
+                }
+                else {
+                    dispatch(postCatalogEnd());
+                }
             }).catch( error => {
                 console.log(error.response.status, error.response.data.message);
-                dispatch(postCatalogFailure(POST_CATALOG_TYPE_BY_COMMUNITY));
+                dispatch(postCatalogUnload());
             });
     }
 }
 
 function loadBySearchPostCatalog(query, startdate, enddate, page, pageSize){
     return dispatch => {
-        dispatch(postCatalogBegin(POST_CATALOG_TYPE_BY_SEARCH));
+        // TODO: add load to ui/ux
         return PostsAPI.bySearch(query, startdate, enddate, page, pageSize)
             .then(response => {
                 let posts = response.data;
-                dispatch(postCatalogSuccess(posts, POST_CATALOG_TYPE_BY_SEARCH));
+                if(response.data.length !== 0){
+                    dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_BY_SEARCH, page));
+                }
+                else{
+                    dispatch(postCatalogEnd());
+                }
             }).catch(error => {
                 console.log(error.response.status, error.response.data.message);
-                dispatch(postCatalogFailure(POST_CATALOG_TYPE_BY_SEARCH));
+                dispatch(postCatalogUnload());
             });
     };
+}
+
+function unloadPostCatalog(){
+    return dispatch =>{
+        dispatch(postCatalogUnload());
+    }
 }
 
 function methodByCatalogType(catalogType){
@@ -104,5 +130,6 @@ export {
     loadPostCatalog,
     loadBySearchPostCatalog,
     loadBySubscriptionPostCatalog,
-    loadByCommunityPostCatalog
+    loadByCommunityPostCatalog,
+    unloadPostCatalog
 }

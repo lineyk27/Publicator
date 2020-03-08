@@ -1,33 +1,39 @@
 import {
-    COMMUNITY_VIEW_SUCCESFULL,
-    COMMUNITY_VIEW_FAILURE,
-    COMMUNITY_VIEW_BEGIN
+    COMMUNITY_VIEW_LOAD,
+    COMMUNITY_VIEW_UNLOAD
 } from "../actionTypes";
 
 import CommunitiesAPI from "../api/communitiesApi";
 
-const communityViewBegin = () => ({
-    type: COMMUNITY_VIEW_BEGIN
+const communityViewUnload = () => ({
+    type: COMMUNITY_VIEW_UNLOAD
 });
 
-const communityViewFailure = () => ({
-    type: COMMUNITY_VIEW_FAILURE
-});
-
-const communityViewSuccesfull = (community) => ({
-    type: COMMUNITY_VIEW_SUCCESFULL,
-    payload: community
+const communityViewLoad = (community) => ({
+    type: COMMUNITY_VIEW_LOAD,
+    communityInfo: community
 });
 
 function loadCommunityView(communityId){
     return dispatch => {
-        dispatch(communityViewBegin());
+        // TODO: add ui/ux loading
         return CommunitiesAPI.byId(communityId)
             .then(response => {
-                dispatch(communityViewSuccesfull(response.data));
+                dispatch(communityViewLoad(response.data));
             }).catch(error => {
                 console.log(error.response.status, error.response.data.message);
-                dispatch(communityViewFailure());
+                dispatch(communityViewUnload());
             });
     }
+}
+
+function unloadCommunityView(){
+    return dispatch => {
+        dispatch(communityViewUnload);
+    }
+}
+
+export default{
+    loadCommunityView,
+    unloadCommunityView
 }
