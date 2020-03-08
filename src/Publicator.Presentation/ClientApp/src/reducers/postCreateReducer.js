@@ -25,3 +25,5 @@ function postCreateReducer(state=initialState, action){
             return state;
     }
 }
+
+export { postCreateReducer }

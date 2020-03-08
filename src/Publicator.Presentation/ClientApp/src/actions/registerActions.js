@@ -21,9 +21,11 @@ function confirmAccount(id, token){
     var result;
     AccountAPI.confirm(id, token)
         .then(response => {
+            console.log(response.data);
             result = registerResult(true, null)
         }).catch(error => {
-            result = registerResult(false, message);
+            console.log(error.response.data.message);
+            result = registerResult(false, error.response.data.message);
         });
     return result;
 }
