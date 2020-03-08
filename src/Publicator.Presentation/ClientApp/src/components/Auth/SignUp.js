@@ -1,12 +1,7 @@
 import React from 'react';
 import { Form, Message, Label, Button, Input, Transition, Header } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-
-const ANIMATION_DURATION = 500;
-const EMAIL_EXP = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-const MIN_LENGTH_USERNAME = 4;
-const MIN_LENGTH_PASSWORD = 8;
-
+import {MIN_LENGTH_USERNAME, MIN_LENGTH_PASSWORD, ANIMATION_DURATION, EMAIL_EXP} from "../../constants"; 
 
 class SignUp extends React.Component {
     constructor(props){
@@ -36,25 +31,25 @@ class SignUp extends React.Component {
 
 
     validate = () => {
-        var result = true;
         const{t} = this.props;
-        if(this.state.username < MIN_LENGTH_USERNAME){
-            this.setState({usernameError: t("usernameError")});
-            result = false;
-        }
+
         if(!EMAIL_EXP.test(this.state.email)){
             this.setState({emailError: t("emailError")});
-            result = false;
+            return false;
+        }
+        if(this.state.username < MIN_LENGTH_USERNAME){
+            this.setState({usernameError: t("usernameError")});
+            return false;
         }
         if(this.state.password.length < MIN_LENGTH_PASSWORD){
             this.setState({passwordError: t("passwordError")});
-            result = false;
+            return false;
         }
         if(this.state.password !== this.state.confirmPassword || this.state.confirmPassword.length < MIN_LENGTH_PASSWORD){
             this.setState({confirmError: t("confirmPasswordError")});
-            result = false;
+            return false;
         }
-        return result;
+        return true;
     }
     handleSignup = () => {
         if(this.validate()){

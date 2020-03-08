@@ -3,15 +3,14 @@ import { Segment, Header} from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import SignUp from "./SignUp";
 import LogIn from "./LogIn";
-
-const LOGIN_PAGE = 1;
-const SIGNUP_PAGE = 2;
+import {LOGIN_PAGE, SIGNUP_PAGE} from "../../constants";
 
 class AuthenticationWindow extends React.Component{
     constructor(props){
         super(props);
+        const {page} = this.props;
         this.state = {
-            currentPage : LOGIN_PAGE
+            currentPage : page || LOGIN_PAGE
         }
     }
     handleClick = () => {
@@ -42,10 +41,4 @@ class AuthenticationWindow extends React.Component{
     }
 }
 
-
-
-
-
-
 export default withTranslation()(AuthenticationWindow);
-

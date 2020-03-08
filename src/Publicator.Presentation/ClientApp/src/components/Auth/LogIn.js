@@ -1,11 +1,8 @@
 import React from 'react';
 import { Form, Message, Segment, Label, Button, Input, Transition, Header } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
+import {MIN_LENGTH_PASSWORD, ANIMATION_DURATION, EMAIL_EXP} from "../../constants"; 
 
-const ANIMATION_DURATION = 500;
-const EMAIL_EXP = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-const MIN_LENGTH_USERNAME = 4;
-const MIN_LENGTH_PASSWORD = 8;
 
 
 class LogInPage extends React.Component{
@@ -26,16 +23,15 @@ class LogInPage extends React.Component{
         var validEmail = EMAIL_EXP.test(this.state.email) && this.state.email !== "";
         var validPassword = this.state.password.length >= MIN_LENGTH_PASSWORD;
         const {t} = this.props;
-        var result = true;
         if(!validEmail) {
             this.setState({emailError: t("emailError")})
-            result = false;
+            return false;
         }
         if(!validPassword){
              this.setState({passwordError: t("passwordError")})
-             result = false
+             return false;
         }
-        return result;
+        return true;
     }
 
     handleLogin = () => {
