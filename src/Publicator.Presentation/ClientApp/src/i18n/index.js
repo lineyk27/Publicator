@@ -1,36 +1,22 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import {en, uk} from "./locales";
+import en from "./locales/en.js";
+import uk from "./locales/uk.js";
 
 const options = {
     interpolation:{
         escapeValue : false
     },
+    lng: "en",
     debug: true,
     resources:{
-        en: {
-            common: en.en
-        },
-        uk:{
-            common: uk.uk
-        }
-    },
-    fallbackLng: "en",
-    ns: ["common"],
-    defaultNS: "common",
-    react: {
-        wait: false,
-        bindI18n: "languageChanged loaded",
-        bingStore: "added removed",
-        nsMode: "default"
+        en: en,
+        uk: uk
     },
 };
 
 i18n
     .use(LanguageDetector)
-    .init(options)
-    .changeLanguage('uk', (err, t) => {
-        if(err) return console.log("Translation was not loaded.", err);
-});
+    .init(options);
 
 export default i18n;

@@ -24,9 +24,6 @@ export const GET_COMMENTS_LOAD = 20;
 export const GET_COMMENTS_UNLOAD = 21;
 export const GET_COMMENTS_END = 22;
 
-export const POST_VIEW_LOAD = 23;
-export const POST_VIEW_UNLOAD = 24;
-
 export const USER_VIEW_LOAD = 26;
 export const USER_VIEW_UNLOAD = 27;
 

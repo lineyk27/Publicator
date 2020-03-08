@@ -1,6 +1,7 @@
 import { 
     POST_CATALOG_LOAD,
-    POST_CATALOG_UNLOAD
+    POST_CATALOG_UNLOAD,
+    POST_CATALOG_END
 } from "../actionTypes";
 
 const initialState = {posts: [], lastPage: null, catalogType: null, end: false};

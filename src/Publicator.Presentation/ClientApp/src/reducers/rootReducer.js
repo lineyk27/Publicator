@@ -14,7 +14,6 @@ const rootReducer = combineReducers({
     postCatalog: postCatalogReducer,
     postView: postViewReducer,
     userView: userViewReducer,
-    postCreate: postCreateReducer
 });
 
 export default rootReducer;
