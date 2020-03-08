@@ -29,12 +29,12 @@ class AuthenticationWindow extends React.Component{
                 {currentPage === LOGIN_PAGE &&  
                     <div>
                         <LogIn />
-                        <Header as="h4">{t("loginInvite")} <Header color="blue" as="a" size="tiny" basic onClick={this.handleClick}>{t("signUp")}</Header></Header>
+                        <Header as="h4">{t("signupInvite")} <Header color="blue" as="a" size="tiny" basic onClick={this.handleClick}>{t("signUp")}</Header></Header>
                     </div>
                 }{ currentPage === SIGNUP_PAGE &&   
                     <div>
                         <SignUp />
-                        <Header as="h4">{t("signupInvite")} <Header color="blue" as="a" size="tiny" basic onClick={this.handleClick}>{t("logIn")}</Header></Header>
+                        <Header as="h4">{t("loginInvite")} <Header color="blue" as="a" size="tiny" basic onClick={this.handleClick}>{t("logIn")}</Header></Header>
                     </div>
                 }
             </Segment>
