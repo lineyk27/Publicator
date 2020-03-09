@@ -1,20 +1,20 @@
 import AccountAPI from "../api/accountApi";
 
-const registerResult = (result, message) => ({
-    result: result,
-    message: message
+const registerResult = (success, message) => ({
+    success,
+    message
 });
 
 function register(username, email, password, confirmPassword){
-    var result;
-    AccountAPI.register(username, email, password, confirmPassword)
+    return AccountAPI.register(username, email, password, confirmPassword)
         .then(() => {
-            result = registerResult(true, null);
+            return registerResult(true, null);
         }).catch(error => {
-            let message = error.response.data.message;
-            result = registerResult(false, message);
+            let message = error.status || "Sign up error";
+            let code = error.status;
+            console.log(`${code}: ${message}`);
+            return registerResult(false, message);
         });
-    return result;
 }
 
 function confirmAccount(id, token){

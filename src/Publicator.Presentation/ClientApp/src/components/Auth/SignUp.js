@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Message, Label, Button, Input, Transition, Header } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import {MIN_LENGTH_USERNAME, MIN_LENGTH_PASSWORD, ANIMATION_DURATION, EMAIL_EXP} from "../../constants"; 
+import {register} from "../../actions/registerActions";
 
 class SignUp extends React.Component {
     constructor(props){
@@ -29,7 +30,6 @@ class SignUp extends React.Component {
         this.setState({ [name]: value });
     }
 
-
     validate = () => {
         const{t} = this.props;
 
@@ -53,8 +53,13 @@ class SignUp extends React.Component {
     }
     handleSignup = () => {
         if(this.validate()){
-            this.setState({result: "Username is already used"})
-            // todo logic for sign up
+            var result = register(this.state.username, this.state.email, this.state.password, this.state.confirmPassword);
+            if(result.success){
+                console.log("Success sign up")
+                // todo: mathc any route to go when register succesfull
+            }
+            else
+                this.setState({result: result.message});
         }
     }
     render(){
@@ -69,7 +74,7 @@ class SignUp extends React.Component {
             <div>
                 <Header as="h2">{t("signUp")}</Header>
                 <Transition visible={resErShow} animation='scale' duration={ANIMATION_DURATION}>
-                    <Message name="result" hidden={result === null} error content={result !== null ? t(result) : ""}/>
+                    <Message name="result" hidden={result === null} error content={"signUpError"}/>
                 </Transition>
                 <Form>
                     <Form.Field >
