@@ -1,9 +1,10 @@
 import React from 'react';
-import { Form, Message, Segment, Label, Button, Input, Transition, Header } from "semantic-ui-react";
+import { Form, Message, Label, Button, Input, Transition, Header } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import {MIN_LENGTH_PASSWORD, ANIMATION_DURATION, EMAIL_EXP} from "../../constants"; 
-
-
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {login} from "../../actions/loginActions";
 
 class LogInPage extends React.Component{
     constructor(props){
@@ -36,24 +37,26 @@ class LogInPage extends React.Component{
 
     handleLogin = () => {
         if(this.validate()){
-            // todo logic for login
+            const login = this.props.login;
+            console.log(login);
+            login(this.state.email, this.state.password);
         }
     }
 
     render(){
         const{email, password, emailError, passwordError, result} = this.state;
+        const{error} = this.props;
         const emErShow = emailError !== null ;
         const psErShow = passwordError !== null;
-        const resErShow = result !== null;
         const {t} = this.props;
         return(
             <div>
                 <Header as="h2">{t("logIn")}</Header>
-                <Transition visible={resErShow} animation='scale' duration={ANIMATION_DURATION}>
-                    <Message name="result" hidden={result === null} error content={result !== null ? t(result) : ""}/>
+                <Transition visible={error} animation='scale' duration={ANIMATION_DURATION}>
+                    <Message name="result" hidden={result === null} error content={error !== null ? t("loginError") : ""}/>
                 </Transition>
-                <Form>
-                    <Form.Field >
+                <Form >
+                    <Form.Field>
                         <label>{t("email")}</label>
                         <Input type="email" value={email} name="email" onChange={this.handleChange}/>
                         <Transition visible={emErShow} animation='scale' duration={ANIMATION_DURATION}>
@@ -74,4 +77,17 @@ class LogInPage extends React.Component{
     }
 }
 
-export default withTranslation()(LogInPage);
+const mapStateToProps = (state) => ({
+    isAuthorized: state.login.isAuthorized,
+    userInfo: state.login.userInfo,
+    loading: state.login.loading,
+    error: state.login.error
+})
+
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        login: (email, password) => login(email, password)
+    }, dispatch);
+}
+
+export default withTranslation()((connect(mapStateToProps, mapDispatchToProps)(LogInPage)));

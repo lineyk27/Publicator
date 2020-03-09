@@ -15,6 +15,7 @@ export default {
         "usernameError" : "Мінімальна довжина - 4 символа",
         "confirmPasswordError" : "Некоректний ввід",
         "loginInvite" : "Вже зареєстрований?",
-        "signupInvite" : "Не маєш аккаунту?"
+        "signupInvite" : "Не маєш аккаунту?",
+        "loginError" : "Користувача не знайдено"
     }
 }

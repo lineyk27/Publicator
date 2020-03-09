@@ -15,6 +15,7 @@ export default {
         "usernameError" : "Minimum length 4 characters",
         "confirmPasswordError" : "Inncorrect input",
         "loginInvite" : "Already signed up?",
-        "signupInvite" : "Don't have an account?"
+        "signupInvite" : "Don't have an account?",
+        "loginError" : "User not found.",
     }
 }
