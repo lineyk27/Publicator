@@ -105,8 +105,6 @@ namespace Publicator.ApplicationCore.Services
                 .UserRepository
                 .GetAsync(x => x.Nickname == username,includeProperties:"Role"))
                 .FirstOrDefault();
-            if (user == null)
-                throw new ResourceNotFoundException("User not found");
 
             return user;
         }
@@ -158,8 +156,7 @@ namespace Publicator.ApplicationCore.Services
                 .UserRepository
                 .GetAsync(x => x.Email == email,includeProperties:"Role"))
                 .FirstOrDefault();
-            if(user == null)
-                throw new ResourceNotFoundException("User not found");
+
             return user;
         }
 

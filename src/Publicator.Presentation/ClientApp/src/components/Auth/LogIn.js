@@ -38,7 +38,6 @@ class LogInPage extends React.Component{
     handleLogin = () => {
         if(this.validate()){
             const login = this.props.login;
-            console.log(login);
             login(this.state.email, this.state.password);
         }
     }
