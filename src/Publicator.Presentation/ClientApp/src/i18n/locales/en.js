@@ -17,5 +17,8 @@ export default {
         "loginInvite" : "Already signed up?",
         "signupInvite" : "Don't have an account?",
         "loginError" : "User not found.",
+        "home" : "Home",
+        "communities" : "Communities",
+        "search" : "Search"
     }
 }

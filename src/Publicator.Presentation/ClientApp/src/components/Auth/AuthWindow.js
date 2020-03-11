@@ -30,7 +30,7 @@ class AuthenticationWindow extends React.Component{
                         <LogIn />
                         <Header as="h4">{t("signupInvite")} <Header color="blue" as="a" size="tiny" basic onClick={this.handleClick}>{t("signUp")}</Header></Header>
                     </div>
-                }{ currentPage === SIGNUP_PAGE &&   
+                }{ currentPage === SIGNUP_PAGE &&
                     <div>
                         <SignUp />
                         <Header as="h4">{t("loginInvite")} <Header color="blue" as="a" size="tiny" basic onClick={this.handleClick}>{t("logIn")}</Header></Header>

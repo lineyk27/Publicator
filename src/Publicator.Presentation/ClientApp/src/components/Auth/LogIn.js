@@ -5,6 +5,8 @@ import {MIN_LENGTH_PASSWORD, ANIMATION_DURATION, EMAIL_EXP} from "../../constant
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {login} from "../../actions/loginActions";
+import { T_LOGIN } from "../../constants";
+
 
 class LogInPage extends React.Component{
     constructor(props){
@@ -50,7 +52,7 @@ class LogInPage extends React.Component{
         const {t} = this.props;
         return(
             <div>
-                <Header as="h2">{t("logIn")}</Header>
+                <Header as="h2">{t(T_LOGIN)}</Header>
                 <Transition visible={error} animation='scale' duration={ANIMATION_DURATION}>
                     <Message name="result" hidden={result === null} error content={error !== null ? t("loginError") : ""}/>
                 </Transition>

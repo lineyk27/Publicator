@@ -16,6 +16,9 @@ export default {
         "confirmPasswordError" : "Некоректний ввід",
         "loginInvite" : "Вже зареєстрований?",
         "signupInvite" : "Не маєш аккаунту?",
-        "loginError" : "Користувача не знайдено"
+        "loginError" : "Користувача не знайдено",
+        "home" : "Головна",
+        "communities" : "Товариства",
+        "search" : "Пошук"
     }
 }

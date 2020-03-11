@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Message, Label, Button, Input, Transition, Header } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-import {MIN_LENGTH_USERNAME, MIN_LENGTH_PASSWORD, ANIMATION_DURATION, EMAIL_EXP} from "../../constants"; 
+import {MIN_LENGTH_USERNAME, MIN_LENGTH_PASSWORD, ANIMATION_DURATION, EMAIL_EXP, T_SIGNUP} from "../../constants"; 
 import {register} from "../../actions/registerActions";
 
 class SignUp extends React.Component {
@@ -72,7 +72,7 @@ class SignUp extends React.Component {
         const {t} = this.props;
         return(
             <div>
-                <Header as="h2">{t("signUp")}</Header>
+                <Header as="h2">{t(T_SIGNUP)}</Header>
                 <Transition visible={resErShow} animation='scale' duration={ANIMATION_DURATION}>
                     <Message name="result" hidden={result === null} error content={"signUpError"}/>
                 </Transition>

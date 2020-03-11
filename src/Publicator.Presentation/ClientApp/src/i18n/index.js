@@ -7,7 +7,7 @@ const options = {
     interpolation:{
         escapeValue : false
     },
-    lng: "en",
+    lng: "uk",
     debug: true,
     resources:{
         en: en,
