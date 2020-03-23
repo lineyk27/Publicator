@@ -100,7 +100,7 @@ class NavBar extends React.Component{
                         as={Menu}
                         width="wide"
                         animation="overlay"
-                        inverted
+                        //inverted
                         onHide={() => this.turnOff()}
                         vertical
                         visible={visible}
@@ -125,7 +125,10 @@ class NavBar extends React.Component{
                         }
                     </Sidebar>
                     <Sidebar.Pusher dimmed={visible}>
-                        <Menu inverted>
+                        <Menu 
+                        //inverted
+                            secondary
+                            >
                             <Responsive  maxWidth={MAX_MOBILE_WIDTH}>
                                 <Menu.Item icon onClick={this.turnOn}>
                                     <Icon name="bars" />
