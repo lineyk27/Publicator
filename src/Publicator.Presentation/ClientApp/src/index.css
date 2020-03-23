@@ -1,0 +1,11 @@
+body{
+    font-family: 'Lato', sans-serif;
+}
+.btn:focus {
+    outline: none;
+  }
+.router-link{
+    margin: 0;
+    padding: 0;
+    border: 0;
+}

@@ -1,10 +1,12 @@
-export const LOGIN_BEGIN = 1;
-export const LOGIN_SUCCESFULL = 2;
-export const LOGIN_FAILURE = 3;
+export const LOGIN_BEGIN = 1
+export const LOGIN_SUCCESFULL = 2
+export const LOGIN_FAILURE = 3
 
-export const POST_CATALOG_TYPE_NEW = 4;
-export const POST_CATALOG_TYPE_HOT = 5;
-export const POST_CATALOG_TYPE_SUBSCRIPTION = 6;
+export const LOGOUT = 50
+
+export const POST_CATALOG_TYPE_NEW = 4
+export const POST_CATALOG_TYPE_HOT = 5
+export const POST_CATALOG_TYPE_SUBSCRIPTION = 6
 export const POST_CATALOG_TYPE_USER_SUBSCRIPTION = 7;
 export const POST_CATALOG_TYPE_BY_COMMUNITY = 8;
 export const POST_CATALOG_TYPE_BY_SEARCH = 9;

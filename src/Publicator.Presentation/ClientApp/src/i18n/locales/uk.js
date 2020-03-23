@@ -19,6 +19,11 @@ export default {
         "loginError" : "Користувача не знайдено",
         "home" : "Головна",
         "communities" : "Товариства",
-        "search" : "Пошук"
+        "search" : "Пошук",
+        "loginSuccess": "Ви увійшли!",
+        "profile": "Профіль",
+        "bookmarks": "Закладки",
+        "settings": "Налаштування",
+        "logOut": "Вийти"
     }
 }

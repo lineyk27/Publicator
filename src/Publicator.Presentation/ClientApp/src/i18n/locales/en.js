@@ -19,6 +19,11 @@ export default {
         "loginError" : "User not found.",
         "home" : "Home",
         "communities" : "Communities",
-        "search" : "Search"
+        "search" : "Search",
+        "loginSuccess": "Succesfull login!",
+        "profile": "Profile",
+        "bookmarks": "Bookmarks",
+        "settings": "Settings",
+        "logOut": "Log Out"
     }
 }

@@ -15,7 +15,7 @@ namespace Publicator.Infrastructure.Configurations
             builder.Property(e => e.JoinDate).HasColumnType("smalldatetime");
             builder.Property(e => e.PasswordHash).IsUnicode().HasMaxLength(64);
             builder.Property(e => e.EmailConfirmed).HasDefaultValue(false);
-            builder.Property(e => e.PictureName).IsUnicode().HasMaxLength(64);
+            builder.Property(e => e.PictureName).IsUnicode().HasMaxLength(256);
             builder.HasOne(e => e.State).WithMany(e => e.Users).HasForeignKey(e => e.StateId);
             builder.HasOne(e => e.Role).WithMany(e => e.Users).HasForeignKey(e => e.RoleId);
             builder.HasMany(e => e.Subscriptions).WithOne(e => e.SubscriberUser).HasForeignKey(e => e.SubscriberUserId);

@@ -173,7 +173,6 @@ namespace Publicator.ApplicationCore.Services
             }
             else if (!user.EmailConfirmed)
                 throw new AuthentificationException("Account is not confirmed");
-            Debug.WriteLine($"{passwordhash} - {user.PasswordHash}");
             throw new Exception("Login or password is not correct");
         }
 

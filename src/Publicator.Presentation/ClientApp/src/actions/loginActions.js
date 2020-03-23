@@ -1,10 +1,11 @@
 import { 
     LOGIN_BEGIN,
     LOGIN_FAILURE,
-    LOGIN_SUCCESFULL
+    LOGIN_SUCCESFULL,
+    LOGOUT
 } from "../actionTypes";
 import AccountAPI from "../api/accountApi";
-import { setToken } from "../api";
+import { setToken, removeToken } from "../api";
 
 const loginBegin = () => ({
     type: LOGIN_BEGIN
@@ -23,14 +24,16 @@ function login(login, password){
     return dispatch => {
         dispatch(loginBegin());
         return AccountAPI.login(login, password)
-            .then( response => {
+            .then(response => {
                 // TODO: must be reconsidered
-                let token = response.data.data;
+                console.log(response);
+                let token = response.data;
                 setToken(token);
                 // must be reconsidered
                 setCurrent()(dispatch);
             })
             .catch(error => {
+                console.log("Error happened!")
                 console.log(error);
                 dispatch(loginFailure());
             })
@@ -52,7 +55,15 @@ function setCurrent(){
     }
 }
 
+function logout() {
+    return dispatch => {
+        removeToken();
+        dispatch({ type: LOGOUT });
+    }
+}
+
 export {
     setCurrent, 
-    login
+    login,
+    logout
 };

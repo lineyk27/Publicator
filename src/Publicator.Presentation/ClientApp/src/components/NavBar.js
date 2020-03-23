@@ -1,191 +1,118 @@
-import React from "react";
-import { withTranslation } from "react-i18next";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import {Container, Menu, Responsive, Icon,Sidebar, Button, Header, Image, Input } from "semantic-ui-react";
+import React from "react"
+import {Link} from "react-router-dom"
+import { withTranslation } from "react-i18next"
+import { connect } from "react-redux"
+import { Button, Navbar, Nav, Col, Figure, OverlayTrigger, Popover, ListGroup } from "react-bootstrap"
 import {
+    T_HOME,
+    ROUTE_HOME,
+    T_COMMUNITIES,
+    ROUTE_COMMUNITIES,
     T_LOGIN,
     T_SIGNUP,
-    T_HOME,
-    T_COMMUNITIES,
-    T_SEARCH,
+    ROUTE_SIGNUP,
     ROUTE_LOGIN,
-    ROUTE_HOME,
-    ROUTE_COMMUNITIES,
-    MAX_MOBILE_WIDTH,
-    ROUTE_SIGNUP
-} from "../constants";
-import _ from "lodash";
-
-const LogInButton = withTranslation()(class extends React.Component{
-    render(){
-        const{t, location} = this.props;
-        return(
-            <Link to={{
-                pathname: ROUTE_LOGIN,
-                state: { background: location }
-            }}>
-                <Button content={t(T_LOGIN)} size="tiny" color="green"/>
-            </Link>
-        );
-    }
-});
-
-const SignUpButton = withTranslation()(class extends React.Component{
-    render(){
-        const{t, location} = this.props;
-        return(
-            <Link to={{
-                pathname: ROUTE_SIGNUP,
-                state: { background: location }
-            }}>
-                <Button content={t(T_SIGNUP)} size="tiny" color="blue"/>
-            </Link>
-        );
-    }
-})
-
-const SearchInput = withTranslation()(class extends React.Component{
-    handleSearch = () => {
-        console.log("search was clicked.");
-    }
-    render(){
-        const{t} = this.props;
-        return(
-            <Input action={{icon: 'search', onClick: this.handleSearch}}  placeholder={t(T_SEARCH)}/>
-        );
-    }
-})
+    ROUTE_PROFILE,
+    ROUTE_BOOKMARKS,
+    ROUTE_SETTINGS,
+    T_PROFILE,
+    T_SETTINGS,
+    T_BOOKMARKS,
+    T_LOGOUT
+} from "../constants"
+import { logout } from "../actions/loginActions"
 
 class NavBar extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {visible: false};
-    }
-
-    turnOn = () => {
-        this.setState({visible: true});
-    }
-    turnOff = () => {
-        this.setState({visible: false});
-    }
-    userThumbnail = () => {
-        // TODO: must be reconsidered
-        const{nickname, imageUrl} = this.props.userInfo || ["user", "image"];
+    userPopover = () => {
+        const { t } = this.props;
         return (
-            <div>          
-                <Header as='h4' image>
-                    <Image src={imageUrl} rounded size='mini' />
-                    <Header.Content> {nickname} </Header.Content>
-                </Header>
-            </div>
-        );
-    }
-    menuButtons = () => {
-        let res = {};
-        res[T_HOME] = ROUTE_HOME;
-        res[T_COMMUNITIES] = ROUTE_COMMUNITIES;
-        console.log(res);
-        return res;
-    }
-    render(){
-        const {t, isAuthorized} = this.props;
-        const {children} = this.props;
-        const {visible} = this.state;
-        const thumbnail = isAuthorized ? this.userThumbnail() : null;
-        return(
-            <Container>
-                <Sidebar.Pushable>
-                    <Sidebar
-                        as={Menu}
-                        width="wide"
-                        animation="overlay"
-                        //inverted
-                        onHide={() => this.turnOff()}
-                        vertical
-                        visible={visible}
-                        >
-                        <Menu.Item>
-                            <SearchInput/>
-                        </Menu.Item>
-                        {isAuthorized &&
-                            <Menu.Item>
-                                {thumbnail}
-                            </Menu.Item>
-                        }
-                        {!isAuthorized &&
-                            <Menu.Item> 
-                                <LogInButton/>
-                            </Menu.Item>
-                        }
-                        {!isAuthorized &&
-                            <Menu.Item> 
-                                <SignUpButton/>
-                            </Menu.Item>
-                        }
-                    </Sidebar>
-                    <Sidebar.Pusher dimmed={visible}>
-                        <Menu 
-                        //inverted
-                            secondary
-                            >
-                            <Responsive  maxWidth={MAX_MOBILE_WIDTH}>
-                                <Menu.Item icon onClick={this.turnOn}>
-                                    <Icon name="bars" />
-                                </Menu.Item>
-                            </Responsive>
-                            <Menu.Item>
-                                <Link to={ROUTE_HOME}>
-                                    Publicator
-                                </Link>
-                            </Menu.Item>
-                            {
-                                _.map(this.menuButtons(), (route, name) => {
-                                    return(
-                                        <Menu.Item>
-                                            <Link to={route}>{t(name)}</Link>
-                                        </Menu.Item>
-                                    );
-                                })
-                            }
-                            <Menu.Menu position='right'>
-                                <Responsive minWidth={MAX_MOBILE_WIDTH} as={Menu.Item}>
-                                    <SearchInput/>
-                                </Responsive>
-                                {isAuthorized && 
-                                    <Responsive minWidth={MAX_MOBILE_WIDTH}>
-                                        <Menu.Item>
-                                            {thumbnail}
-                                        </Menu.Item>
-                                    </Responsive>
-                                }
-                                {!isAuthorized &&
-                                    <Responsive minWidth={MAX_MOBILE_WIDTH}>
-                                        <Menu.Item>
-                                            <LogInButton/>
-                                        </Menu.Item>
-                                    </Responsive>
-                                }
-                                {!isAuthorized &&
-                                    <Responsive minWidth={MAX_MOBILE_WIDTH}>
-                                        <Menu.Item>
-                                            <SignUpButton/>
-                                        </Menu.Item>
-                                    </Responsive>
-                                }
-                            </Menu.Menu>
-                        </Menu>
-                        {children}
-                    </Sidebar.Pusher>
-                </Sidebar.Pushable>
-            </Container>
+            <Popover>
+                <Popover.Content>
+                    <ListGroup variant="flush" >
+                        <Link to={ROUTE_PROFILE} className="router-link"  >
+                            <ListGroup.Item action>
+                                {t(T_PROFILE)}
+                            </ListGroup.Item>
+                        </Link>
+                        <Link to={ROUTE_BOOKMARKS} className="router-link" >
+                            <ListGroup.Item action>
+                                {t(T_BOOKMARKS)}
+                            </ListGroup.Item>
+                        </Link>
+                        <Link to={ROUTE_SETTINGS} className="router-link" >
+                            <ListGroup.Item action>
+                                {t(T_SETTINGS)}
+                            </ListGroup.Item>
+                        </Link>
+                        <ListGroup.Item action onClick={this.handleLogout}>
+                            {t(T_LOGOUT)}
+                        </ListGroup.Item>
+                    </ListGroup>
+                </Popover.Content>
+            </Popover>
         )
     }
-};
 
-const mapStateToProps = (state) => ({
-    userInfo: state.login.userInfo,
-    isAuthorized: state.login.isAuthorized
+    handleLogout = () => {
+        this.props.logout();
+    }
+
+    render(){
+        const { t, isAuthorized, userInfo } = this.props;
+        return(
+                <Navbar bg="light" variant="light" collapseOnSelect expand="md"  >
+                    <Navbar.Brand>/Some brand/</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    <Navbar.Collapse id="responsive-navbar-nav">
+                        <Nav className="mr-auto">
+                            <Nav.Item as={Col}>
+                                <Link to={ROUTE_HOME}>{t(T_HOME)}</Link>
+                            </Nav.Item>
+                            <Nav.Item as={Col}>
+                                <Link to={ROUTE_COMMUNITIES}>{t(T_COMMUNITIES)}</Link>
+                            </Nav.Item>
+                        </Nav>
+                        <Nav>
+                            {!isAuthorized && 
+                                <React.Fragment>
+                                    <Nav.Item as={Col}>
+                                        <Link to={ROUTE_LOGIN} >
+                                            <Button size='sm' variant="outline-primary" >{t(T_LOGIN)}</Button>
+                                        </Link>
+                                    </Nav.Item>
+                                    <Nav.Item as={Col}>
+                                        <Link to={ROUTE_SIGNUP}>
+                                            <Button size='sm' variant="outline-success">{t(T_SIGNUP)}</Button>
+                                        </Link>
+                                    </Nav.Item>
+                                </React.Fragment>
+                            }
+                            {isAuthorized &&
+                            <Nav.Item>
+                                <OverlayTrigger trigger="click" placement="bottom-start" overlay={this.userPopover()}>
+                                    <div style={{ cursor: "pointer" }} >
+                                        <span>{userInfo.nickname}</span><span>&nbsp;</span>
+                                        <Figure style={{margin: "0"}} >
+                                            <Figure.Image roundedCircle src={userInfo.imageUrl} width={40} height={40} />
+                                        </Figure>
+                                    </div>
+                                </OverlayTrigger>
+                            </Nav.Item>
+                            }
+                        </Nav>                        
+                    </Navbar.Collapse>
+                </Navbar>
+            );
+    }
+}
+
+const mapStateToProps = state => ({
+    isAuthorized: state.login.isAuthorized,
+    userInfo: state.login.userInfo
 })
 
-export default withTranslation()((connect(mapStateToProps, null)(NavBar)));
+const mapDispatchToProps = {
+    logout
+}
+
+export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(NavBar))

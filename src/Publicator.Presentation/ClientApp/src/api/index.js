@@ -10,14 +10,21 @@ function getToken(){
     return window.localStorage.getItem(authName);
 }
 
+function removeToken() {
+    window.localStorage.removeItem(authName);
+}
+
+function getAuthHeaders() {
+    return getToken() !== null ? { [authName]: `Bearer ${getToken()}`} : null;
+}
+
 const requests = axios.create({
-    headers: {
-        authName: getToken
-    }
+    headers: getAuthHeaders()
 })
 
 export {
     requests,
     setToken,
-    getToken
+    getToken,
+    removeToken
 }

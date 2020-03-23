@@ -115,7 +115,7 @@ namespace Publicator.Presentation.Controllers
         /// <summary>
         /// Method to return current authenticated user
         /// </summary>
-        /// <returns>UserDTO of authenricated user</returns>
+        /// <returns>UserDTO of authenticated user</returns>
         // GET: /api/account/current
         [Authorize]
         [Route("current")]
