@@ -173,6 +173,7 @@ namespace Publicator.ApplicationCore.Services
                 CreatorUserId = user.Id
             };
             _unitOfWork.PostRepository.Insert(post);
+            _unitOfWork.Save();
             AddTagsToPostAsync(post, tags);
             return post;
         }

@@ -61,7 +61,10 @@ class NewPostPage extends React.Component{
             && this.state.content.blocks.length != 0 
             && this.state.communityId !== null
             && this.state.tags.length != 0){
-                console.log(["submit data", this.state.name, this.state.content, this.state.communityId, this.state.tags])
+                //console.log(["submit data", this.state.name, this.state.content, this.state.communityId, this.state.tags])
+                const{name, communityId, tags, content} = this.state;
+                let data = createPost(name, JSON.stringify(content), communityId, tags);
+                console.log(data);
             }
     }
     handleRemoveTag = (event) => {

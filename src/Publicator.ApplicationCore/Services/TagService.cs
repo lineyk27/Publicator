@@ -22,8 +22,6 @@ namespace Publicator.ApplicationCore.Services
                 .TagRepository
                 .GetAsync(x => x.Name.ToLower() == name.ToLower()))
                 .FirstOrDefault();
-            if (tag == null)
-                throw new ResourceNotFoundException("Tag not found");
             return tag;
         }
 
