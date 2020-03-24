@@ -24,6 +24,11 @@ export default {
         "profile": "Profile",
         "bookmarks": "Bookmarks",
         "settings": "Settings",
-        "logOut": "Log Out"
+        "logOut": "Log Out",
+        "postName" : "Name",
+        "community" : "Community",
+        "tags" : "Tags",
+        "addTag" : "Add tag",
+        "createPost" : "Post"
     }
 }

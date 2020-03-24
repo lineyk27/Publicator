@@ -1,4 +1,4 @@
-import { requests } from "./index";
+import { requests, getAuthHeaders } from "./index";
 
 const BASE_URL = "/api/account"
 
@@ -7,7 +7,9 @@ const AccountAPI = {
         return requests.post(`${BASE_URL}/login`, {login, password});
     },
     current: () => {
-        return requests.get(`${BASE_URL}/current`)
+        return requests.get(`${BASE_URL}/current`, {
+            headers: getAuthHeaders()
+        })
     },
     register: (username, email, password, confirmPassword) => {
         return requests.post(`${BASE_URL}/register`, {

@@ -15,7 +15,9 @@ import {
     ROUTE_PROFILE,
     ROUTE_BOOKMARKS,
     ROUTE_SETTINGS,
+    ROUTE_NEWPOST,
     T_PROFILE,
+    T_NEWPOST,
     T_SETTINGS,
     T_BOOKMARKS,
     T_LOGOUT
@@ -88,16 +90,25 @@ class NavBar extends React.Component{
                                 </React.Fragment>
                             }
                             {isAuthorized &&
-                            <Nav.Item>
-                                <OverlayTrigger trigger="click" placement="bottom-start" overlay={this.userPopover()}>
-                                    <div style={{ cursor: "pointer" }} >
-                                        <span>{userInfo.nickname}</span><span>&nbsp;</span>
-                                        <Figure style={{margin: "0"}} >
-                                            <Figure.Image roundedCircle src={userInfo.imageUrl} width={40} height={40} />
-                                        </Figure>
-                                    </div>
-                                </OverlayTrigger>
-                            </Nav.Item>
+                            <React.Fragment>
+                                <Nav.Item>
+                                    <Link to={ROUTE_NEWPOST} >
+                                        <Button size='sm' variant="outline-dark" >
+                                            {t(T_NEWPOST)}
+                                        </Button>
+                                    </Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <OverlayTrigger trigger="click" placement="bottom-start" overlay={this.userPopover()}>
+                                        <Button variant="link" >
+                                            <span>{userInfo.nickname}</span><span>&nbsp;</span>
+                                            <Figure style={{margin: "0"}} >
+                                                <Figure.Image roundedCircle src={userInfo.imageUrl} width={40} height={40} />
+                                            </Figure>
+                                        </Button>
+                                    </OverlayTrigger>
+                                </Nav.Item>
+                            </React.Fragment>
                             }
                         </Nav>                        
                     </Navbar.Collapse>

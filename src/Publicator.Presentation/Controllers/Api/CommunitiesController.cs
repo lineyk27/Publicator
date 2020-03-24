@@ -76,6 +76,11 @@ namespace Publicator.Presentation.Controllers.Api
             var communityDTO = _mapper.Map<Community, CommunityDTO>(community);
             return Ok(communityDTO);
         }
+        /// <summary>
+        /// Search for community by name
+        /// </summary>
+        /// <param name="query">Found communities</param>
+        /// <returns></returns>
         // GET: api/communities/search?query="politic"
         [HttpGet]
         [Route("search")]
@@ -92,6 +97,19 @@ namespace Publicator.Presentation.Controllers.Api
             }
             var commsDTO = _mapper.Map<IEnumerable<Community>, IEnumerable<CommunityDTO>>(communities);
             return Ok(commsDTO);
+        }
+        /// <summary>
+        /// Get all communities
+        /// </summary>
+        /// <returns>All communities</returns>
+        // GET: api/communities/all
+        [HttpGet]
+        [Route("all")]
+        public async Task<IActionResult> GetBySearch()
+        {
+            var communities =  await _communityService.GetAllAsync();
+            var dto = _mapper.Map<IEnumerable<Community>, IEnumerable<CommunityDTO>>(communities);
+            return Ok(dto);
         }
     }
 }

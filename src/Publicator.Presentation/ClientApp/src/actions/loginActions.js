@@ -20,7 +20,7 @@ const loginFailure = () => ({
     type: LOGIN_FAILURE
 })
 
-function login(login, password){
+function login (login, password){
     return dispatch => {
         dispatch(loginBegin());
         return AccountAPI.login(login, password)
@@ -49,13 +49,13 @@ function setCurrent(){
                 dispatch(loginSuccesfull(userInfo));
             })
             .catch(error => {
-                console.log(error.response.status, error.response.data.Message)
+                console.log(error.status)
                 dispatch(loginFailure());
             })
     }
 }
 
-function logout() {
+function logout(){
     return dispatch => {
         removeToken();
         dispatch({ type: LOGOUT });

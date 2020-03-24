@@ -25,6 +25,12 @@ export const T_PROFILE = "profile"
 export const T_BOOKMARKS = "bookmarks"
 export const T_SETTINGS = "settings"
 export const T_LOGOUT = "logOut"
+export const T_NEWPOST = "newPost"
+export const T_POSTNAME = "postName"
+export const T_COMMUNITY = "community"
+export const T_TAGS = "tags"
+export const T_ADDTAG = "addTag"
+export const T_CREATEPOST = "createPost"
 
 export const ROUTE_LOGIN = "/login";
 export const ROUTE_SIGNUP = "/signup";
@@ -33,3 +39,4 @@ export const ROUTE_COMMUNITIES = "/communities";
 export const ROUTE_PROFILE = "/profile";
 export const ROUTE_BOOKMARKS = "/bookmarks";
 export const ROUTE_SETTINGS = "/settings";
+export const ROUTE_NEWPOST = "/new"

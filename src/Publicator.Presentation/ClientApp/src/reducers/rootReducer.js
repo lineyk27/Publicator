@@ -5,7 +5,6 @@ import loginReducer from "./loginReducer";
 import postCatalogReducer from "./postCatalogReducer";
 import postViewReducer from "./postViewReducer";
 import userViewReducer from "./userViewReducer";
-import postCreateReducer from "./postCreateReducer";
 
 const rootReducer = combineReducers({
     comment: commentReducer,

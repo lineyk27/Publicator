@@ -8,6 +8,9 @@ const CommunitiesAPI = {
     },
     bySearch: (query) => {
         return requests.get(`${BASE_URL}/search`, {params: {query}});
+    },
+    all: () => {
+        return requests.get(`${BASE_URL}/all`);
     }
 }
 

@@ -67,7 +67,6 @@ namespace Publicator.ApplicationCore.Services
 
         public async Task<Community> GetByPostAsync(Post post)
         {
-            // TODO need to be reconsidered
             return (await _unitOfWork
                 .CommunityRepository
                 .GetAsync(x => x.Posts.Contains(post)))

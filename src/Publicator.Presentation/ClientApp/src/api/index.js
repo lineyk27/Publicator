@@ -26,5 +26,6 @@ export {
     requests,
     setToken,
     getToken,
-    removeToken
+    removeToken,
+    getAuthHeaders
 }

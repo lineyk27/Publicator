@@ -4,7 +4,7 @@ export default {
         "posts" : "Записи",
         "logIn" : "Увійти",
         "signUp" : "Зарєструватися",
-        "newPost" : "Новий запис",
+        "newPost" : "Новий пост",
         "email" : "Електронна пошта",
         "password" : "Пароль",
         "username" : "Нік",
@@ -24,6 +24,11 @@ export default {
         "profile": "Профіль",
         "bookmarks": "Закладки",
         "settings": "Налаштування",
-        "logOut": "Вийти"
+        "logOut": "Вийти",
+        "postName" : "Назва",
+        "community" : "Товариство",
+        "tags": "Теги",
+        "addTag": "Додати тег",
+        "createPost" : "Запостити"
     }
 }
