@@ -31,6 +31,8 @@ export const T_COMMUNITY = "community"
 export const T_TAGS = "tags"
 export const T_ADDTAG = "addTag"
 export const T_CREATEPOST = "createPost"
+export const T_ERROR = "error"
+export const T_FILLALLFIELDS = "fillAllFields"
 
 export const ROUTE_LOGIN = "/login";
 export const ROUTE_SIGNUP = "/signup";

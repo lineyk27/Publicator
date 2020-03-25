@@ -1,18 +1,27 @@
 import React from "react"
 import { withTranslation } from "react-i18next"
-import { Container, Badge } from "react-bootstrap"
+import { Container, Badge, Toast } from "react-bootstrap"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import { withRouter } from "react-router";
 import EditorJS from "@editorjs/editorjs"
 import { Button ,Form, InputGroup } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faTimesCircle } from "@fortawesome/free-solid-svg-icons"
+import { faTimesCircle, faExclamationCircle } from "@fortawesome/free-solid-svg-icons"
 import _ from "lodash"
 import createPost from "../actions/postCreateActions"
 import CommunitiesAPI from "../api/communitiesApi"
 
-import { T_POSTNAME, T_COMMUNITY, T_TAGS, T_ADDTAG, T_NEWPOST, T_CREATEPOST} from "../constants"
+import { 
+    T_POSTNAME,
+    T_COMMUNITY,
+    T_TAGS,
+    T_ADDTAG,
+    T_NEWPOST,
+    T_CREATEPOST, 
+    T_ERROR, 
+    T_FILLALLFIELDS
+} from "../constants"
 
 class NewPostPage extends React.Component{
     constructor(props){
@@ -27,7 +36,8 @@ class NewPostPage extends React.Component{
             tags: [],
             communityId: null,
             currentTag: "",
-            communities: null
+            communities: null,
+            showNotification: false
         }
     }
     componentDidMount() {
@@ -68,12 +78,12 @@ class NewPostPage extends React.Component{
             && this.state.tags.length != 0) {
                 const{name, communityId, tags, content} = this.state;
                 this.props.createPost(name, JSON.stringify(content), communityId, tags);
-                console.log("this.props.postInfo");
-                console.log(this.props.postInfo);
                 if (this.props.postInfo != null) {
-                    console.log("in navigate location");
-                    console.log(this.props.location);
+
                 }
+            }
+            else{
+                this.showNotification(true);
             }
     }
     handleRemoveTag = (event) => {
@@ -93,12 +103,28 @@ class NewPostPage extends React.Component{
         console.log(this.props);
         console.log(this.props.postInfo);
     }
+    showNotification = (val) => {
+        this.setState({showNotification: val});
+    }
     render(){
         const{t} = this.props;
         return(
             <Container>
+                <Toast
+                    style={{position: "absolute", backgroundColor: "white"}}
+                    onClose={() => this.showNotification(false)} show={this.state.showNotification} delay={5000} autohide>
+                    <Toast.Header>
+                        <FontAwesomeIcon icon={faExclamationCircle} className="mr-auto" color="red"/>
+                        <span className="mr-auto" >{t(T_ERROR)}</span>
+                    </Toast.Header>
+                    <Toast.Body>
+                        {t(T_FILLALLFIELDS)}
+                    </Toast.Body>
+                </Toast>
                 <h3>Create new post.</h3>
-                <Form>
+                <Form
+                    noValidate
+                    >
                     <Form.Group>
                         <Form.Label>{t(T_POSTNAME)}</Form.Label>
                         <Form.Control
@@ -109,7 +135,7 @@ class NewPostPage extends React.Component{
                             onChange={this.handleChange}
                             />
                     </Form.Group>
-                    <div id="editor" />
+                    <div id="editor"/>
                     <Form.Group>
                         <h5>{t(T_COMMUNITY)}</h5>
                         <Form.Control as="select" custom onChange={this.handleCommunityChange} >
@@ -131,16 +157,14 @@ class NewPostPage extends React.Component{
                         <div>
                             {this.state.tags.map((tag, index) => {
                                 return(
-                                    <React.Fragment
-                                        key={index}
-                                        >
+                                    <React.Fragment key={index} >
                                         <Badge
-                                            variant="secondary" 
-                                            style={{fontSize: "16"}}
+                                            style={{fontSize: "13px"}}
+                                            variant="secondary"
                                             value={tag}
                                             onClick={this.handleRemoveTag}
                                             >{tag}{" "}
-                                            <FontAwesomeIcon icon={faTimesCircle}/>
+                                            <FontAwesomeIcon icon={faTimesCircle} size="14px"/>
                                         </Badge>{" "}
                                     </React.Fragment>
                                     )
@@ -163,7 +187,6 @@ class NewPostPage extends React.Component{
                         </InputGroup>
                     </Form.Group>
                     <Button onClick={this.handleSubmit}>{t(T_CREATEPOST)}</Button>
-                    <Button onClick={this.getPostInfo} >Get info</Button>
                 </Form>
             </Container>
         );

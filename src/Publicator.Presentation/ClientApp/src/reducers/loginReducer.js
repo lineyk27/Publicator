@@ -1,4 +1,4 @@
-import { 
+import {
     LOGIN_BEGIN,
     LOGIN_FAILURE,
     LOGIN_SUCCESFULL,
@@ -10,7 +10,7 @@ const initialState = {isAuthorized: false, userInfo: null, loading: false, error
 function loginReducer (state = initialState, action){
     switch(action.type){
         case LOGIN_BEGIN:
-            return{
+            return {
                 ...state,
                 loading: true,
                 error: false

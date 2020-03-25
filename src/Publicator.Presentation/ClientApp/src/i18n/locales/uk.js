@@ -29,6 +29,8 @@ export default {
         "community" : "Товариство",
         "tags": "Теги",
         "addTag": "Додати тег",
-        "createPost" : "Запостити"
+        "createPost" : "Запостити",
+        "error": "Помилка",
+        "fillAllFields": "Будь ласка заповніть всі поля."
     }
 }

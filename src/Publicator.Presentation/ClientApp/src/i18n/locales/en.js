@@ -29,6 +29,8 @@ export default {
         "community" : "Community",
         "tags" : "Tags",
         "addTag" : "Add tag",
-        "createPost" : "Post"
+        "createPost" : "Post",
+        "error": "Error",
+        "fillAllFields": "Please, fill all fields."
     }
 }
