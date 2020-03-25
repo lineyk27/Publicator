@@ -56,6 +56,7 @@ namespace Publicator.Presentation
                         ValidateAudience = true,
                         ValidAudience = jwtsettings.Audience,
                         ValidateIssuer = true,
+                        ValidateLifetime = false,
                         ValidIssuer = jwtsettings.Issuer,
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(key)

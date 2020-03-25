@@ -1,6 +1,9 @@
 import React from "react"
 import { withTranslation } from "react-i18next"
 import { Container, Badge } from "react-bootstrap"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import { withRouter } from "react-router";
 import EditorJS from "@editorjs/editorjs"
 import { Button ,Form, InputGroup } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -14,10 +17,10 @@ import { T_POSTNAME, T_COMMUNITY, T_TAGS, T_ADDTAG, T_NEWPOST, T_CREATEPOST} fro
 class NewPostPage extends React.Component{
     constructor(props){
         super(props);
-        console.log("new post page loaded");
         this.editor = new EditorJS({
             holderId:"editor"
         });
+
         this.state = {
             name: "",
             content: {blocks: []},
@@ -55,16 +58,22 @@ class NewPostPage extends React.Component{
     handleSubmit = () => {
         this.editor.save().then(data => {
             this.setState({content: data});
+        }).catch(reason => {
+            console.log(reason);
         });
-        console.log(["submit data", this.state.name, this.state.content, this.state.communityId, this.state.tags])
-        if(this.state.name !== "" 
+
+        if (this.state.name !== "" 
             && this.state.content.blocks.length != 0 
             && this.state.communityId !== null
-            && this.state.tags.length != 0){
-                //console.log(["submit data", this.state.name, this.state.content, this.state.communityId, this.state.tags])
+            && this.state.tags.length != 0) {
                 const{name, communityId, tags, content} = this.state;
-                let data = createPost(name, JSON.stringify(content), communityId, tags);
-                console.log(data);
+                this.props.createPost(name, JSON.stringify(content), communityId, tags);
+                console.log("this.props.postInfo");
+                console.log(this.props.postInfo);
+                if (this.props.postInfo != null) {
+                    console.log("in navigate location");
+                    console.log(this.props.location);
+                }
             }
     }
     handleRemoveTag = (event) => {
@@ -80,12 +89,16 @@ class NewPostPage extends React.Component{
         var community = this.state.communities[event.currentTarget.selectedIndex];
         this.setState({communityId: community.id});
     }
+    getPostInfo = () => {
+        console.log(this.props);
+        console.log(this.props.postInfo);
+    }
     render(){
         const{t} = this.props;
         return(
             <Container>
                 <h3>Create new post.</h3>
-                <Form onChange={this.handleChange} >
+                <Form>
                     <Form.Group>
                         <Form.Label>{t(T_POSTNAME)}</Form.Label>
                         <Form.Control
@@ -102,7 +115,6 @@ class NewPostPage extends React.Component{
                         <Form.Control as="select" custom onChange={this.handleCommunityChange} >
                             {this.state.communities !== null &&
                                 (_.map(this.state.communities, (value, index) => {
-                                    console.log("Added community!");
                                     return (
                                         <option key={index}>{value.name}</option>
                                         )
@@ -124,7 +136,7 @@ class NewPostPage extends React.Component{
                                         >
                                         <Badge
                                             variant="secondary" 
-                                            style={{fontSize: "16"}} 
+                                            style={{fontSize: "16"}}
                                             value={tag}
                                             onClick={this.handleRemoveTag}
                                             >{tag}{" "}
@@ -151,10 +163,19 @@ class NewPostPage extends React.Component{
                         </InputGroup>
                     </Form.Group>
                     <Button onClick={this.handleSubmit}>{t(T_CREATEPOST)}</Button>
+                    <Button onClick={this.getPostInfo} >Get info</Button>
                 </Form>
             </Container>
         );
     }
 }
 
-export default withTranslation()(NewPostPage)
+const mapStateToProps = state => ({
+    postInfo: state.postView.postInfo
+})
+
+const mapDispatchToProps = dispatch => ({
+    createPost: bindActionCreators(createPost, dispatch)
+})
+
+export default withRouter(withTranslation()(connect(mapStateToProps, mapDispatchToProps)(NewPostPage)))

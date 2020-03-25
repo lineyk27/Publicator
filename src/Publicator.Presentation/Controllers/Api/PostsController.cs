@@ -107,12 +107,13 @@ namespace Publicator.Presentation.Controllers.Api
         /// <returns>Post by id</returns>
         // GET: api/posts/123..1ef3
         [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetById([FromRoute]IdRequest model)
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetById(Guid id)
         {
-            if (ModelState.IsValid)
-                return BadRequest();
-            var post = await _postService.GetByIdAsync(model.Id);
+            //[FromRoute]IdRequest model
+            //if (ModelState.IsValid)
+            //    return BadRequest();
+            var post = await _postService.GetByIdAsync(id);
             var postDTO = _mapper.Map<Post, PostDTO>(post);
             return Ok(postDTO);
         }

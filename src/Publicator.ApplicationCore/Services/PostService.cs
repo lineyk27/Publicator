@@ -186,7 +186,8 @@ namespace Publicator.ApplicationCore.Services
                 _unitOfWork.PostTagRepository.Insert(new PostTag()
                 {
                     PostId = post.Id,
-                    TagId = i.Id
+                    TagId = i.Id,
+                    
                 });
             }
             _unitOfWork.Save();

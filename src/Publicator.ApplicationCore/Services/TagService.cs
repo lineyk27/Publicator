@@ -47,10 +47,7 @@ namespace Publicator.ApplicationCore.Services
                 _unitOfWork.Save();
                 return tag;
             }
-            else
-            {
-                return found;
-            }
+            return found;
         }
     }
 }

@@ -15,10 +15,11 @@ const postViewUnload = () => ({
 
 function loadPostView(postId){
     return dispatch => {
-        //TODO: add any loading ui/ux
         return PostsAPI.byId(postId)
             .then(response => {
                 let post = response.data;
+                console.log("Post was loaded: ")
+                console.log(response.data);
                 dispatch(postViewLoad(post));
             }).catch(error => {
                 console.log(error.response.status, error.response.data.message);
