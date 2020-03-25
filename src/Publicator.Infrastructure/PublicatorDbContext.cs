@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Publicator.Infrastructure.Entities;
 using Publicator.Infrastructure.Configurations;
+using System.Threading.Tasks;
 
 namespace Publicator.Infrastructure
 {
@@ -45,6 +46,16 @@ namespace Publicator.Infrastructure
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new UserTagConfiguration());
             builder.ApplyConfiguration(new StateConfiguration());
+        }
+        public override void Dispose()
+        {
+            SaveChanges();
+            base.Dispose();
+        }
+        public override ValueTask DisposeAsync()
+        {
+            SaveChangesAsync();
+            return base.DisposeAsync();
         }
     }
 }

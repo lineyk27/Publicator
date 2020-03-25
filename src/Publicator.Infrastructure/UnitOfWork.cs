@@ -4,14 +4,12 @@ using Publicator.Infrastructure.Interfaces;
 
 namespace Publicator.Infrastructure
 {
-    public class UnitOfWork : IDisposable, IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
-        private PublicatorDbContext context;
-        private bool disposed;
-        public UnitOfWork(string connectionstring)
+        private PublicatorDbContext _context;
+        public UnitOfWork(PublicatorDbContext context)
         {
-            context = PublicatorDbContextFactory.Create(connectionstring);
-            disposed = false;
+            _context = context;
         }
         private Repository<User> userRepository;
         private Repository<Bookmark> bookmarkRepository;
@@ -33,7 +31,7 @@ namespace Publicator.Infrastructure
             {
                 if (userRepository == null)
                 {
-                    userRepository = new Repository<User>(context);
+                    userRepository = new Repository<User>(_context);
                 }
                 return userRepository;
             }
@@ -44,7 +42,7 @@ namespace Publicator.Infrastructure
             {
                 if (bookmarkRepository == null)
                 {
-                    bookmarkRepository = new Repository<Bookmark>(context);
+                    bookmarkRepository = new Repository<Bookmark>(_context);
                 }
                 return bookmarkRepository;
             }
@@ -55,7 +53,7 @@ namespace Publicator.Infrastructure
             {
                 if (commentRepository == null)
                 {
-                    commentRepository = new Repository<Comment>(context);
+                    commentRepository = new Repository<Comment>(_context);
                 }
                 return commentRepository;
             }
@@ -66,7 +64,7 @@ namespace Publicator.Infrastructure
             {
                 if (postRepository == null)
                 {
-                    postRepository = new Repository<Post>(context);
+                    postRepository = new Repository<Post>(_context);
                 }
                 return postRepository;
             }
@@ -77,7 +75,7 @@ namespace Publicator.Infrastructure
             {
                 if (postTagRepository == null)
                 {
-                    postTagRepository = new Repository<PostTag>(context);
+                    postTagRepository = new Repository<PostTag>(_context);
                 }
                 return postTagRepository;
             }
@@ -88,7 +86,7 @@ namespace Publicator.Infrastructure
             {
                 if (userTagRepository == null)
                 {
-                    userTagRepository = new Repository<UserTag>(context);
+                    userTagRepository = new Repository<UserTag>(_context);
                 }
                 return userTagRepository;
             }
@@ -99,7 +97,7 @@ namespace Publicator.Infrastructure
             {
                 if (subscriptionNewPostRepository == null)
                 {
-                    subscriptionNewPostRepository = new Repository<SubscriptionNewPost>(context);
+                    subscriptionNewPostRepository = new Repository<SubscriptionNewPost>(_context);
                 }
                 return subscriptionNewPostRepository;
             }
@@ -110,7 +108,7 @@ namespace Publicator.Infrastructure
             {
                 if (tagRepository == null)
                 {
-                    tagRepository = new Repository<Tag>(context);
+                    tagRepository = new Repository<Tag>(_context);
                 }
                 return tagRepository;
             }
@@ -121,7 +119,7 @@ namespace Publicator.Infrastructure
             {
                 if (stateRepository == null)
                 {
-                    stateRepository = new Repository<State>(context);
+                    stateRepository = new Repository<State>(_context);
                 }
                 return stateRepository;
             }
@@ -132,7 +130,7 @@ namespace Publicator.Infrastructure
             {
                 if (userSubscriptionRepository == null)
                 {
-                    userSubscriptionRepository = new Repository<UserSubscription>(context);
+                    userSubscriptionRepository = new Repository<UserSubscription>(_context);
                 }
                 return userSubscriptionRepository;
             }
@@ -143,7 +141,7 @@ namespace Publicator.Infrastructure
             {
                 if (voteRepository == null)
                 {
-                    voteRepository = new Repository<Vote>(context);
+                    voteRepository = new Repository<Vote>(_context);
                 }
                 return voteRepository;
             }
@@ -154,7 +152,7 @@ namespace Publicator.Infrastructure
             {
                 if (userCommunityRepository == null)
                 {
-                    userCommunityRepository = new Repository<UserCommunity>(context);
+                    userCommunityRepository = new Repository<UserCommunity>(_context);
                 }
                 return userCommunityRepository;
             }
@@ -165,7 +163,7 @@ namespace Publicator.Infrastructure
             {
                 if (communityRepository == null)
                 {
-                    communityRepository = new Repository<Community>(context);
+                    communityRepository = new Repository<Community>(_context);
                 }
                 return communityRepository;
             }
@@ -176,7 +174,7 @@ namespace Publicator.Infrastructure
             {
                 if (roleRepository == null)
                 {
-                    roleRepository = new Repository<Role>(context);
+                    roleRepository = new Repository<Role>(_context);
                 }
                 return roleRepository;
             }
@@ -184,23 +182,7 @@ namespace Publicator.Infrastructure
 
         public void Save()
         {
-            context.SaveChanges();
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    context.Dispose();
-                }
-            }
-            disposed = true;
-        }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            _context.SaveChanges();
         }
     }
 }
