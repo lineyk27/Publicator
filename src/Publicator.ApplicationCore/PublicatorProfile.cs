@@ -14,7 +14,9 @@ namespace Publicator.ApplicationCore
             CreateMap<Post, PostDTO>()
                 .ForMember(dto => dto.Tags, e => e.MapFrom(z => z.PostTags.Select(pt => pt.Tag)));
             CreateMap<Tag, TagDTO>();
-            CreateMap<Comment, CommentDTO>();
+            CreateMap<Comment, CommentDTO>()
+                .ForMember(dto => dto.CreatorUser, e => e.MapFrom(z => z.User))
+                .ForMember(dto => dto.Replies, e => e.MapFrom(z => z.RepliesComments));
             CreateMap<Community, CommunityDTO>()
                 .ForMember(dto => dto.ImageUrl, e => e.MapFrom(x => x.PictureName));
             CreateMap<Role, RoleDTO>();

@@ -31,6 +31,8 @@ export default {
         "addTag": "Додати тег",
         "createPost" : "Запостити",
         "error": "Помилка",
-        "fillAllFields": "Будь ласка заповніть всі поля."
+        "fillAllFields": "Будь ласка заповніть всі поля.",
+        "creator": "Автор: ",
+        "comments": "Коментарі"
     }
 }

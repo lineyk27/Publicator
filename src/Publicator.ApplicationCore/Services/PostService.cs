@@ -122,7 +122,7 @@ namespace Publicator.ApplicationCore.Services
                 .BookmarkRepository
                 .GetAsync(x => x.UserId == user.Id && x.PostId == post.Id))
                 .FirstOrDefault();
-            if(currentbookmark != null)
+            if(currentbookmark == null)
             {
                 var newbookmark= new Bookmark()
                 {
@@ -134,7 +134,12 @@ namespace Publicator.ApplicationCore.Services
                 _unitOfWork.Save();
                 return true;
             }
-            return false;
+            else
+            {
+                _unitOfWork.BookmarkRepository.Delete(currentbookmark);
+                _unitOfWork.Save();
+                return false;
+            }
         }
         public async Task<bool> RemoveFromBookmarkAsync(Post post)
         {
@@ -332,7 +337,7 @@ namespace Publicator.ApplicationCore.Services
                 .Take(PageSize);
         }
 
-        public async Task<Vote> VoteAsync(Post post, bool up = false)
+        public async Task<Vote> VoteAsync(Post post, bool up)
         {
             var user = await _userService.GetCurrentUserAsync();
             var currentvote = (await _unitOfWork
@@ -343,11 +348,14 @@ namespace Publicator.ApplicationCore.Services
             {
                 var newvote = new Vote()
                 {
+                    Id = Guid.NewGuid(),
                     PostId = post.Id,
                     UserId = user.Id,
+                    CreationDate = DateTime.Now,
                     Up = up
                 };
                 _unitOfWork.VoteRepository.Insert(newvote);
+                _unitOfWork.Save();
                 return newvote;
             }
             else
@@ -355,14 +363,17 @@ namespace Publicator.ApplicationCore.Services
                 if(currentvote.Up == up)
                 {
                     _unitOfWork.VoteRepository.Delete(currentvote);
+                    _unitOfWork.Save();
+                    return null;
                 }
                 else
                 {
                     currentvote.Up = up;
+                    currentvote.CreationDate = DateTime.Now;
                     _unitOfWork.VoteRepository.Update(currentvote);
+                    _unitOfWork.Save();
+                    return currentvote;
                 }
-                _unitOfWork.Save();
-                return currentvote;
             }
         }
 

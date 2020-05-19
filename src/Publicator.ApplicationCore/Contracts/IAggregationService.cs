@@ -6,6 +6,7 @@ namespace Publicator.ApplicationCore.Contracts
 {
     public interface IAggregationService
     {
-        public IEnumerable<PostDTO> AggregateWithBookmarkVote(IEnumerable<Post> posts, User user);
+        public IEnumerable<PostDTO> AggregateWithBookmarkVote(IEnumerable<Post> posts, User user);        
+        public PostDTO AggregateWithBookmarkVote(Post post,User user);
     }
 }

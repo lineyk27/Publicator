@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
     login: loginReducer,
     postCatalog: postCatalogReducer,
     postView: postViewReducer,
-    userView: userViewReducer,
+    userView: userViewReducer
 });
 
 export default rootReducer;

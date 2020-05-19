@@ -31,6 +31,8 @@ export default {
         "addTag" : "Add tag",
         "createPost" : "Post",
         "error": "Error",
-        "fillAllFields": "Please, fill all fields."
+        "fillAllFields": "Please, fill all fields.",
+        "createdBy": "Authow: ",
+        "comments": "Comments"
     }
 }

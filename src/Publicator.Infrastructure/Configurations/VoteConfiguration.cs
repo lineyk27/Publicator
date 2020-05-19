@@ -10,7 +10,6 @@ namespace Publicator.Infrastructure.Configurations
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
-            builder.Property(e => e.Up).HasDefaultValue(true);
             builder.Property(e => e.CreationDate).HasColumnType("smalldatetime");
             builder
                 .HasOne(e => e.User)

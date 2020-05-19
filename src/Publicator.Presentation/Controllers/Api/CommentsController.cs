@@ -25,19 +25,17 @@ namespace Publicator.Presentation.Controllers.Api
         /// <summary>
         /// Get post's comments
         /// </summary>
-        /// <param name="model">Model that represents query with pagnation</param>
+        /// <param name="model">Model that represents post's id</param>
         /// <returns>Comments</returns>
-        // GET: api/comments/post?postid=123..23&page=3&pagesize=10
+        // GET: api/comments/post?postid=123..23
         [HttpGet]
         [Route("post")]
-        public async Task<IActionResult> GetByPost(CommentsRequest model)
+        public async Task<IActionResult> GetByPost([FromQuery]CommentsRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var post = await _postService.GetByIdAsync(model.PostId);
-            _commentsService.Page = model.Page;
-            _commentsService.PageSize = model.PageSize;
 
             var comments = await _commentsService.GetByPostAsync(post);
             var commentsDTO = _mapper.Map<IEnumerable<Comment>, IEnumerable<CommentDTO>>(comments);

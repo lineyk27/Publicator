@@ -36,5 +36,23 @@ namespace Publicator.ApplicationCore.Services
 
             return result;
         }
+
+        public PostDTO AggregateWithBookmarkVote(Post post,User user)
+        {
+            if (user == null)
+                return _mapper.Map<Post, PostDTO>(post);
+            
+            PostDTO dto;
+            dto = _mapper.Map<Post, PostDTO>(post);
+            var vote = post.Votes.Where(x => x.UserId == user.Id).FirstOrDefault();
+            var bookmark = post.Bookmarks.Where(x => x.UserId == user.Id).FirstOrDefault();
+            if (vote != null)
+            {
+                dto.CurrentVote = new VoteDTO() { Down = vote.Up == false, Up = vote.Up = true };
+            }
+            dto.CurrentBookmark = new BookmarkDTO() { Bookmarked = bookmark != null };
+
+            return dto;
+        }
     }
 }

@@ -53,7 +53,7 @@ namespace Publicator.Presentation.Controllers.Api
         [Route("create")]
         public async Task<IActionResult> CreateBookmark([FromBody]BookmarkRequest model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var post = await _postService.GetByIdAsync(model.PostId);

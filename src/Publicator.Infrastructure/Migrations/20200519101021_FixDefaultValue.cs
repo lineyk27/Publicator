@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Publicator.Infrastructure.Migrations
 {
-    public partial class FixUrlLength : Migration
+    public partial class FixDefaultValue : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -335,7 +335,7 @@ namespace Publicator.Infrastructure.Migrations
                     CreationDate = table.Column<DateTime>(type: "smalldatetime", nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
                     PostId = table.Column<Guid>(nullable: false),
-                    Up = table.Column<bool>(nullable: false, defaultValue: true)
+                    Up = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -358,9 +358,9 @@ namespace Publicator.Infrastructure.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("75163eea-6752-4720-8aec-dc10c34766b8"), "Administrator" },
-                    { new Guid("8c181453-c3a3-404a-b3d7-72e37acabd01"), "Moderator" },
-                    { new Guid("86e60261-abf4-42eb-b9bd-cda8156b9f5e"), "Simple" }
+                    { new Guid("14172959-9fca-4765-853d-f166b61df95b"), "Administrator" },
+                    { new Guid("f9f5daf5-7677-4740-bf9c-b82a5af6e16f"), "Moderator" },
+                    { new Guid("29adbc34-52b8-4769-b437-2797fed3dfa3"), "Simple" }
                 });
 
             migrationBuilder.InsertData(
@@ -368,8 +368,8 @@ namespace Publicator.Infrastructure.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("4de71c91-d906-4dd5-81dc-d10ea52aeef5"), "Active" },
-                    { new Guid("18bfb8ec-fbd8-4f28-9a59-46e2d147b506"), "Freezed" }
+                    { new Guid("77a3ac34-9f4a-4c98-9a69-8c2382e69d14"), "Active" },
+                    { new Guid("bc0eb7b6-0c30-40b0-86f1-ecbca8360d1e"), "Freezed" }
                 });
 
             migrationBuilder.InsertData(
@@ -377,70 +377,70 @@ namespace Publicator.Infrastructure.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("eb54e5bb-8277-4a5d-a55f-ed9f0c45915b"), "Life" },
-                    { new Guid("188d431f-2eac-439f-8cf9-bedd64a2e76a"), "Motorcycle" },
-                    { new Guid("3995db15-bb9c-404f-aaf5-585f278a8588"), "Car" },
-                    { new Guid("f9db585b-196c-428f-a43c-c19293299a27"), "Politic" }
+                    { new Guid("2b8d5e1c-fdc0-4471-974d-c155a9f18f55"), "Life" },
+                    { new Guid("756eb495-6529-477c-b73b-68c24b13e1cd"), "Motorcycle" },
+                    { new Guid("c2ebc6b1-4ef2-482a-9b25-4e2670ff3a3d"), "Car" },
+                    { new Guid("72a9e71e-7a76-4922-b486-656b419cf9ca"), "Politic" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "BeginStateDate", "Email", "EndStateDate", "JoinDate", "Nickname", "PasswordHash", "PictureName", "RoleId", "StateId" },
-                values: new object[] { new Guid("48ec12e9-40f9-4bea-8782-c55da22efbc6"), new DateTime(2020, 3, 21, 19, 7, 2, 170, DateTimeKind.Local).AddTicks(6052), "lineyk27gg@gmail.com", new DateTime(2050, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 3, 21, 19, 7, 2, 165, DateTimeKind.Local).AddTicks(1884), "lineyk27gg", "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f", null, new Guid("86e60261-abf4-42eb-b9bd-cda8156b9f5e"), new Guid("4de71c91-d906-4dd5-81dc-d10ea52aeef5") });
+                values: new object[] { new Guid("c255818e-574f-4b07-86f5-8d5dff4021f1"), new DateTime(2020, 5, 19, 13, 10, 20, 660, DateTimeKind.Local).AddTicks(396), "lineyk27gg@gmail.com", new DateTime(2050, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 5, 19, 13, 10, 20, 653, DateTimeKind.Local).AddTicks(59), "lineyk27gg", "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f", null, new Guid("29adbc34-52b8-4769-b437-2797fed3dfa3"), new Guid("77a3ac34-9f4a-4c98-9a69-8c2382e69d14") });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "BeginStateDate", "Email", "EndStateDate", "JoinDate", "Nickname", "PasswordHash", "PictureName", "RoleId", "StateId" },
-                values: new object[] { new Guid("9966a0bc-6215-4b92-93c8-0ec20a867ab2"), new DateTime(2020, 3, 21, 19, 7, 2, 171, DateTimeKind.Local).AddTicks(106), "lineyk27@yandex.ru", new DateTime(2050, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 3, 21, 19, 7, 2, 171, DateTimeKind.Local).AddTicks(72), "lineyk27", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", null, new Guid("86e60261-abf4-42eb-b9bd-cda8156b9f5e"), new Guid("4de71c91-d906-4dd5-81dc-d10ea52aeef5") });
+                values: new object[] { new Guid("7235142b-bf61-46d6-a844-af2613e94c3d"), new DateTime(2020, 5, 19, 13, 10, 20, 660, DateTimeKind.Local).AddTicks(5416), "lineyk27@yandex.ru", new DateTime(2050, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 5, 19, 13, 10, 20, 660, DateTimeKind.Local).AddTicks(5380), "lineyk27", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", null, new Guid("29adbc34-52b8-4769-b437-2797fed3dfa3"), new Guid("77a3ac34-9f4a-4c98-9a69-8c2382e69d14") });
 
             migrationBuilder.InsertData(
                 table: "Communities",
                 columns: new[] { "Id", "CreationDate", "CreatorUserId", "Description", "Name", "PictureName" },
-                values: new object[] { new Guid("556fea9a-bd34-4cbc-832a-104b4708fef9"), new DateTime(2020, 3, 21, 19, 7, 2, 171, DateTimeKind.Local).AddTicks(2187), new Guid("48ec12e9-40f9-4bea-8782-c55da22efbc6"), "Here users post stories about theirs lifes.", "Stories about Life", null });
+                values: new object[] { new Guid("793ae715-ebc1-4aee-bcbf-16dcbca0d4f3"), new DateTime(2020, 5, 19, 13, 10, 20, 660, DateTimeKind.Local).AddTicks(8032), new Guid("c255818e-574f-4b07-86f5-8d5dff4021f1"), "Here users post stories about theirs lifes.", "Stories about Life", null });
 
             migrationBuilder.InsertData(
                 table: "Communities",
                 columns: new[] { "Id", "CreationDate", "CreatorUserId", "Description", "Name", "PictureName" },
-                values: new object[] { new Guid("174e742e-4478-46c2-839d-c84e25a743e0"), new DateTime(2020, 3, 21, 19, 7, 2, 171, DateTimeKind.Local).AddTicks(3890), new Guid("48ec12e9-40f9-4bea-8782-c55da22efbc6"), "Community about vehicles and all about it.", "Vehicle", null });
+                values: new object[] { new Guid("236ecced-2c1b-4aa6-b386-d831accabc01"), new DateTime(2020, 5, 19, 13, 10, 20, 660, DateTimeKind.Local).AddTicks(9954), new Guid("c255818e-574f-4b07-86f5-8d5dff4021f1"), "Community about vehicles and all about it.", "Vehicle", null });
 
             migrationBuilder.InsertData(
                 table: "UserSubscriptions",
                 columns: new[] { "Id", "SubscriberUserId", "SubscriptionUserId" },
-                values: new object[] { new Guid("03521f5e-372a-42f7-a222-e90cea5b16d8"), new Guid("48ec12e9-40f9-4bea-8782-c55da22efbc6"), new Guid("9966a0bc-6215-4b92-93c8-0ec20a867ab2") });
+                values: new object[] { new Guid("c5ff1a0d-9c02-44ec-8756-8e5385498798"), new Guid("c255818e-574f-4b07-86f5-8d5dff4021f1"), new Guid("7235142b-bf61-46d6-a844-af2613e94c3d") });
 
             migrationBuilder.InsertData(
                 table: "Posts",
                 columns: new[] { "Id", "CommunityId", "Content", "CreationDate", "CreatorUserId", "Name" },
-                values: new object[] { new Guid("308e2592-84e1-4052-b323-f76189c0bf1c"), new Guid("556fea9a-bd34-4cbc-832a-104b4708fef9"), "<p>In this post i want to tell you story of my life...</p>", new DateTime(2020, 3, 21, 19, 7, 2, 171, DateTimeKind.Local).AddTicks(6029), new Guid("48ec12e9-40f9-4bea-8782-c55da22efbc6"), "Post about my life" });
+                values: new object[] { new Guid("1c146bb4-18a1-4c26-83d7-eca5221ae591"), new Guid("793ae715-ebc1-4aee-bcbf-16dcbca0d4f3"), "<p>In this post i want to tell you story of my life...</p>", new DateTime(2020, 5, 19, 13, 10, 20, 661, DateTimeKind.Local).AddTicks(2451), new Guid("c255818e-574f-4b07-86f5-8d5dff4021f1"), "Post about my life" });
 
             migrationBuilder.InsertData(
                 table: "Posts",
                 columns: new[] { "Id", "CommunityId", "Content", "CreationDate", "CreatorUserId", "Name" },
-                values: new object[] { new Guid("d991b890-d54a-4a79-be1f-5fb74e4d2949"), new Guid("556fea9a-bd34-4cbc-832a-104b4708fef9"), "<p>Once upon a time in Ukraine, village Sokal i studied in school...</p>", new DateTime(2020, 3, 21, 19, 7, 2, 171, DateTimeKind.Local).AddTicks(8344), new Guid("9966a0bc-6215-4b92-93c8-0ec20a867ab2"), "Happened in Sokal" });
+                values: new object[] { new Guid("e24c7135-0d47-4875-924d-8517991b7d16"), new Guid("793ae715-ebc1-4aee-bcbf-16dcbca0d4f3"), "<p>Once upon a time in Ukraine, village Sokal i studied in school...</p>", new DateTime(2020, 5, 19, 13, 10, 20, 661, DateTimeKind.Local).AddTicks(5297), new Guid("7235142b-bf61-46d6-a844-af2613e94c3d"), "Happened in Sokal" });
 
             migrationBuilder.InsertData(
                 table: "Bookmarks",
                 columns: new[] { "Id", "CreationDate", "PostId", "UserId" },
-                values: new object[] { new Guid("dc1d5f04-ddcf-49d7-9f98-1177efc12b08"), new DateTime(2020, 3, 24, 19, 7, 2, 172, DateTimeKind.Local).AddTicks(3437), new Guid("d991b890-d54a-4a79-be1f-5fb74e4d2949"), new Guid("48ec12e9-40f9-4bea-8782-c55da22efbc6") });
+                values: new object[] { new Guid("5e06b34b-563c-45cf-a257-942722bcec01"), new DateTime(2020, 5, 22, 13, 10, 20, 662, DateTimeKind.Local).AddTicks(1576), new Guid("e24c7135-0d47-4875-924d-8517991b7d16"), new Guid("c255818e-574f-4b07-86f5-8d5dff4021f1") });
 
             migrationBuilder.InsertData(
                 table: "Comments",
                 columns: new[] { "Id", "Content", "CreationDate", "ParentRepliedCommentId", "PostId", "UserId" },
-                values: new object[] { new Guid("9b1505f2-5ad2-40df-9350-cf7b6754a6dd"), "<p>Hilarious, how it happened with you</p>", new DateTime(2020, 3, 22, 19, 7, 2, 172, DateTimeKind.Local).AddTicks(413), null, new Guid("308e2592-84e1-4052-b323-f76189c0bf1c"), new Guid("48ec12e9-40f9-4bea-8782-c55da22efbc6") });
+                values: new object[] { new Guid("b98aab3d-ec1f-4745-a530-ecedfd5b67ee"), "<p>Hilarious, how it happened with you</p>", new DateTime(2020, 5, 20, 13, 10, 20, 661, DateTimeKind.Local).AddTicks(7851), null, new Guid("1c146bb4-18a1-4c26-83d7-eca5221ae591"), new Guid("c255818e-574f-4b07-86f5-8d5dff4021f1") });
 
             migrationBuilder.InsertData(
                 table: "PostTags",
                 columns: new[] { "Id", "PostId", "TagId" },
                 values: new object[,]
                 {
-                    { new Guid("0eb652eb-fdc0-4dc0-8010-31070213e27d"), new Guid("308e2592-84e1-4052-b323-f76189c0bf1c"), new Guid("eb54e5bb-8277-4a5d-a55f-ed9f0c45915b") },
-                    { new Guid("411831d3-40ec-4755-b27a-ca75df07c2b3"), new Guid("308e2592-84e1-4052-b323-f76189c0bf1c"), new Guid("f9db585b-196c-428f-a43c-c19293299a27") }
+                    { new Guid("36baf4a3-7a19-491e-bb6b-0d411a4f5bb8"), new Guid("1c146bb4-18a1-4c26-83d7-eca5221ae591"), new Guid("2b8d5e1c-fdc0-4471-974d-c155a9f18f55") },
+                    { new Guid("559905cf-b051-4153-a24a-d52d3dd10cf7"), new Guid("1c146bb4-18a1-4c26-83d7-eca5221ae591"), new Guid("72a9e71e-7a76-4922-b486-656b419cf9ca") }
                 });
 
             migrationBuilder.InsertData(
                 table: "Comments",
                 columns: new[] { "Id", "Content", "CreationDate", "ParentRepliedCommentId", "PostId", "UserId" },
-                values: new object[] { new Guid("e26ffc25-2f79-479d-a875-d1f1e5c41565"), "<p>It happened in 2016 year, i was 16 years old</p>", new DateTime(2020, 3, 23, 19, 7, 2, 172, DateTimeKind.Local).AddTicks(1829), new Guid("9b1505f2-5ad2-40df-9350-cf7b6754a6dd"), new Guid("308e2592-84e1-4052-b323-f76189c0bf1c"), new Guid("9966a0bc-6215-4b92-93c8-0ec20a867ab2") });
+                values: new object[] { new Guid("3b44310f-904f-4aff-b19b-35952fd93a20"), "<p>It happened in 2016 year, i was 16 years old</p>", new DateTime(2020, 5, 21, 13, 10, 20, 661, DateTimeKind.Local).AddTicks(9653), new Guid("b98aab3d-ec1f-4745-a530-ecedfd5b67ee"), new Guid("1c146bb4-18a1-4c26-83d7-eca5221ae591"), new Guid("7235142b-bf61-46d6-a844-af2613e94c3d") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookmarks_PostId",

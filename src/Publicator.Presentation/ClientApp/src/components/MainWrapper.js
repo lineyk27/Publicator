@@ -8,10 +8,12 @@ import LogIn from "./Authentication/LogIn"
 import SignUp from "./Authentication/SignUp"
 import NavBar from "./NavBar"
 import NewPostPage from "./NewPostPage"
+import PostViewPage from "./PostViewPage"
 import {
     ROUTE_LOGIN,
     ROUTE_SIGNUP,
-    ROUTE_NEWPOST
+    ROUTE_NEWPOST,
+    ROUTE_POSTVIEW
 } from "../constants"
 
 class MainWrapper extends React.Component{
@@ -32,6 +34,9 @@ class MainWrapper extends React.Component{
                         </Route>
                         <Route path={ROUTE_NEWPOST} >
                             <NewPostPage />
+                        </Route>
+                        <Route path={ROUTE_POSTVIEW} >
+                            <PostViewPage />
                         </Route>
                     </Switch>
                 </Container>

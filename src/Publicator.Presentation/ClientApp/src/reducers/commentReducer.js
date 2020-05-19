@@ -35,13 +35,18 @@ import {
 
 */
 
-const initialState = {loading: false, lastPage: null, comments: [], end: null, replyCommentId: null, replyCommentLoading: false}
+const initialState = {
+    loading: false,
+    comments: [],
+    replyCommentId: null,
+    replyCommentLoading: false
+}
 
 function commentReducer(state=initialState, action){
     switch(action.type){
         case GET_COMMENTS_LOAD:
             return {
-                comments: [...(state.comments), ...(action.comments)]
+                comments: action.comments
             };
         case GET_COMMENTS_END:
             return {
@@ -59,13 +64,24 @@ function commentReducer(state=initialState, action){
         case CREATE_COMMENT_SUCCESFULL:
             let comments = state.comments;
             let comment = searchCommentById(action.replyCommentId, comments);
-            if(comment) comment.replies.push(action.payload);
-            return {
-                ...state,
-                replyCommentLoading: false,
-                replyCommentId: null,
-                comments: state.comments
-            };
+            if(comment !== null) {
+                comment.replies.push(action.payload);
+                return {
+                    ...state,
+                    replyCommentLoading: false,
+                    replyCommentId: null,
+                    comments: [state.comments]
+                };
+            }
+            else{
+                console.log("push to all comments");
+                 return {
+                    ...state,
+                    replyCommentLoading: false,
+                    replyCommentId: null,
+                    comments: [action.payload, ...(state.comments)]
+                };
+            }
         case CREATE_COMMENT_FAILURE:
             return {
                 ...state,
@@ -79,17 +95,17 @@ function commentReducer(state=initialState, action){
 }
 
 function searchCommentById(commentId, commentTree){
-    if( !commentTree || 
-        !Array.isArray(commentTree) ||
-        !commentTree.length ||
-        commentTree.length === 0)
-            return null;
-    for(let comment in commentTree){
-        if(comment.id === commentId){
-            return comment;
+    if( Array.isArray(commentTree) || commentTree.length !== 0){
+       for(let i = 0; i < commentTree.length; i++){
+            if(commentTree[i].id === commentId){
+                return commentTree[i];
+            }
+            console.log('Comment in tree search!!!!!!!!');
+            console.log(commentTree[i]);
+            return searchCommentById(commentTree[i].replies);
         }
-        return searchCommentById(comment.replies);
     }
+    return null;
 }
 
 export default commentReducer;

@@ -1,8 +1,16 @@
 import { 
     POST_VIEW_LOAD,
-    POST_VIEW_UNLOAD
+    POST_VIEW_UNLOAD,
+    POST_BOOKMARK_BEGIN,
+    POST_BOOKMARK_FAILURE,
+    POST_BOOKMARK_SUCCESFULL,
+    POST_VOTE_BEGIN,
+    POST_VOTE_FAILURE,
+    POST_VOTE_SUCCESFULL
 } from "../actionTypes";
 import PostsAPI from "../api/postsApi";
+import BookmarkAPI from "../api/bookmarksApi";
+import VotesAPI from "../api/votesApi";
 
 const postViewLoad = (post) => ({
     type: POST_VIEW_LOAD,
@@ -13,12 +21,67 @@ const postViewUnload = () => ({
     type: POST_VIEW_UNLOAD
 });
 
+const postBookmarkBegin = () => ({
+    type: POST_BOOKMARK_BEGIN
+});
+
+const postBookmarkFailure = () => ({
+    type: POST_BOOKMARK_FAILURE
+});
+
+const postBookmarkSuccesfull = (bookmarked) => ({
+    type: POST_BOOKMARK_SUCCESFULL,
+    bookmarked
+});
+
+const votePostBegin = () => ({
+    type: POST_VOTE_BEGIN
+})
+
+const votePostFailure = () => ({
+    type: POST_VOTE_FAILURE
+})
+
+const votePostSuccesfull = (vote) => ({
+    type: POST_VOTE_SUCCESFULL,
+    vote
+})
+
+function votePost(postId, up){
+    return dispatch => {
+        dispatch(votePostBegin());
+        VotesAPI.create(postId, up)
+            .then(response => {
+                let vote = response.data;
+                dispatch(votePostSuccesfull(vote));
+            }).catch(error => {
+                console.log(error);
+                dispatch(votePostFailure());
+            })
+    }
+}
+
+function bookmarkPost(postId){
+    return dispatch => {
+        dispatch(postBookmarkBegin());
+        return BookmarkAPI.create(postId)
+            .then(response => {
+                console.log("In bookmark post action");
+                console.log(response);
+                let bookmarked = response.data.state;
+                dispatch(postBookmarkSuccesfull(bookmarked));
+            }).catch(error => {
+                console.log(error);
+                dispatch(postBookmarkFailure());
+            });
+    }
+}
+
 function loadPostView(postId){
     return dispatch => {
         return PostsAPI.byId(postId)
             .then(response => {
                 let post = response.data;
-                console.log("Post was loaded: ")
                 console.log(response.data);
                 dispatch(postViewLoad(post));
             }).catch(error => {
@@ -36,5 +99,7 @@ function unloadPostView(){
 
 export {
     loadPostView,
-    unloadPostView
+    unloadPostView,
+    bookmarkPost,
+    votePost
 };

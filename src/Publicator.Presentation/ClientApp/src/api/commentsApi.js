@@ -3,9 +3,9 @@ import { requests } from "./index";
 const BASE_URL = "/api/comments"
 
 const CommentsAPI = {
-    byPost: (postId, page, pageSize) => {
+    byPost: (postId) => {
         return requests.get(`${BASE_URL}/post`, {
-            params: {postId, page, pageSize},
+            params: {postId},
         });
     },
     create: (postId, text, parentCommentId) => {

@@ -1,7 +1,6 @@
 import {
     GET_COMMENTS_LOAD,
     GET_COMMENTS_UNLOAD,
-    GET_COMMENTS_END,
     CREATE_COMMENT_FAILURE,
     CREATE_COMMENT_BEGIN,
     CREATE_COMMENT_SUCCESFULL
@@ -10,10 +9,6 @@ import CommentsAPI from "../api/commentsApi";
 
 const getCommentsUnload = () => ({
     type: GET_COMMENTS_UNLOAD
-});
-
-const getCommentsEnd = () => ({
-    type: GET_COMMENTS_END
 });
 
 const getCommentsLoad = (comments) => ({
@@ -37,16 +32,15 @@ const createCommentSuccesfull = (replyCommentId, comment) => ({
     replyCommentId: replyCommentId
 });
 
-function loadComments(postId, page, pageSize){
+function loadComments(postId){
     return dispatch => {
         // loading ui
-        CommentsAPI.byPost(postId, page, pageSize)
+        CommentsAPI.byPost(postId)
             .then(response => {
                 let comments = response.data;
-                if(comments.length == 0) dispatch(getCommentsEnd());
-                else dispatch(getCommentsLoad(comments));
+                dispatch(getCommentsLoad(comments));
             }).catch(error => {
-                console.log(error.response.status, error.response.data.message);
+                console.log(error);
                 dispatch(getCommentsUnload());
             });
     }
@@ -58,9 +52,9 @@ function createComment(postId, text, parentCommentId){
         return CommentsAPI.create(postId, text, parentCommentId)
             .then(response => {
                 let comment = response.data;
-                dispatch(createCommentSuccesfull(replyCommentId, comment));
+                dispatch(createCommentSuccesfull(parentCommentId, comment));
             }).catch(error => {
-                console.log(error.response.status, error.response.data.message);
+                console.log(error);
                 dispatch(createCommentFailure(parentCommentId));
             });
     }

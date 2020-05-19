@@ -11,7 +11,17 @@ import { faTimesCircle, faExclamationCircle } from "@fortawesome/free-solid-svg-
 import _ from "lodash"
 import createPost from "../actions/postCreateActions"
 import CommunitiesAPI from "../api/communitiesApi"
-
+import { uploadImageByFile, uploadImageByUrl } from "../api/fileApi"
+import ImageTool from "@editorjs/image"
+import Marker from "@editorjs/marker"
+import Quote from "@editorjs/quote"
+import List from "@editorjs/list"
+import InlineCode from "@editorjs/inline-code"
+import Header from "@editorjs/header"
+import CodeTool from "@editorjs/code"
+import Embed from "@editorjs/embed"
+import Paragraph from "@editorjs/paragraph"
+import Delimiter from "@editorjs/delimiter"
 import { 
     T_POSTNAME,
     T_COMMUNITY,
@@ -27,7 +37,45 @@ class NewPostPage extends React.Component{
     constructor(props){
         super(props);
         this.editor = new EditorJS({
-            holderId:"editor"
+            holderId: "editor",
+            tools: {
+                image: {
+                    class: ImageTool,
+                    config: {
+                      uploader: {
+                        uploadByFile: uploadImageByFile,
+                        uploadByUrl: uploadImageByUrl
+                        },
+                    }
+                },
+                marker: Marker,
+                quote: Quote,
+                list: {
+                    class: List,
+                    inlineToolbar: true,
+                },
+                inlineCode: InlineCode,
+                header: {
+                    class: Header,
+                    config: {
+                      defaultLevel: 3
+                    }
+                },
+                code: CodeTool,
+                embed: {
+                    class: Embed,
+                    config: {
+                      services: {
+                        youtube: true
+                      }
+                    }
+                  },
+                paragraph: {
+                    class: Paragraph,
+                    inlineToolbar: true,
+                },
+                delimiter: Delimiter
+        }
         });
 
         this.state = {
@@ -48,6 +96,7 @@ class NewPostPage extends React.Component{
             }).catch(error => {
                 console.log(error)
             });
+        //this.editor.focus(false);
     }
     componentWillUnmount(){
         this.editor.destroy();
@@ -79,7 +128,7 @@ class NewPostPage extends React.Component{
                 const{name, communityId, tags, content} = this.state;
                 this.props.createPost(name, JSON.stringify(content), communityId, tags);
                 if (this.props.postInfo != null) {
-
+                    this.props.history.push(`/posts/${this.props.postInfo.id}`);
                 }
             }
             else{

@@ -33,6 +33,8 @@ export const T_ADDTAG = "addTag"
 export const T_CREATEPOST = "createPost"
 export const T_ERROR = "error"
 export const T_FILLALLFIELDS = "fillAllFields"
+export const T_CREATOR = "creator"
+export const T_COMMENTS = "comments"
 
 export const ROUTE_LOGIN = "/login";
 export const ROUTE_SIGNUP = "/signup";
@@ -42,3 +44,14 @@ export const ROUTE_PROFILE = "/profile";
 export const ROUTE_BOOKMARKS = "/bookmarks";
 export const ROUTE_SETTINGS = "/settings";
 export const ROUTE_NEWPOST = "/new"
+export const ROUTE_POSTVIEW = "/posts/:id"
+export const ROUTE_USER = "/users/:nickname"
+
+export const BLOCK_PARAGRAPH = "paragraph"
+export const BLOCK_HEADER = "header"
+export const BLOCK_IMAGE = "image"
+export const BLOCK_QUOTE = "quote"
+export const BLOCK_LIST = "list"
+export const BLOCK_CODE = "code"
+export const BLOCK_DELIMITER = "delimiter"
+export const BLOCK_EMBED = "embed"

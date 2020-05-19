@@ -113,8 +113,9 @@ namespace Publicator.Presentation.Controllers.Api
             //[FromRoute]IdRequest model
             //if (ModelState.IsValid)
             //    return BadRequest();
+            var curruser = await _userService.TryGetCurrentAsync();
             var post = await _postService.GetByIdAsync(id);
-            var postDTO = _mapper.Map<Post, PostDTO>(post);
+            var postDTO = _aggregationService.AggregateWithBookmarkVote(post, curruser);
             return Ok(postDTO);
         }
         /// <summary>

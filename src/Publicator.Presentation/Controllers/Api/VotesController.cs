@@ -42,11 +42,11 @@ namespace Publicator.Presentation.Controllers.Api
         /// </summary>
         /// <param name="model">Model with vote info</param>
         /// <returns>Current vote</returns>
-        // PUT: api/votes/vote?postid=123..23&up=true
+        // PUT: api/votes/vote
         [Authorize]
         [HttpPut]
         [Route("vote")]
-        public async Task<IActionResult> VoteAsync([FromQuery]VoteRequest model)
+        public async Task<IActionResult> VoteAsync([FromBody]VoteRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
