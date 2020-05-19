@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { createComment, loadComments, unloadComments } from "../actions/commentActions";
-import { loadPostView, votePost, bookmarkPost } from "../actions/postViewActions";
+import { loadPostView, votePost, bookmarkPost, updateRating } from "../actions/postViewActions";
 import { Link } from "react-router-dom"
 import { withRouter } from "react-router";
 import { withTranslation } from "react-i18next";
@@ -65,15 +65,12 @@ class PostViewPage extends React.Component{
         const {postInfo} = this.props;
         if(postInfo.currentVote !== null){
             if(postInfo.currentVote.up === true) return "text-success";
-            else return "text-danger";
+            else if(postInfo.currentVote.up === true) return "text-danger";
         }
         return "text-dark"
     }
     render(){
         const{ postInfo, t, comments } = this.props;
-        const{ validated } = this.state;
-        console.log("POST INFORMATION !!!!");
-        console.log(postInfo);
         return(
             <React.Fragment>
                 {postInfo === null && 
@@ -304,6 +301,7 @@ const mapDispatchToProps = dispatch => ({
     loadPostView: bindActionCreators(loadPostView, dispatch),
     bookmarkPost: bindActionCreators(bookmarkPost, dispatch),
     votePost: bindActionCreators(votePost, dispatch),
+    updateRating: bindActionCreators(updateRating, dispatch)
 });
 
 export default withRouter(withTranslation()(connect(mapStateToProps, mapDispatchToProps)(PostViewPage)))

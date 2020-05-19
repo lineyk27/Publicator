@@ -340,13 +340,13 @@ namespace Publicator.ApplicationCore.Services
         public async Task<Vote> VoteAsync(Post post, bool up)
         {
             var user = await _userService.GetCurrentUserAsync();
-            var currentvote = (await _unitOfWork
+            Vote currentvote = (await _unitOfWork
                 .VoteRepository
                 .GetAsync(x => x.PostId == post.Id && x.UserId == user.Id))
                 .FirstOrDefault();
             if(currentvote == null)
             {
-                var newvote = new Vote()
+                currentvote = new Vote()
                 {
                     Id = Guid.NewGuid(),
                     PostId = post.Id,
@@ -354,9 +354,8 @@ namespace Publicator.ApplicationCore.Services
                     CreationDate = DateTime.Now,
                     Up = up
                 };
-                _unitOfWork.VoteRepository.Insert(newvote);
+                _unitOfWork.VoteRepository.Insert(currentvote);
                 _unitOfWork.Save();
-                return newvote;
             }
             else
             {
@@ -364,7 +363,7 @@ namespace Publicator.ApplicationCore.Services
                 {
                     _unitOfWork.VoteRepository.Delete(currentvote);
                     _unitOfWork.Save();
-                    return null;
+                    currentvote = null;
                 }
                 else
                 {
@@ -372,9 +371,10 @@ namespace Publicator.ApplicationCore.Services
                     currentvote.CreationDate = DateTime.Now;
                     _unitOfWork.VoteRepository.Update(currentvote);
                     _unitOfWork.Save();
-                    return currentvote;
                 }
             }
+            await CalcCurrentRatingAsync(post);
+            return currentvote;    
         }
 
         public async Task<Vote> CurrentVoteAsync(Post post)

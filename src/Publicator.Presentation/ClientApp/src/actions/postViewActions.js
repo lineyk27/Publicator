@@ -6,7 +6,8 @@ import {
     POST_BOOKMARK_SUCCESFULL,
     POST_VOTE_BEGIN,
     POST_VOTE_FAILURE,
-    POST_VOTE_SUCCESFULL
+    POST_VOTE_SUCCESFULL,
+    POST_RATING_UPDATE
 } from "../actionTypes";
 import PostsAPI from "../api/postsApi";
 import BookmarkAPI from "../api/bookmarksApi";
@@ -47,6 +48,11 @@ const votePostSuccesfull = (vote) => ({
     vote
 })
 
+const updateRatingSuccesfull = (rating) => ({
+    type: POST_RATING_UPDATE,
+    rating
+})
+
 function votePost(postId, up){
     return dispatch => {
         dispatch(votePostBegin());
@@ -54,10 +60,23 @@ function votePost(postId, up){
             .then(response => {
                 let vote = response.data;
                 dispatch(votePostSuccesfull(vote));
+                dispatch(updateRating(postId));
             }).catch(error => {
                 console.log(error);
                 dispatch(votePostFailure());
             })
+    }
+}
+
+function updateRating(postId){
+    return dispatch => {
+        VotesAPI.currentRating(postId)
+            .then(response => {
+                let rating = response.data.currentRating;
+                dispatch(updateRatingSuccesfull(rating));
+            }).catch(error => {
+                console.log(error);
+            });
     }
 }
 
@@ -101,5 +120,6 @@ export {
     loadPostView,
     unloadPostView,
     bookmarkPost,
-    votePost
+    votePost,
+    updateRating
 };

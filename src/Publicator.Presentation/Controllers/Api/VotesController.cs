@@ -57,5 +57,21 @@ namespace Publicator.Presentation.Controllers.Api
             var voteDTO = _mapper.Map<Vote, VoteDTO>(current);
             return Ok(voteDTO);
         }
+        /// <summary>
+        /// Get's current rating of post
+        /// </summary>
+        /// <param name="model">Model with post id</param>
+        /// <returns>Current rating</returns>
+        // GET: api/votes/rating?postId=123..23
+        [HttpGet]
+        [Route("rating")]
+        public async Task<IActionResult> CurrentRating([FromQuery]CurrentVoteRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var post = await _postService.GetByIdAsync(model.PostId);
+            return Ok(new {CurrentRating = post.CurrentRating});
+        }
     }
 }

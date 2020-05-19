@@ -6,7 +6,8 @@ import {
     POST_VOTE_FAILURE,
     POST_BOOKMARK_SUCCESFULL,
     POST_BOOKMARK_FAILURE,
-    POST_BOOKMARK_BEGIN
+    POST_BOOKMARK_BEGIN,
+    POST_RATING_UPDATE
 } from "../actionTypes";
 
 const initialState = {postInfo: null};
@@ -38,6 +39,13 @@ function postViewReducer(state=initialState, action){
             }
             console.log(state);
             return state;
+        case POST_RATING_UPDATE:
+            return  {
+                postInfo:{
+                    ...state.postInfo,
+                    currentRating: action.rating
+                }
+            };
         default:
             return state;
     }

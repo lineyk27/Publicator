@@ -23,6 +23,7 @@ export const POST_BOOKMARK_FAILURE = 37;
 export const POST_VOTE_BEGIN = 38;
 export const POST_VOTE_SUCCESFULL = 39;
 export const POST_VOTE_FAILURE = 40;
+export const POST_RATING_UPDATE = 41;
 
 export const CREATE_COMMENT_BEGIN = 17;
 export const CREATE_COMMENT_SUCCESFULL = 18;
