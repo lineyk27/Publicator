@@ -43,9 +43,19 @@ export const ROUTE_COMMUNITIES = "/communities";
 export const ROUTE_PROFILE = "/profile";
 export const ROUTE_BOOKMARKS = "/bookmarks";
 export const ROUTE_SETTINGS = "/settings";
-export const ROUTE_NEWPOST = "/new"
+export const ROUTE_NEWPOST = "/create"
 export const ROUTE_POSTVIEW = "/posts/:id"
 export const ROUTE_USER = "/users/:nickname"
+export const ROUTE_MAIN = "/:catalog"
+
+export const CATALOG_PERIOD_DAY = "day"
+export const CATALOG_PERIOD_WEEK = "week"
+export const CATALOG_PERIOD_MONTH = "month"
+export const CATALOG_PERIOD_YEAR = "year"
+
+export const NAME_CATALOG_HOT = "hot"
+export const NAME_CATALOG_NEW = "new"
+export const NAME_CATALOG_BY_SUBSCRIPTION = "bySubscription"
 
 export const BLOCK_PARAGRAPH = "paragraph"
 export const BLOCK_HEADER = "header"

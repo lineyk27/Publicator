@@ -26,17 +26,15 @@ const postCatalogEnd = () => ({
     type: POST_CATALOG_END
 })
 
-function loadPostCatalog(catalogType, page, pageSize, period){
+function loadCatalogHot(page, pageSize, period){
     return dispatch => {
-        // TODO: add load to ui/ux
-        let method = methodByCatalogType(catalogType);
-        return method(page=page, pageSize=pageSize, period=period)
+        return PostsAPI.hot(period, page, pageSize)
             .then(response => {
                 // TODO must be reconsidered
                 let posts = response.data;
                 // check here is empty
                 if(response.data.length !== 0){
-                    dispatch(postCatalogLoad(posts, catalogType, page));
+                    dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_HOT, page));
                 }
                 else{
                     dispatch(postCatalogEnd());
@@ -50,13 +48,34 @@ function loadPostCatalog(catalogType, page, pageSize, period){
     }
 }
 
-function loadBySubscriptionPostCatalog(username, page, pageSize){
+function loadCatalogNew(page, pageSize){
     return dispatch => {
-        // TODO: add load to ui/ux
-        return PostsAPI.bySubscription(username, page, pageSize)
+        return PostsAPI.new(page, pageSize)
             .then(response => {
                 let posts = response.data;
                 if(response.data.length !== 0){
+                    dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_NEW, page));
+                }
+                else{
+                    dispatch(postCatalogEnd());
+                }
+            })
+            .catch(error => {
+                // TODO must be reconsidered
+                console.log(error.response.status, error.response.data.message);
+                dispatch(postCatalogUnload());
+            })
+    }
+}
+
+function loadBySubscriptionPostCatalog(page, pageSize){
+    return dispatch => {
+        // TODO: add load to ui/ux
+        return PostsAPI.bySubscription(page, pageSize)
+            .then(response => {
+                let posts = response.data;
+                console.log(response.data);
+                if(posts.length !== 0){
                     dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_USER_SUBSCRIPTION, page));
                 }
                 else{
@@ -127,9 +146,10 @@ function methodByCatalogType(catalogType){
 }
 
 export {
-    loadPostCatalog,
     loadBySearchPostCatalog,
     loadBySubscriptionPostCatalog,
     loadByCommunityPostCatalog,
-    unloadPostCatalog
+    unloadPostCatalog,
+    loadCatalogHot,
+    loadCatalogNew
 }

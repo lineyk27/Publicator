@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { createComment, loadComments, unloadComments } from "../actions/commentActions";
 import { loadPostView, votePost, bookmarkPost, updateRating } from "../actions/postViewActions";
 import { Link } from "react-router-dom"
@@ -14,22 +14,13 @@ import {
     faLongArrowAltUp
   } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
-
-import { 
-    BLOCK_CODE, 
-    BLOCK_DELIMITER, 
-    BLOCK_HEADER, 
-    BLOCK_IMAGE,
-    BLOCK_LIST,
-    BLOCK_PARAGRAPH,
-    BLOCK_QUOTE,
-    BLOCK_EMBED,
+import {
     T_CREATOR,
     T_COMMUNITY,
-    T_COMMENTS,
-    ROUTE_USER
+    T_COMMENTS
  } from "../constants"
 import _ from "lodash"
+import ItemView from "./ItemView"
 
 class PostViewPage extends React.Component{
     constructor(props){
@@ -65,7 +56,7 @@ class PostViewPage extends React.Component{
         const {postInfo} = this.props;
         if(postInfo.currentVote !== null){
             if(postInfo.currentVote.up === true) return "text-success";
-            else if(postInfo.currentVote.up === true) return "text-danger";
+            else if(postInfo.currentVote.down === true) return "text-danger";
         }
         return "text-dark"
     }
@@ -89,7 +80,7 @@ class PostViewPage extends React.Component{
                         </span>
                         <hr/>
                         <div>
-                            {_.map(JSON.parse(postInfo.content).blocks, itemView)}
+                            {_.map(JSON.parse(postInfo.content).blocks, ItemView)}
                         </div>
                         <hr/>
                         <ButtonGroup >
@@ -213,7 +204,7 @@ class CommentsView extends React.Component{
     const {comments, handleSubmit} = this.props;
     return (
         <React.Fragment>
-            {comments != undefined && 
+            {comments !== undefined && 
                 _.map(comments, (comment, index) => {
                     return(
                         <div key={index} className="pl-3">
@@ -225,64 +216,6 @@ class CommentsView extends React.Component{
         </React.Fragment>
         );
     }
-}
-
-function itemView(item, index){
-    return(
-        <React.Fragment key={index}>
-            {item.type === BLOCK_PARAGRAPH && 
-                <p>{item.data.text}</p>
-            }{item.type === BLOCK_HEADER && 
-                <h3>
-                    {item.data.text}
-                </h3>
-            }{item.type === BLOCK_CODE && 
-                <pre>
-                    <code>
-                        {item.data.code}
-                    </code>
-                </pre>
-            }{item.type == BLOCK_DELIMITER && 
-                <h3 className="text-center">
-                    ***
-                </h3>
-            }{item.type === BLOCK_IMAGE && 
-                <React.Fragment>
-                    <img src={item.data.file.url} className="mw-100"/>
-                    <p className="text-center text-muted">{item.data.caption}</p>
-                </React.Fragment>
-            }{item.type === BLOCK_LIST &&
-                <React.Fragment>
-                {item.data.style === "ordered" && 
-                    <ol>
-                        {_.map(item.data.items, (value,index) => {
-                            return(
-                                <li key={index} >{value}</li>
-                            );
-                        })}
-                    </ol>
-                }{item.data.style === "unordered" && 
-                <ul>
-                    {_.map(item.data.items, (value,index) => {
-                        return(
-                            <li key={index} >{value}</li>
-                        );
-                    })}
-                </ul>
-                }
-                </React.Fragment>
-            }{item.type === BLOCK_QUOTE && 
-                <blockquote className="blockquote">
-                    <p className="mb-0">{item.data.text}</p>
-                    <footer className="blockquote-footer">{item.data.caption}</footer>
-                </blockquote>
-            }{item.type === BLOCK_EMBED && 
-                <div className="row justify-content-center">
-                    <iframe className="col-xs-12 col-md-7 d-flex" height="350px" src={item.data.embed} />
-                </div>
-            }
-        </React.Fragment>
-    );
 }
 
 const mapStateToProps = state => ({

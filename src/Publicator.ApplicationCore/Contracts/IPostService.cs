@@ -13,7 +13,7 @@ namespace Publicator.ApplicationCore.Contracts
         public Task<IEnumerable<Post>> GetNewAsync();
         public Task<IEnumerable<Post>> GetByTagAsync(Tag tag);
         public Task<Post> GetByIdAsync(Guid postid);
-        public Task<IEnumerable<Post>> GetBySubscriptionAsync(User user);
+        public Task<IEnumerable<Post>> GetBySubscriptionAsync();
         public Task<IEnumerable<Post>> GetByCreatorAsync(User creatoruser);
         public Task<IEnumerable<Post>> GetBookmarks();
         public Task<IEnumerable<Post>> GetByCommunity(Community community);

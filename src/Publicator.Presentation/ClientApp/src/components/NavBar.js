@@ -68,7 +68,7 @@ class NavBar extends React.Component{
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="mr-auto">
                             <Nav.Item as={Col}>
-                                <Link to={ROUTE_HOME}>{t(T_HOME)}</Link>
+                                <Link to={"/hot"}>{t(T_HOME)}</Link>
                             </Nav.Item>
                             <Nav.Item as={Col}>
                                 <Link to={ROUTE_COMMUNITIES}>{t(T_COMMUNITIES)}</Link>

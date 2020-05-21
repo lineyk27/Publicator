@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -243,8 +244,8 @@ namespace Publicator.ApplicationCore.Services
                     startDate = endDate.AddMonths(-1);
                     break;
             }
-            var periodDate = (endDate - startDate).TotalHours;
-
+            var periodDate = (endDate - startDate).TotalDays;
+            //Debug.WriteLine($"end date = {endDate}, startDate = {startDate}, period = {periodDate}");
             var startPage = (Page - 1) * PageSize;
             var posts = (await _unitOfWork
                 .PostRepository
@@ -253,7 +254,7 @@ namespace Publicator.ApplicationCore.Services
                 .OrderByDescending(x => (x.CurrentRating / periodDate))
                 .Skip(startPage)
                 .Take(PageSize);
-
+                
             return posts;
         }
 
@@ -290,11 +291,12 @@ namespace Publicator.ApplicationCore.Services
             return post;
         }
 
-        public async Task<IEnumerable<Post>> GetBySubscriptionAsync(User user)
+        public async Task<IEnumerable<Post>> GetBySubscriptionAsync()
         {
+            var user = await _userService.GetCurrentUserAsync();
             return (await _unitOfWork
                 .SubscriptionNewPostRepository
-                .GetAsync(x => x.SubscriptionUserId == user.Id, includeProperties: "Post.PostTags.Tag,Post.CreatorUser,Votes,Bookmarks"))
+                .GetAsync(x => x.SubscriptionUserId == user.Id, includeProperties: "Post.PostTags.Tag,Post.CreatorUser,Post.Votes,Post.Bookmarks"))
                 .Select(x => x.Post)
                 .OrderByDescending(x => x.CreationDate)
                 .Skip(GetStartPage())

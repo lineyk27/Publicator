@@ -202,7 +202,7 @@ namespace Publicator.ApplicationCore.Services
                 {
                     user = await GetByEmailAsync(email);
                 }
-                catch(ResourceException e)
+                catch(ResourceException)
                 {
                     var id = Guid.NewGuid();
                     var role = await _roleService.GetByNameAsync("Simple");

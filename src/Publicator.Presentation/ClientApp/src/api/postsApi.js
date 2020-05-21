@@ -5,12 +5,12 @@ const BASE_URL = "/api/posts"
 const PostsAPI = {
     hot: (period, page, pageSize) => {
         return requests.get(`${BASE_URL}/hot`, {
-            params: { period, page, pageSize}
+            params: {page, pageSize, period}
         })
     },
-    bySubscription: (username, page ,pageSize) => {
+    bySubscription: (page ,pageSize) => {
         return requests.get(`${BASE_URL}/subscription`, {
-            params: {username, page, pageSize}
+            params: {page, pageSize}
         });
     },
     new: (page, pageSize) => {
