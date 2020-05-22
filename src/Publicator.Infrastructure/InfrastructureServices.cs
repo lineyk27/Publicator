@@ -15,7 +15,7 @@ namespace Publicator.Infrastructure
             {
                 var Configuration = services.BuildServiceProvider().GetService<IConfiguration>();
                 options.UseSqlServer(Configuration.GetConnectionString(conn));
-            });
+            }, ServiceLifetime.Transient);
             return services;
         }
     }

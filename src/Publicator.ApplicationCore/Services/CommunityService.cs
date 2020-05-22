@@ -69,7 +69,7 @@ namespace Publicator.ApplicationCore.Services
         {
             return (await _unitOfWork
                 .CommunityRepository
-                .GetAsync(x => x.Posts.Contains(post)))
+                .GetAsync(x => x.Posts.Any(y => y.Id == post.Id),includeProperties: "Posts"))
                 .FirstOrDefault();
         }
 

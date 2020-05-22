@@ -12,7 +12,7 @@ namespace Publicator.Infrastructure.Entities
         public User SubscriptionUser { get; set; }
         public Guid? SubscriptionTagId { get; set; }
         public Tag SubscriptionTag { get; set; }
-        public Guid SubscriptionCommunityId { get; set; }
+        public Guid? SubscriptionCommunityId { get; set; }
         public Community SubscriptionCommunity { get; set; }
     }
 }

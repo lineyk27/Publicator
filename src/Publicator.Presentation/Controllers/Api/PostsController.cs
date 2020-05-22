@@ -202,11 +202,9 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var community = model.CommunityId != null ? await _communityService.GetByIdAsync((Guid)model.CommunityId) : null;
+            var community = model.CommunityId == null ? null : await _communityService.GetByIdAsync((Guid)model.CommunityId);
 
-            var tags = new List<Tag>();
-            foreach (var i in model.Tags)
-                tags.Add(await _tagService.CreateAsync(i));
+            var tags =  await _tagService.CreateAsync(model.Tags);
             
             var post = await _postService.CreateAsync(model.Name, model.Content, community, tags);
             var postDTO = _mapper.Map<Post, PostDTO>(post);

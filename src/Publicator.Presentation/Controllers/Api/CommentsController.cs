@@ -62,7 +62,7 @@ namespace Publicator.Presentation.Controllers.Api
 
             var comment = await _commentsService.AddToPost(post, model.Text, parent);
             var commentDTO = _mapper.Map<Comment, CommentDTO>(comment);
-            return Ok(comment);
+            return Ok(commentDTO);
         }
     }
 }

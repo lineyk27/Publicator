@@ -63,19 +63,20 @@ function commentReducer(state=initialState, action){
             };
         case CREATE_COMMENT_SUCCESFULL:
             let comments = state.comments;
-            let comment = searchCommentById(action.replyCommentId, comments);
+            let comment = searchCommentById(action.replyCommentId, comments, 1);
             if(comment !== null) {
                 comment.replies.push(action.payload);
                 return {
                     ...state,
                     replyCommentLoading: false,
                     replyCommentId: null,
-                    comments: [state.comments]
+                    comments: state.comments
                 };
             }
             else{
                 console.log("push to all comments");
-                 return {
+                console.log(action.payload);
+                return {
                     ...state,
                     replyCommentLoading: false,
                     replyCommentId: null,
@@ -94,15 +95,13 @@ function commentReducer(state=initialState, action){
     }
 }
 
-function searchCommentById(commentId, commentTree){
+function searchCommentById(commentId, commentTree, level){
     if( Array.isArray(commentTree) || commentTree.length !== 0){
        for(let i = 0; i < commentTree.length; i++){
             if(commentTree[i].id === commentId){
-                return commentTree[i];
+                return {comment: commentTree[i], level};
             }
-            console.log('Comment in tree search!!!!!!!!');
-            console.log(commentTree[i]);
-            return searchCommentById(commentTree[i].replies);
+            return searchCommentById(commentId, commentTree[i].replies, level+1);
         }
     }
     return null;

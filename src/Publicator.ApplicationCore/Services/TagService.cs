@@ -49,5 +49,24 @@ namespace Publicator.ApplicationCore.Services
             }
             return found;
         }
+        public async Task<IEnumerable<Tag>> CreateAsync(IEnumerable<string> names)
+        {
+            List<Tag> tags = new List<Tag>();
+            foreach(var name in names){
+                var found = await GetByNameAsync(name);
+                if(found == null)
+                {
+                    var tag = new Tag()
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = name
+                    };
+                    _unitOfWork.TagRepository.Insert(tag);
+                    tags.Add(tag);
+                }
+            }
+            _unitOfWork.Save();
+            return tags;
+        }
     }
 }

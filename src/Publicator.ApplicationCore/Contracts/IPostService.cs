@@ -18,7 +18,7 @@ namespace Publicator.ApplicationCore.Contracts
         public Task<IEnumerable<Post>> GetBookmarks();
         public Task<IEnumerable<Post>> GetByCommunity(Community community);
         public Task<IEnumerable<Post>> GetVotedByCreatorAsync(User creatorvoteuser);
-        public void AddSubscriptionNewPostAsync(Post post);
+        public Task AddSubscriptionNewPostAsync(Post post);
         public Task<IEnumerable<Post>> GetHotAsync();
         public Task<IEnumerable<Post>> GetBySearchAsync(string query, DateTime? startDate, DateTime? endDate, int? minRating, Community community, User creatorUser);
         public Task<int> CalcCurrentRatingAsync(Post post);

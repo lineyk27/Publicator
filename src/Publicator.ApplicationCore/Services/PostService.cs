@@ -58,7 +58,7 @@ namespace Publicator.ApplicationCore.Services
             Period = HotPeriod.Month;
         }
 
-        public async void AddSubscriptionNewPostAsync(Post post)
+        public async Task AddSubscriptionNewPostAsync(Post post)
         {
             var currentuser = await _userService.GetCurrentUserAsync();
             //var tags = await _tagService.GetByPostAsync(post);
@@ -72,18 +72,15 @@ namespace Publicator.ApplicationCore.Services
                 .UserCommunityRepository
                 .GetAsync(x => x.CommunityId == community.Id,includeProperties:"User"))
                 .Select(x => x.User);
+            Console.WriteLine($"-------------------------count subscribers - {usersubscribers.Count()}");
             foreach (var i in usersubscribers)
             {
-                await AddSingleSubscriptionNewPostAsync(post, i, creator, null);
-            }
-            foreach (var i in communitysubscribers)
-            {
-                await AddSingleSubscriptionNewPostAsync(post, i, null, community);
+                await AddSingleSubscriptionNewPostAsync(post, i, creator, community);
             }
             // TODO add tags subscribe logic(or no)
         }
 
-        public async Task AddSingleSubscriptionNewPostAsync(Post post,
+        public async Task<SubscriptionNewPost> AddSingleSubscriptionNewPostAsync(Post post,
             User subscriberuser,
             User subscriptionuser,
             Community subscriptioncommunity)
@@ -94,26 +91,36 @@ namespace Publicator.ApplicationCore.Services
                 .FirstOrDefault();
             if(currentsubscription != null)
             {
+                Console.WriteLine("---------------current user was not null;");
                 currentsubscription.SubscriptionCommunityId = (Guid)subscriptioncommunity?.Id;
                 currentsubscription.SubscriptionUserId = (Guid)subscriptionuser?.Id;
-                _unitOfWork
-                    .SubscriptionNewPostRepository
-                    .Update(currentsubscription);                
+                _unitOfWork.SubscriptionNewPostRepository.Update(currentsubscription);
+                _unitOfWork.Save();
+                return currentsubscription;
             }
             else
             {
+                Console.WriteLine("--------------------current sub was null;");
                 var newpost = new SubscriptionNewPost()
                 {
+                    Id = Guid.NewGuid(),
                     PostId = post.Id,
                     UserId = subscriberuser.Id
                 };
-                newpost.SubscriptionCommunityId = (Guid)subscriptioncommunity?.Id;
-                newpost.SubscriptionUserId = (Guid)subscriptionuser?.Id;
-                _unitOfWork
-                    .SubscriptionNewPostRepository
-                    .Insert(newpost);
+                if(subscriptioncommunity != null)
+                {
+                    newpost.SubscriptionCommunityId = subscriptioncommunity.Id;
+                }
+                if (subscriberuser != null)
+                {
+                    newpost.SubscriptionUserId = subscriptionuser.Id;
+                }
+                _unitOfWork.SubscriptionNewPostRepository.Insert(newpost);
+                _unitOfWork.Save();
+                var res = await _unitOfWork.SubscriptionNewPostRepository.GetAsync();
+                Console.WriteLine($"--------------------count of all {res.Count()}");
+                return newpost;
             }
-            _unitOfWork.Save();
         }
 
         public async Task<bool> AddToBookmarkAsync(Post post)
@@ -180,11 +187,12 @@ namespace Publicator.ApplicationCore.Services
             };
             _unitOfWork.PostRepository.Insert(post);
             _unitOfWork.Save();
-            AddTagsToPostAsync(post, tags);
+            await AddTagsToPostAsync(post, tags);
+            await AddSubscriptionNewPostAsync(post);
             return post;
         }
 
-        public async void AddTagsToPostAsync(Post post, IEnumerable<Tag> tags)
+        public async Task AddTagsToPostAsync(Post post, IEnumerable<Tag> tags)
         {
             foreach(var i in tags)
             {
@@ -194,8 +202,8 @@ namespace Publicator.ApplicationCore.Services
                     PostId = post.Id,
                     TagId = i.Id,                    
                 });
-                _unitOfWork.Save();
             }
+            _unitOfWork.Save();
         }
 
         public async Task<IEnumerable<Post>> GetNewAsync()

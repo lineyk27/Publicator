@@ -77,7 +77,6 @@ class NewPostPage extends React.Component{
                 delimiter: Delimiter
         }
         });
-
         this.state = {
             name: "",
             content: {blocks: []},
@@ -87,6 +86,7 @@ class NewPostPage extends React.Component{
             communities: null,
             showNotification: false
         }
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
     componentDidMount() {
         CommunitiesAPI.all()
@@ -114,7 +114,7 @@ class NewPostPage extends React.Component{
     handleChange = (event) => {
         this.setState({[event.currentTarget.name]: event.currentTarget.value});
     }
-    handleSubmit = () => {
+    async handleSubmit() {
         this.editor.save().then(data => {
             this.setState({content: data});
         }).catch(reason => {
@@ -126,10 +126,8 @@ class NewPostPage extends React.Component{
             && this.state.communityId !== null
             && this.state.tags.length != 0) {
                 const{name, communityId, tags, content} = this.state;
-                this.props.createPost(name, JSON.stringify(content), communityId, tags);
-                if (this.props.postInfo != null) {
-                    this.props.history.push(`/posts/${this.props.postInfo.id}`);
-                }
+                let id = await this.props.createPost(name, JSON.stringify(content), communityId, tags);
+                console.log(id);
             }
             else{
                 this.showNotification(true);
