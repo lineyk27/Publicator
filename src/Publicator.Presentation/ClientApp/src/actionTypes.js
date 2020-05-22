@@ -2,14 +2,16 @@ export const LOGIN_BEGIN = 1
 export const LOGIN_SUCCESFULL = 2
 export const LOGIN_FAILURE = 3
 
-export const LOGOUT = 50
+export const LOGOUT = 4
 
-export const POST_CATALOG_TYPE_NEW = 4
-export const POST_CATALOG_TYPE_HOT = 5
-export const POST_CATALOG_TYPE_SUBSCRIPTION = 6
-export const POST_CATALOG_TYPE_USER_SUBSCRIPTION = 7;
+export const POST_CATALOG_TYPE_NEW = 5
+export const POST_CATALOG_TYPE_HOT = 6
+export const POST_CATALOG_TYPE_SUBSCRIPTION = 7
+export const POST_CATALOG_TYPE_USER_SUBSCRIPTION = 71;
 export const POST_CATALOG_TYPE_BY_COMMUNITY = 8;
 export const POST_CATALOG_TYPE_BY_SEARCH = 9;
+export const POST_CATALOG_TYPE_BY_CREATOR = 228123;
+
 
 export const POST_CATALOG_LOAD = 10;
 export const POST_CATALOG_UNLOAD = 11;
@@ -35,6 +37,7 @@ export const GET_COMMENTS_END = 22;
 
 export const USER_VIEW_LOAD = 26;
 export const USER_VIEW_UNLOAD = 27;
+export const USER_SUBSCRIPTION_LOAD = 100;
 
 export const COMMUNITY_VIEW_LOAD = 30;
 export const COMMUNITY_VIEW_UNLOAD = 31;

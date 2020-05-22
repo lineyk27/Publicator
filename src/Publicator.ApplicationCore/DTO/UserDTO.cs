@@ -6,7 +6,7 @@ namespace Publicator.ApplicationCore.DTO
     {
         public Guid Id { get; set; }
         public string Nickname { get; set; }
-        public DateTime JoidDate { get; set; }
+        public DateTime JoinDate { get; set; }
         public string ImageUrl { get; set; }
         public RoleDTO Role { get; set; }
     }

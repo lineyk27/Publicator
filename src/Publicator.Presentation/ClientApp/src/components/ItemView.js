@@ -10,6 +10,7 @@ import {
     BLOCK_PARAGRAPH,
     BLOCK_QUOTE,
 } from "../constants"
+
 function ItemView(item){
     return(
         <React.Fragment >

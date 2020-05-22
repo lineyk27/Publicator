@@ -10,12 +10,14 @@ import NavBar from "./NavBar"
 import NewPostPage from "./NewPostPage"
 import PostViewPage from "./PostViewPage"
 import PostCatalogPage from "./PostCatalogPage"
+import ProfileViewPage from "./ProfileViewPage"
 import {
     ROUTE_LOGIN,
     ROUTE_SIGNUP,
     ROUTE_NEWPOST,
     ROUTE_POSTVIEW,
-    ROUTE_MAIN
+    ROUTE_MAIN,
+    ROUTE_USER
 } from "../constants"
 
 class MainWrapper extends React.Component{
@@ -42,6 +44,9 @@ class MainWrapper extends React.Component{
                         </Route>
                         <Route path={[ROUTE_MAIN, "/"]} exact>
                             <PostCatalogPage/>
+                        </Route>
+                        <Route path={ROUTE_USER} exact>
+                            <ProfileViewPage/>
                         </Route>
                     </Switch>
                 </Container>

@@ -25,23 +25,6 @@ namespace Publicator.Presentation.Controllers.Api
             _postService = postService;
         }
         /// <summary>
-        /// Gets user by username
-        /// </summary>
-        /// <param name="username">Username of user</param>
-        /// <returns>User found by username</returns>
-        // GET: api/users/john03
-        [HttpGet]
-        [Route("{username}")]
-        public async Task<IActionResult> GetByUsername([FromRoute]UsernameRequest model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var user = await _userService.GetByUsernameAsync(model.Username);
-            var userDTO = _mapper.Map<User, UserDTO>(user);
-            return Ok(userDTO);
-        }
-        /// <summary>
         /// Get user by post he created
         /// </summary>
         /// <param name="postid">Id of created post</param>
@@ -71,6 +54,22 @@ namespace Publicator.Presentation.Controllers.Api
             return Ok(userDTO);
         }
         /// <summary>
+        /// Get's current subscription on user
+        /// </summary>
+        /// <param name="model">Username of queried user</param>
+        /// <returns>Current state of subscription.</returns>
+        // GET: api/users/currentSubscription?username=lineyk27
+        [HttpGet]
+        [Route("currentSubscription")]
+        public async Task<IActionResult> GetCurrentSubscription([FromQuery]UsernameRequest model){            
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userService.GetByUsernameAsync(model.Username);
+            var subscription = await _userService.GetCurrentSubscriptionAsync(user);
+            return Ok(new CurrentStateResponse() { State = subscription});
+        }
+        /// <summary>
         /// Subscribe on user
         /// </summary>
         /// <param name="model">User to subscribe model</param>
@@ -88,6 +87,22 @@ namespace Publicator.Presentation.Controllers.Api
             var isSubscribed = await _userService.MakeSubscription(subscription);
 
             return Ok(new CurrentStateResponse() { State = isSubscribed});
+        }
+        /// <summary>
+        /// Gets user by username
+        /// </summary>
+        /// <param name="username">Username of user</param>
+        /// <returns>User found by username</returns>
+        // GET: api/users?username=john03
+        [HttpGet]
+        public async Task<IActionResult> GetByUsername([FromQuery]UsernameRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userService.GetByUsernameAsync(model.Username);
+            var userDTO = _mapper.Map<User, UserDTO>(user);
+            return Ok(userDTO);
         }
     }
 }

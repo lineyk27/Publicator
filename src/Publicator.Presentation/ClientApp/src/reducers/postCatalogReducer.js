@@ -26,6 +26,9 @@ function postCatalogReducer(state=initialState, action){
             return initialState;
         case POST_CATALOG_END:
             if(state.catalogType !== action.catalogType){
+                console.log("Types are not equal!");
+                console.log(action.catalogType);
+                console.log(state.catalogType);
                 return{
                     posts: [],
                     lastPage: action.page,

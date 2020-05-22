@@ -142,7 +142,15 @@ namespace Publicator.ApplicationCore.Services
                 .GetAsync(x => x.SubscriptionUserId == subscriptionuser.Id, includeProperties: "SubscriberUser"))
                 .Select(x => x.SubscriberUser);
         }
-
+        public async Task<bool> GetCurrentSubscriptionAsync(User user){
+            var curruser = await GetCurrentUserAsync();
+            if(curruser != null){
+                var subs = (await GetSubscriptionsAsync(curruser))
+                    .FirstOrDefault(x => x.Id == user.Id);
+                return subs != null;
+            }
+            return false;
+        }
         public async Task<IEnumerable<User>> GetSubscriptionsAsync(User subscriberuser)
         {
             return (await _unitOfWork

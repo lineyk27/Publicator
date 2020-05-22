@@ -7,7 +7,8 @@ import {
     POST_CATALOG_TYPE_USER_SUBSCRIPTION,
     POST_CATALOG_LOAD,
     POST_CATALOG_UNLOAD,
-    POST_CATALOG_END
+    POST_CATALOG_END,
+    POST_CATALOG_TYPE_BY_CREATOR
 } from "../actionTypes";
 import PostsAPI from "../api/postsApi";
 
@@ -22,8 +23,9 @@ const postCatalogUnload = () => ({
     type: POST_CATALOG_UNLOAD
 });
 
-const postCatalogEnd = () => ({
-    type: POST_CATALOG_END
+const postCatalogEnd = (catalogType) => ({
+    type: POST_CATALOG_END,
+    catalogType
 })
 
 function loadCatalogHot(page, pageSize, period){
@@ -37,7 +39,7 @@ function loadCatalogHot(page, pageSize, period){
                     dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_HOT, page));
                 }
                 else{
-                    dispatch(postCatalogEnd());
+                    dispatch(postCatalogEnd(POST_CATALOG_TYPE_HOT));
                 }
             })
             .catch(error => {
@@ -57,7 +59,7 @@ function loadCatalogNew(page, pageSize){
                     dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_NEW, page));
                 }
                 else{
-                    dispatch(postCatalogEnd());
+                    dispatch(postCatalogEnd(POST_CATALOG_TYPE_NEW));
                 }
             })
             .catch(error => {
@@ -79,7 +81,7 @@ function loadBySubscriptionPostCatalog(page, pageSize){
                     dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_USER_SUBSCRIPTION, page));
                 }
                 else{
-                    dispatch(postCatalogEnd());
+                    dispatch(postCatalogEnd(POST_CATALOG_TYPE_USER_SUBSCRIPTION));
                 }
             }).catch(error => {
                 console.log(error.response.status, error.response.data.message);
@@ -98,7 +100,7 @@ function loadByCommunityPostCatalog(communityId, page, pageSize){
                     dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_BY_COMMUNITY, page));
                 }
                 else {
-                    dispatch(postCatalogEnd());
+                    dispatch(postCatalogEnd(POST_CATALOG_TYPE_BY_COMMUNITY));
                 }
             }).catch( error => {
                 console.log(error.response.status, error.response.data.message);
@@ -117,7 +119,7 @@ function loadBySearchPostCatalog(query, startdate, enddate, page, pageSize){
                     dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_BY_SEARCH, page));
                 }
                 else{
-                    dispatch(postCatalogEnd());
+                    dispatch(postCatalogEnd(POST_CATALOG_TYPE_BY_SEARCH));
                 }
             }).catch(error => {
                 console.log(error.response.status, error.response.data.message);
@@ -125,6 +127,26 @@ function loadBySearchPostCatalog(query, startdate, enddate, page, pageSize){
             });
     };
 }
+
+function loadByCreatorPostCatalog(username, page, pageSize){
+    return dispatch => {
+        // TODO: add load to ui/ux
+        return PostsAPI.byCreatorUser(username, page, pageSize)
+            .then(response => {
+                let posts = response.data;
+                if(response.data.length !== 0){
+                    dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_BY_CREATOR, page));
+                }
+                else{
+                    dispatch(postCatalogEnd(POST_CATALOG_TYPE_BY_CREATOR));
+                }
+            }).catch(error => {
+                console.log(error.response.status, error.response.data.message);
+                dispatch(postCatalogUnload());
+            });
+    };
+}
+
 
 function unloadPostCatalog(){
     return dispatch =>{
@@ -141,7 +163,6 @@ function methodByCatalogType(catalogType){
         case POST_CATALOG_TYPE_HOT:
         default:
             return PostsAPI.hot;
-
     }
 }
 
@@ -151,5 +172,6 @@ export {
     loadByCommunityPostCatalog,
     unloadPostCatalog,
     loadCatalogHot,
-    loadCatalogNew
+    loadCatalogNew,
+    loadByCreatorPostCatalog
 }

@@ -21,6 +21,8 @@ import { withTranslation } from "react-i18next"
 import { Card } from "react-bootstrap"
 import { connect } from "react-redux"
 import { BLOCK_PARAGRAPH, BLOCK_IMAGE, BLOCK_QUOTE } from "../constants";
+import reprDate from "../utils/dateRepr"
+
 const PAGE_SIZE = 10;
 
 class PostCatalog extends React.Component{
@@ -70,7 +72,7 @@ class PostCardView extends React.Component{
                             {post.name}
                         </Card.Title>
                         <Card.Subtitle>
-                            <small className="text-muted">{post.creationDate}</small>
+                            <small className="text-muted">{reprDate(post.creationDate)}</small>
                         </Card.Subtitle>
                         <Card.Text>
                             {this.getThumbnail()}
