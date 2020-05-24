@@ -39,7 +39,7 @@ namespace Publicator.Presentation.Controllers.Api
         {
             var posts = await _postService.GetBookmarks();
             var curruser = await _userService.TryGetCurrentAsync();
-            var postsDTO = _aggregationService.AggregateWithBookmarkVote(posts, curruser);
+            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
             return Ok(postsDTO);
         }
         /// <summary>

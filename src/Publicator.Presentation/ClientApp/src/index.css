@@ -3,9 +3,13 @@ body{
 }
 #wrapper{
     background-color: ghostwhite;
+    min-height: 800px;
 }
 .btn:focus {
     outline: none;
+}
+.cdx-block:focus{
+    border-bottom: solid 1px grey;
 }
 .myElement{
     -webkit-font-smoothing: antialiased;
@@ -18,7 +22,9 @@ body{
     border: 0;
 }
 #editor{
-    border: black 13 solid;
-    padding-top: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightsteelblue;
+    border-radius: 7px;
+    background-color: white;
 }

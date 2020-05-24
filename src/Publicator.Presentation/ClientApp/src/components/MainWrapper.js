@@ -17,8 +17,10 @@ import {
     ROUTE_NEWPOST,
     ROUTE_POSTVIEW,
     ROUTE_MAIN,
-    ROUTE_USER
+    ROUTE_USER,
+    ROUTE_BOOKMARKS
 } from "../constants"
+import BookmarksPage from "./BookmarksPage"
 
 class MainWrapper extends React.Component{
     componentDidMount(){
@@ -28,7 +30,8 @@ class MainWrapper extends React.Component{
         return(
             <div id="wrapper" >
                 <NavBar/>
-                <Container >
+                <br/><br/><br/><br/><br/>
+                <Container className="mt-2 full" >
                     <Switch>
                         <Route path={ROUTE_LOGIN} >
                             <LogIn />
@@ -42,12 +45,16 @@ class MainWrapper extends React.Component{
                         <Route path={ROUTE_POSTVIEW} >
                             <PostViewPage />
                         </Route>
+                        <Route path={ROUTE_BOOKMARKS} exact>
+                            <BookmarksPage/>
+                        </Route>
                         <Route path={[ROUTE_MAIN, "/"]} exact>
                             <PostCatalogPage/>
                         </Route>
                         <Route path={ROUTE_USER} exact>
                             <ProfileViewPage/>
                         </Route>
+
                     </Switch>
                 </Container>
             </div>

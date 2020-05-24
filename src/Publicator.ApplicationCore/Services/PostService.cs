@@ -72,7 +72,6 @@ namespace Publicator.ApplicationCore.Services
                 .UserCommunityRepository
                 .GetAsync(x => x.CommunityId == community.Id,includeProperties:"User"))
                 .Select(x => x.User);
-            Console.WriteLine($"-------------------------count subscribers - {usersubscribers.Count()}");
             foreach (var i in usersubscribers)
             {
                 await AddSingleSubscriptionNewPostAsync(post, i, creator, community);
@@ -91,7 +90,6 @@ namespace Publicator.ApplicationCore.Services
                 .FirstOrDefault();
             if(currentsubscription != null)
             {
-                Console.WriteLine("---------------current user was not null;");
                 currentsubscription.SubscriptionCommunityId = (Guid)subscriptioncommunity?.Id;
                 currentsubscription.SubscriptionUserId = (Guid)subscriptionuser?.Id;
                 _unitOfWork.SubscriptionNewPostRepository.Update(currentsubscription);
@@ -100,7 +98,6 @@ namespace Publicator.ApplicationCore.Services
             }
             else
             {
-                Console.WriteLine("--------------------current sub was null;");
                 var newpost = new SubscriptionNewPost()
                 {
                     Id = Guid.NewGuid(),
@@ -118,7 +115,6 @@ namespace Publicator.ApplicationCore.Services
                 _unitOfWork.SubscriptionNewPostRepository.Insert(newpost);
                 _unitOfWork.Save();
                 var res = await _unitOfWork.SubscriptionNewPostRepository.GetAsync();
-                Console.WriteLine($"--------------------count of all {res.Count()}");
                 return newpost;
             }
         }
@@ -226,11 +222,12 @@ namespace Publicator.ApplicationCore.Services
             var user = await _userService.GetCurrentUserAsync();
             return (await _unitOfWork
                 .BookmarkRepository
-                .GetAsync(x => x.UserId == user.Id,includeProperties: "Post.PostTags.Tag, Post.CreatorUser, Post.Votes, Post.Bookmarks"))
-                .Select(x => x.Post)
+                .GetAsync(x => x.UserId == user.Id,includeProperties: "Post.PostTags.Tag,Post.CreatorUser,Post.Votes,Post.Bookmarks"))
                 .OrderByDescending(x => x.CreationDate)
-                .Skip(GetStartPage())
-                .Take(PageSize);
+                .Select(x => x.Post)
+                //.Skip(GetStartPage())
+                //.Take(PageSize);
+                ;
         }
 
         public async Task<IEnumerable<Post>> GetHotAsync()
@@ -292,7 +289,7 @@ namespace Publicator.ApplicationCore.Services
         {
             var post = (await _unitOfWork
                 .PostRepository
-                .GetAsync(x => x.Id == postid,includeProperties: "PostTags.Tag,CreatorUser,Votes,Bookmarks"))
+                .GetAsync(x => x.Id == postid,includeProperties: "PostTags.Tag,CreatorUser,Votes,Bookmarks,Community"))
                 .FirstOrDefault();
             if (post == null)
                 throw new ResourceNotFoundException("Post not found");

@@ -23,6 +23,7 @@ import {
     T_LOGOUT
 } from "../constants"
 import { logout } from "../actions/loginActions"
+import logo from "../logo.png"
 
 class NavBar extends React.Component{
     userPopover = () => {
@@ -58,12 +59,15 @@ class NavBar extends React.Component{
     handleLogout = () => {
         this.props.logout();
     }
-
     render(){
         const { t, isAuthorized, userInfo } = this.props;
         return(
-                <Navbar bg="light" variant="light" collapseOnSelect expand="md"  >
-                    <Navbar.Brand>/Some brand/</Navbar.Brand>
+                <Navbar bg="dark" variant="light" fixed="top" collapseOnSelect expand="md"  >
+                    <Navbar.Brand>
+                        <Link to="/hot">
+                            <img src={logo} />
+                        </Link>
+                    </Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="mr-auto">
@@ -92,10 +96,8 @@ class NavBar extends React.Component{
                             {isAuthorized &&
                             <React.Fragment>
                                 <Nav.Item>
-                                    <Link to={ROUTE_NEWPOST} >
-                                        <Button size='sm' variant="outline-dark" >
-                                            {t(T_NEWPOST)}
-                                        </Button>
+                                    <Link to={ROUTE_NEWPOST} className="btn btn-light mt-2">
+                                        New post
                                     </Link>
                                 </Nav.Item>
                                 <Nav.Item>
@@ -110,7 +112,7 @@ class NavBar extends React.Component{
                                 </Nav.Item>
                             </React.Fragment>
                             }
-                        </Nav>                        
+                        </Nav>
                     </Navbar.Collapse>
                 </Navbar>
             );

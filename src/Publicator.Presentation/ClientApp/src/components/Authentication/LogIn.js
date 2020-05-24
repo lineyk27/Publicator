@@ -39,7 +39,7 @@ class LogIn extends React.Component{
         const { validated } = this.state;
         const { t, isAuthorized, error } = this.props;
         return(
-            <Container>
+            <Container className="mw-50">
                 {error && 
                     <Alert variant="danger">{t(T_LOGINERROR)}</Alert>
                 }

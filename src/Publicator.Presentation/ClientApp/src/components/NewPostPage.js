@@ -92,7 +92,7 @@ class NewPostPage extends React.Component{
         CommunitiesAPI.all()
             .then(response => {
                 let comms = response.data;
-                this.setState({ communities: comms });
+                this.setState({ communities: comms, communityId: comms[0].id });
             }).catch(error => {
                 console.log(error)
             });
@@ -156,7 +156,7 @@ class NewPostPage extends React.Component{
     render(){
         const{t} = this.props;
         return(
-            <Container>
+            <Container className="w-75">
                 <Toast
                     style={{position: "absolute", backgroundColor: "white"}}
                     onClose={() => this.showNotification(false)} show={this.state.showNotification} delay={5000} autohide>

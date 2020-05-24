@@ -8,9 +8,11 @@ import {
     POST_CATALOG_LOAD,
     POST_CATALOG_UNLOAD,
     POST_CATALOG_END,
-    POST_CATALOG_TYPE_BY_CREATOR
+    POST_CATALOG_TYPE_BY_CREATOR,
+    POST_CATALOG_TYPE_BOOKMARKS
 } from "../actionTypes";
 import PostsAPI from "../api/postsApi";
+import BookmarksAPI from "../api/bookmarksApi";
 
 const postCatalogLoad = (posts, catalogType, page) => ({
     type: POST_CATALOG_LOAD,
@@ -64,7 +66,7 @@ function loadCatalogNew(page, pageSize){
             })
             .catch(error => {
                 // TODO must be reconsidered
-                console.log(error.response.status, error.response.data.message);
+                console.log(error);
                 dispatch(postCatalogUnload());
             })
     }
@@ -141,12 +143,31 @@ function loadByCreatorPostCatalog(username, page, pageSize){
                     dispatch(postCatalogEnd(POST_CATALOG_TYPE_BY_CREATOR));
                 }
             }).catch(error => {
-                console.log(error.response.status, error.response.data.message);
+                console.log(error);
                 dispatch(postCatalogUnload());
             });
     };
 }
 
+function loadBookmarksPostCatalog(){
+    return dispatch => {
+        return BookmarksAPI.bookmarks()
+            .then(response => {
+                let posts = response.data;
+                console.log(response.data);
+                if(posts.length !== 0){
+                    dispatch(postCatalogLoad(posts, POST_CATALOG_TYPE_BOOKMARKS, 1));
+                }
+                else{
+                    dispatch(postCatalogEnd(POST_CATALOG_TYPE_BOOKMARKS));
+                }
+            }).catch(error => {
+                console.log(error);
+                dispatch(postCatalogUnload());
+            })
+
+    }
+}
 
 function unloadPostCatalog(){
     return dispatch =>{
@@ -173,5 +194,6 @@ export {
     unloadPostCatalog,
     loadCatalogHot,
     loadCatalogNew,
-    loadByCreatorPostCatalog
+    loadByCreatorPostCatalog,
+    loadBookmarksPostCatalog
 }

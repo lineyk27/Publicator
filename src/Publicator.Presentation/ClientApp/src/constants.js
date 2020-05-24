@@ -65,3 +65,5 @@ export const BLOCK_LIST = "list"
 export const BLOCK_CODE = "code"
 export const BLOCK_DELIMITER = "delimiter"
 export const BLOCK_EMBED = "embed"
+
+export const PROFILE_EMPTY_URL = "https://res.cloudinary.com/dgepkksyl/image/upload/v1590190706/user_pics/blank-profile-picture-973460_640_lgd2zr.png"

@@ -104,7 +104,7 @@ function loadPostView(postId){
                 console.log(response.data);
                 dispatch(postViewLoad(post));
             }).catch(error => {
-                console.log(error.response.status, error.response.data.message);
+                console.log(error);
                 dispatch(postViewUnload());
             });
     }

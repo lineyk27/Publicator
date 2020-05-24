@@ -52,7 +52,6 @@ class PostCatalogPage extends React.Component{
         }
     }
     getCatalogType = () => {
-            //this.props.history.push(`/${this.props.match.params.catalog}` );
         if(this.props.match.params.catalog === "new"){
             return POST_CATALOG_TYPE_NEW;
         }else if (this.props.match.params.catalog === "bySubscription"){
@@ -83,24 +82,47 @@ class PostCatalogPage extends React.Component{
             this.handleHot();
         });
     }
+    handleLoadMore = () => {
+        let { lastPage } = this.props;
+        let catalogType = this.props.match.params.catalog;
+        if(catalogType === "hot"){
+            this.props.loadCatalogHot(lastPage+1, 10, this.state.period);
+        }else if(catalogType === "new"){
+            this.props.loadCatalogNew(lastPage+1, 10);
+        }else if(catalogType === "bySubscription"){
+            this.props.loadCatalogNew(lastPage+1, 10);
+        }
+    }
+    getFocusStyle = (type) => {
+        let curr = this.getCatalogType();
+        if(curr === type){
+            return "primary";
+        }
+        return "secondary";
+    }
     render(){
         const{periods} = this.state;
+        const{end} = this.props;
+        console.log(end);
         return(
             <div>
                 <div className="row mb-3">
                     <div className="col-md-1">
                         <Button
                             onClick={this.handleHot}
+                            variant={this.getFocusStyle(POST_CATALOG_TYPE_HOT)}
                             >Hot</Button>
                     </div>
                     <div className="col-md-1">
                         <Button
                             onClick={this.handleNew}
+                            variant={this.getFocusStyle(POST_CATALOG_TYPE_NEW)}
                             >New</Button>
                     </div>
                     <div className="col-md-2">
                         <Button
                             onClick={this.handleBySubscription}
+                            variant={this.getFocusStyle(POST_CATALOG_TYPE_SUBSCRIPTION)}
                             >Subscription</Button>
                     </div>
                     {this.getCatalogType() === POST_CATALOG_TYPE_HOT && 
@@ -120,6 +142,13 @@ class PostCatalogPage extends React.Component{
                     }
                 </div>
                 <PostCatalog/>
+                <Button 
+                    block
+                    size="lg"
+                    onClick={this.handleLoadMore} 
+                    disabled={end}>
+                    {!end ? "Load more" : "All is loaded"}
+                </Button>
             </div>
         );
     }

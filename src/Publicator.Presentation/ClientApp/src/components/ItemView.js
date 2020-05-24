@@ -15,11 +15,11 @@ function ItemView(item){
     return(
         <React.Fragment >
             {item.type === BLOCK_PARAGRAPH && 
-                <span>{item.data.text}</span>
+                <p dangerouslySetInnerHTML={{__html: item.data.text}}></p>
             }{item.type === BLOCK_HEADER && 
-                <h3>
+                <h6>
                     {item.data.text}
-                </h3>
+                </h6>
             }{item.type === BLOCK_CODE && 
                 <pre>
                     <code>
@@ -32,8 +32,10 @@ function ItemView(item){
                 </h3>
             }{item.type === BLOCK_IMAGE && 
                 <div>
-                    <img src={item.data.file.url} alt={item.data.file.url} className="mw-100"/>
-                    <p className="text-center text-muted">{item.data.caption}</p>
+                    <div className="justify-content-center">
+                        <img src={item.data.file.url} alt={item.data.file.url} className="mw-100 col"/>
+                        <p className="text-center text-muted">{item.data.caption}</p>
+                    </div>
                 </div>
             }{item.type === BLOCK_LIST &&
                 <React.Fragment>

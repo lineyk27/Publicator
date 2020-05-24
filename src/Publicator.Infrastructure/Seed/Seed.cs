@@ -15,119 +15,95 @@ namespace Publicator.Infrastructure.Seed
             // seed user states
             var stateActive = new State() { Id = Guid.NewGuid(), Name = "Active" };
             var stateFreezed = new State() { Id = Guid.NewGuid(), Name = "Freezed" };
-            // seed tags
-            var tag1 = new Tag() { Id = Guid.NewGuid(), Name = "Life" };
-            var tag2 = new Tag() { Id = Guid.NewGuid(), Name = "Motorcycle" };
-            var tag3 = new Tag() { Id = Guid.NewGuid(), Name = "Car" };
-            var tag4 = new Tag() { Id = Guid.NewGuid(), Name = "Politic" };
             // seed users
             var user1 = new User()
             {
                 Id = Guid.NewGuid(),
                 Email = "lineyk27gg@gmail.com",
-                Nickname = "lineyk27gg",
+                Nickname = "lineyk27",
                 // decode - 12345678
-                PasswordHash = "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f", // using plain text, only for tests
+                PasswordHash = "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f",
                 JoinDate = DateTime.Now,
                 BeginStateDate = DateTime.Now,
                 EndStateDate = new DateTime(2050, 12, 12),
                 StateId = stateActive.Id,
-                RoleId = roleSimple.Id
+                RoleId = roleSimple.Id,
+                PictureName = "https://res.cloudinary.com/dgepkksyl/image/upload/v1590192208/user_pics/IMG_0572_ut5cxl.jpg"
             };
             var user2 = new User()
             {
                 Id = Guid.NewGuid(),
-                Nickname = "lineyk27",
-                Email = "lineyk27@yandex.ru",
+                Nickname = "kit22",
+                Email = "lineyk27@gmail.com",
                 // decode - password
                 PasswordHash = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", 
                 JoinDate = DateTime.Now,
                 BeginStateDate = DateTime.Now,
                 EndStateDate = new DateTime(2050, 12, 13),
                 StateId = stateActive.Id,
-                RoleId = roleSimple.Id
+                RoleId = roleSimple.Id,
+                PictureName = "https://res.cloudinary.com/dgepkksyl/image/upload/v1590194554/user_pics/index_gz1sqk.jpg"
             };
             // seed communities
             var community1 = new Community()
             {
                 Id = Guid.NewGuid(),
-                Name = "Stories about Life",
-                Description = "Here users post stories about theirs lifes.",
+                Name = "Cars",
+                Description = "Community for car lovers.",
                 CreationDate = DateTime.Now,
-                CreatorUserId = user1.Id
+                CreatorUserId = user1.Id,
+                PictureName = "https://res.cloudinary.com/dgepkksyl/image/upload/v1590193947/user_pics/cars2_c5wyqk.jpg"
             };
             var community2 = new Community()
             {
                 Id = Guid.NewGuid(),
-                Name = "Vehicle",
-                Description = "Community about vehicles and all about it.",
-                CreationDate = DateTime.Now,
-                CreatorUserId = user1.Id
-            };
-            // seed posts
-            var post1 = new Post()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Post about my life",
-                Content = "<p>In this post i want to tell you story of my life...</p>",
+                Name = "Sport",
+                Description = "Community footbal, basketall, tenis and other.",
                 CreationDate = DateTime.Now,
                 CreatorUserId = user1.Id,
-                CommunityId = community1.Id
+                PictureName = "https://res.cloudinary.com/dgepkksyl/image/upload/v1590193942/user_pics/sport2_fs0yab.jpg"
             };
-            var post2 = new Post()
+            
+            var community3 = new Community()
             {
                 Id = Guid.NewGuid(),
-                Name = "Happened in Sokal",
-                Content = "<p>Once upon a time in Ukraine, village Sokal i studied in school...</p>",
+                Name = "Food",
+                Description = "Community for those who love cooking.",
                 CreationDate = DateTime.Now,
-                CreatorUserId = user2.Id,
-                CommunityId = community1.Id
+                CreatorUserId = user1.Id,
+                PictureName = "https://res.cloudinary.com/dgepkksyl/image/upload/v1590193991/user_pics/food2_uckrcb.jpg"
             };
-            // seed comments
-            var comment1 = new Comment()
+
+            var community4 = new Community()
             {
                 Id = Guid.NewGuid(),
-                UserId = user1.Id,
-                PostId = post1.Id,
-                CreationDate = DateTime.Now.AddDays(1),
-                Content = "<p>Hilarious, how it happened with you</p>"
+                Name = "Programming",
+                Description = "IT industry communicates here.",
+                CreationDate = DateTime.Now,
+                CreatorUserId = user1.Id,
+                PictureName = "https://res.cloudinary.com/dgepkksyl/image/upload/v1590193952/user_pics/programing_wlmjj4.jpg"
             };
-            var comment2 = new Comment()
+
+            var community5 = new Community()
             {
                 Id = Guid.NewGuid(),
-                UserId = user2.Id,
-                PostId = post1.Id,
-                CreationDate = DateTime.Now.AddDays(2),
-                Content = "<p>It happened in 2016 year, i was 16 years old</p>",
-                ParentRepliedCommentId = comment1.Id
+                Name = "Culture",
+                Description = "Culture life.",
+                CreationDate = DateTime.Now,
+                CreatorUserId = user1.Id,
+                PictureName = "https://res.cloudinary.com/dgepkksyl/image/upload/v1590193976/user_pics/culture2_hdclpb.jpg"
             };
-            // seed bookmarks
-            var bookmark1 = new Bookmark()
-            {
-                Id = Guid.NewGuid(),
-                CreationDate = DateTime.Now.AddDays(3),
-                UserId = user1.Id,
-                PostId = post2.Id
-            };
-            // seed post tags
-            var postTag1 = new PostTag() { Id = Guid.NewGuid(), PostId = post1.Id, TagId = tag1.Id };
-            var postTag2 = new PostTag() { Id = Guid.NewGuid(), PostId = post1.Id, TagId = tag4.Id };
             // seed subscriptions
             var subscription1 = new UserSubscription() {
                 Id = Guid.NewGuid(),
                 SubscriberUserId = user1.Id, 
                 SubscriptionUserId = user2.Id
             };
-            builder.Entity<Tag>().HasData(tag1, tag2, tag3, tag4);
             builder.Entity<User>().HasData(user1, user2);
-            builder.Entity<Community>().HasData(community1, community2);
-            builder.Entity<Post>().HasData(post1, post2);
+            builder.Entity<Community>().HasData(community1, community2, community3, community4, community5);
             builder.Entity<UserSubscription>().HasData(subscription1);
-            builder.Entity<Comment>().HasData(comment1, comment2);
-            builder.Entity<PostTag>().HasData(postTag1, postTag2);
             builder.Entity<State>().HasData(stateActive, stateFreezed);
             builder.Entity<Role>().HasData(roleAdmin, roleModerator, roleSimple);
-            builder.Entity<Bookmark>().HasData(bookmark1);
         }
     }
 }

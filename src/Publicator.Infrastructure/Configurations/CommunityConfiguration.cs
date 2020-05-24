@@ -14,8 +14,8 @@ namespace Publicator.Infrastructure.Configurations
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
             builder.Property(e => e.Name).HasMaxLength(64).IsUnicode();
-            builder.Property(e => e.PictureName).HasMaxLength(32);
-            builder.Property(e => e.Description).HasMaxLength(128);
+            builder.Property(e => e.PictureName).HasMaxLength(512);
+            builder.Property(e => e.Description).HasMaxLength(256);
             builder
                 .HasOne(e => e.CreatorUser)
                 .WithMany(e => e.CreatedCommunities)

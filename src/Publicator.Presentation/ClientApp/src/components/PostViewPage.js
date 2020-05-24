@@ -21,6 +21,7 @@ import {
  } from "../constants"
 import _ from "lodash"
 import ItemView from "./ItemView"
+import Loading from "./Loading"
 
 class PostViewPage extends React.Component{
     constructor(props){
@@ -62,21 +63,23 @@ class PostViewPage extends React.Component{
     }
     render(){
         const{ postInfo, t, comments } = this.props;
+        console.log(this.props);
         return(
             <React.Fragment>
                 {postInfo === null && 
                     <div>
-                        Loading post...
+                        <Loading/>
                     </div>
                 }{postInfo !== null &&
-                    <div>
+                    <div className="row justify-content-center">
+                    <div className="w-75">
                         <h2>{postInfo.name}</h2>
-                        <span className="text-muted" >{t(T_CREATOR)}
+                        <span className="text-muted" >Creator:{" "}
                             <Link to={`/users/${postInfo.creatorUser.nickname}`}>{postInfo.creatorUser.nickname}</Link>
                         </span>
                         <br/>
                         <span className="text-muted">{t(T_COMMUNITY)}:&nbsp; 
-                            <Link to={`/communities/$`}>A community name here.</Link>
+                            <Link to={`/communities/$`}>{postInfo.community.name}</Link>
                         </span>
                         <hr/>
                         <div>
@@ -85,7 +88,7 @@ class PostViewPage extends React.Component{
                         <hr/>
                         <ButtonGroup >
                             <Button variant="link" color="green" onClick={this.handleUpVote}>
-                                <FontAwesomeIcon icon={faLongArrowAltUp} />
+                                <FontAwesomeIcon color="green" icon={faLongArrowAltUp} />
                             </Button>
                             <Button variant="link" disabled >
                                 <span className={this.voteColor} >
@@ -106,9 +109,7 @@ class PostViewPage extends React.Component{
                         <h3>{t(T_COMMENTS)}</h3>
                         <div>
                             {comments.loading === true &&
-                                <Spinner animation="border" role="status">
-                                    <span className="sr-only">Loading...</span>
-                                </Spinner>
+                                <Loading/>
                             }{comments.comments.length === 0 && 
                                 <p className="text-center text-muted">Nothing found!</p>
                             }{comments.comments.length !== 0 && 
@@ -116,6 +117,7 @@ class PostViewPage extends React.Component{
                             }
                         </div>
                         <CommentInput submitCallback={this.handleComment} />
+                    </div>
                     </div>
                 }
             </React.Fragment>

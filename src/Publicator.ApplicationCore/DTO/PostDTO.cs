@@ -11,6 +11,7 @@ namespace Publicator.ApplicationCore.DTO
         public UserDTO CreatorUser { get; set; }
         public DateTime CreationDate{ get;set; }
         public int CurrentRating{ get; set; }
+        public CommunityDTO Community { get; set; }
         public VoteDTO CurrentVote { get; set; }
         public BookmarkDTO CurrentBookmark { get; set; }
         public IEnumerable<TagDTO> Tags { get; set; }

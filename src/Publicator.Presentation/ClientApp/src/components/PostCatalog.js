@@ -22,6 +22,7 @@ import { Card } from "react-bootstrap"
 import { connect } from "react-redux"
 import { BLOCK_PARAGRAPH, BLOCK_IMAGE, BLOCK_QUOTE } from "../constants";
 import reprDate from "../utils/dateRepr"
+import Loading from "./Loading";
 
 const PAGE_SIZE = 10;
 
@@ -33,9 +34,9 @@ class PostCatalog extends React.Component{
                 {(posts === null || posts.length === 0) && 
                     <div>
                         {end === true && 
-                            <p>End of catalog</p>
+                            <p>Nothing found</p>
                         }{end === false && 
-                            <p>Loading...</p>
+                            <Loading />
                         }
                     </div>
                 }
