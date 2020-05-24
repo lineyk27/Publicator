@@ -45,7 +45,8 @@ class SignUp extends React.Component{
         const { validated, error } = this.state;
         const {t} = this.props;
         return(
-            <Container>
+            <div className="row justify-content-center">
+            <div className="w-50 ">
                 {error && 
                     <Alert variant="danger" hidded="true" >{t(T_SIGNUP)}</Alert>
                 }
@@ -107,7 +108,8 @@ class SignUp extends React.Component{
                         </Form.Group>
                     <Button type="submit" >{t(T_SIGNUP)}</Button>
                 </Form>
-            </Container>
+                </div>
+                </div>
         )
     }
 }

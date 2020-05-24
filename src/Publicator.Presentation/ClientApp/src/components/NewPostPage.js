@@ -228,7 +228,7 @@ class NewPostPage extends React.Component{
                                 />
                             <InputGroup.Append>
                                 <Button 
-                                    variant="outline-secondary" 
+                                    variant="secondary" 
                                     onClick={this.handleAddTag}>{t(T_ADDTAG)}</Button>
                             </InputGroup.Append>
                         </InputGroup>

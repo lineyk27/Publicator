@@ -14,13 +14,13 @@ import {
 import { login } from "../../actions/loginActions"
 import { connect } from "react-redux"
 
-
 class LogIn extends React.Component{
     constructor(props){
         super(props);
         this.state = {validated: false, error: false}
     }
     handleSubmit = event => {
+        this.handleChange();
         const form = event.currentTarget;
         this.setState({validated: true});
         event.preventDefault();
@@ -31,15 +31,25 @@ class LogIn extends React.Component{
         let email = form.elements["email"].value;
         let password = form.elements["password"].value;
         this.props.login(email, password);
-
+        if(this.props.error !== null && this.props.error !== false){
+            this.setState({
+                error: this.props.error
+            });
+        }
         this.setState({validated: true});
+    }
+    handleChange = () => {
+        this.setState({
+            error: false
+        });
     }
     
     render(){
-        const { validated } = this.state;
-        const { t, isAuthorized, error } = this.props;
+        const { validated, error } = this.state;
+        const { t, isAuthorized } = this.props;
         return(
-            <Container className="mw-50">
+            <div className="row justify-content-center">
+            <div className="w-50 ">
                 {error && 
                     <Alert variant="danger">{t(T_LOGINERROR)}</Alert>
                 }
@@ -50,6 +60,7 @@ class LogIn extends React.Component{
                     noValidate
                     validated={validated}
                     onSubmit={this.handleSubmit}
+                    onChange={this.handleChange}
                     >
                         <Form.Group
                             //as={Col}
@@ -78,7 +89,8 @@ class LogIn extends React.Component{
                         </Form.Group>
                     <Button type="submit" >{t(T_LOGIN)}</Button>
                 </Form>
-            </Container>
+            </div>
+            </div>
         )
     }
 }

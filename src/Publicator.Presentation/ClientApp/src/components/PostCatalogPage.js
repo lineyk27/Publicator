@@ -102,7 +102,7 @@ class PostCatalogPage extends React.Component{
     }
     render(){
         const{periods} = this.state;
-        const{end} = this.props;
+        const{end, isAuthorized} = this.props;
         console.log(end);
         return(
             <div>
@@ -119,12 +119,14 @@ class PostCatalogPage extends React.Component{
                             variant={this.getFocusStyle(POST_CATALOG_TYPE_NEW)}
                             >New</Button>
                     </div>
-                    <div className="col-md-2">
-                        <Button
-                            onClick={this.handleBySubscription}
-                            variant={this.getFocusStyle(POST_CATALOG_TYPE_SUBSCRIPTION)}
-                            >Subscription</Button>
-                    </div>
+                    {isAuthorized && 
+                        <div className="col-md-2">
+                            <Button
+                                onClick={this.handleBySubscription}
+                                variant={this.getFocusStyle(POST_CATALOG_TYPE_SUBSCRIPTION)}
+                                >Subscription</Button>
+                        </div>
+                    }
                     {this.getCatalogType() === POST_CATALOG_TYPE_HOT && 
                         <div className="col-md-8 row justify-content-end">
                             <div className="col-md-4 row">

@@ -1,6 +1,8 @@
 import {
     COMMUNITY_VIEW_LOAD,
-    COMMUNITY_VIEW_UNLOAD
+    COMMUNITY_VIEW_UNLOAD,
+    COMMUNITIES_CATALOG_LOAD,
+    COMMUNITIES_CATALOG_UNLOAD
 } from "../actionTypes";
 
 import CommunitiesAPI from "../api/communitiesApi";
@@ -14,9 +16,17 @@ const communityViewLoad = (community) => ({
     communityInfo: community
 });
 
-function loadCommunityView(communityId){
+const communitiesCatalogLoad = (communities) => ({
+    type: COMMUNITIES_CATALOG_LOAD,
+    communities: communities
+});
+
+const communitiesCatalogUnload = () => ({
+    type: COMMUNITIES_CATALOG_UNLOAD
+});
+
+export function loadCommunityView(communityId){
     return dispatch => {
-        // TODO: add ui/ux loading
         return CommunitiesAPI.byId(communityId)
             .then(response => {
                 dispatch(communityViewLoad(response.data));
@@ -27,13 +37,26 @@ function loadCommunityView(communityId){
     }
 }
 
-function unloadCommunityView(){
+export function loadCommunitiesCatalog(){
     return dispatch => {
-        dispatch(communityViewUnload);
+        return CommunitiesAPI.all()
+            .then(response => {
+                let communities = response.data;
+                dispatch(communitiesCatalogLoad(communities));
+            }).catch(error => {
+                console.log(error);
+            })
     }
 }
 
-export default{
-    loadCommunityView,
-    unloadCommunityView
-}
+export function unloadCommunitiesCatalog(){
+    return dispatch => {
+        dispatch(communitiesCatalogUnload);
+    }
+};
+
+export function unloadCommunityView(){
+    return dispatch => {
+        dispatch(communityViewUnload);
+    }
+};

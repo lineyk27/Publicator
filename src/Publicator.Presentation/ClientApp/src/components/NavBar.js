@@ -86,9 +86,8 @@ class NavBar extends React.Component{
                                             <Button size='sm' variant="outline-primary" >{t(T_LOGIN)}</Button>
                                         </Link>
                                     </Nav.Item>
-                                    <Nav.Item as={Col}>
-                                        <Link to={ROUTE_SIGNUP}>
-                                            <Button size='sm' variant="outline-success">{t(T_SIGNUP)}</Button>
+                                    <Nav.Item >
+                                        <Link to={ROUTE_SIGNUP} className="btn btn-sm btn-outline-success">{t(T_SIGNUP)}
                                         </Link>
                                     </Nav.Item>
                                 </React.Fragment>

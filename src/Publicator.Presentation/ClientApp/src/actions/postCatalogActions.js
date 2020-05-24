@@ -94,7 +94,6 @@ function loadBySubscriptionPostCatalog(page, pageSize){
 
 function loadByCommunityPostCatalog(communityId, page, pageSize){
     return dispatch => {
-        // TODO: add load to ui/ux
         return PostsAPI.byCommunity(communityId, page, pageSize)
             .then(response => {
                 let posts = response.data;
@@ -105,7 +104,7 @@ function loadByCommunityPostCatalog(communityId, page, pageSize){
                     dispatch(postCatalogEnd(POST_CATALOG_TYPE_BY_COMMUNITY));
                 }
             }).catch( error => {
-                console.log(error.response.status, error.response.data.message);
+                console.log(error);
                 dispatch(postCatalogUnload());
             });
     }

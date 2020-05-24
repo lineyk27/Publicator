@@ -18,9 +18,14 @@ import {
     ROUTE_POSTVIEW,
     ROUTE_MAIN,
     ROUTE_USER,
-    ROUTE_BOOKMARKS
+    ROUTE_BOOKMARKS,
+    ROUTE_COMMUNITIES,
+    ROUTE_COMMUNITY
 } from "../constants"
 import BookmarksPage from "./BookmarksPage"
+import Footer from "./Footer"
+import CommunitiesCatalogPage from "./CommunitiesCatalogPage"
+import CommunityViewPage from "./CommunityViewPage"
 
 class MainWrapper extends React.Component{
     componentDidMount(){
@@ -28,10 +33,11 @@ class MainWrapper extends React.Component{
     }
     render(){
         return(
+            <React.Fragment>
             <div id="wrapper" >
                 <NavBar/>
                 <br/><br/><br/><br/><br/>
-                <Container className="mt-2 full" >
+                <Container className="mt-2 mb-2 full" >
                     <Switch>
                         <Route path={ROUTE_LOGIN} >
                             <LogIn />
@@ -41,6 +47,12 @@ class MainWrapper extends React.Component{
                         </Route>
                         <Route path={ROUTE_NEWPOST} >
                             <NewPostPage />
+                        </Route>
+                        <Route path={ROUTE_COMMUNITY} >
+                            <CommunityViewPage />
+                        </Route>
+                        <Route path={ROUTE_COMMUNITIES} >
+                            <CommunitiesCatalogPage />
                         </Route>
                         <Route path={ROUTE_POSTVIEW} >
                             <PostViewPage />
@@ -54,10 +66,11 @@ class MainWrapper extends React.Component{
                         <Route path={ROUTE_USER} exact>
                             <ProfileViewPage/>
                         </Route>
-
                     </Switch>
                 </Container>
             </div>
+            <Footer/>
+            </React.Fragment>
         )
     }
 }

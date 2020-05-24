@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import { withRouter } from "react-router";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux"
-import { Spinner, Form, Button, ButtonGroup } from "react-bootstrap"
+import { Spinner, Form, Button, ButtonGroup, Badge } from "react-bootstrap"
 import { bindActionCreators } from "redux"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { 
@@ -32,10 +32,10 @@ class PostViewPage extends React.Component{
         this.state = { validated: null };
     }
     handleComment = (parentCommentId, text) => {
-        const {createComment} = this.props;
+        const {createComment, isAuthorized} = this.props;
         let parentId = parentCommentId !== undefined ? parentCommentId : "";
         const{id} = this.props.match.params;
-        createComment(id, text, parentId);
+        if( isAuthorized !== null && isAuthorized === true )createComment(id, text, parentId);
         this.props.loadComments(id);
     }
     handleBookmark = () => {
@@ -62,7 +62,7 @@ class PostViewPage extends React.Component{
         return "text-dark"
     }
     render(){
-        const{ postInfo, t, comments } = this.props;
+        const{ postInfo, t, comments, isAuthorized } = this.props;
         console.log(this.props);
         return(
             <React.Fragment>
@@ -75,19 +75,28 @@ class PostViewPage extends React.Component{
                     <div className="w-75">
                         <h2>{postInfo.name}</h2>
                         <span className="text-muted" >Creator:{" "}
-                            <Link to={`/users/${postInfo.creatorUser.nickname}`}>{postInfo.creatorUser.nickname}</Link>
+                            <Link to={`/users/${postInfo.creatorUser?.nickname}`}>{postInfo.creatorUser.nickname}</Link>
                         </span>
                         <br/>
                         <span className="text-muted">{t(T_COMMUNITY)}:&nbsp; 
-                            <Link to={`/communities/$`}>{postInfo.community.name}</Link>
+                            <Link to={`/communities/${postInfo.community.id}`}>{postInfo.community.name}</Link>
                         </span>
                         <hr/>
                         <div>
                             {_.map(JSON.parse(postInfo.content).blocks, ItemView)}
                         </div>
+                        <div >Tags: {"  "}
+                            {_.map(postInfo.tags, (tag, index) => {
+                                return <Badge variant="secondary">{tag.name}</Badge>
+                            })}
+                        </div>
                         <hr/>
-                        <ButtonGroup >
-                            <Button variant="link" color="green" onClick={this.handleUpVote}>
+                        <ButtonGroup>
+                            <Button 
+                                disabled={!isAuthorized}
+                                variant="link" 
+                                color="green" 
+                                onClick={this.handleUpVote}>
                                 <FontAwesomeIcon color="green" icon={faLongArrowAltUp} />
                             </Button>
                             <Button variant="link" disabled >
@@ -95,15 +104,20 @@ class PostViewPage extends React.Component{
                                     {"   "}{postInfo.currentRating}{"   "}
                                 </span>
                             </Button>
-                            <Button variant="link" onClick={this.handleDownVote}>
+                            <Button 
+                                variant="link" 
+                                disabled={!isAuthorized}
+                                onClick={this.handleDownVote}>
                                 <FontAwesomeIcon color="red" icon={faLongArrowAltDown}/>
                             </Button>
                         </ButtonGroup>
                         {" "}
                         <Button 
-                            variant={postInfo.currentBookmark.bookmarked === true ? "primary" : "outline-primary"} 
-                            onClick={this.handleBookmark}>
-                            <FontAwesomeIcon icon={postInfo.currentBookmark.bookmarked === true ? solidBookmark : regularBookmark}/>
+                            variant={postInfo.currentBookmark?.bookmarked === true ? "primary" : "outline-primary"} 
+                            onClick={this.handleBookmark}
+                            disabled={!isAuthorized}
+                            >
+                            <FontAwesomeIcon icon={postInfo.currentBookmark?.bookmarked === true ? solidBookmark : regularBookmark}/>
                         </Button>
                         <hr/>
                         <h3>{t(T_COMMENTS)}</h3>
@@ -222,7 +236,8 @@ class CommentsView extends React.Component{
 
 const mapStateToProps = state => ({
     postInfo: state.postView.postInfo,
-    comments: state.comment
+    comments: state.comment,
+    isAuthorized: state.login.isAuthorized
 });
 
 const mapDispatchToProps = dispatch => ({

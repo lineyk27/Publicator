@@ -267,7 +267,7 @@ namespace Publicator.ApplicationCore.Services
         {
             return (await _unitOfWork
                 .CommunityRepository
-                .GetAsync(x => x.Id == community.Id, includeProperties: "Posts.PostTags.Tag,Posts.CreatorUser,Votes,Bookmarks"))
+                .GetAsync(x => x.Id == community.Id, includeProperties: "Posts.PostTags.Tag,Posts.CreatorUser,Posts.Votes,Posts.Bookmarks"))
                 .FirstOrDefault()
                 .Posts
                 .OrderByDescending(x => x.CreationDate)

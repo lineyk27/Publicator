@@ -54,9 +54,8 @@ class ProfileViewPage extends React.Component{
                 <div>
                     <div className="row mt-3">
                         <div className="col-md-3">
-                            <Figure className="m-0"
-                                >
-                                <Figure.Image 
+                            <Figure className="m-0">
+                                <Figure.Image
                                     width={200}
                                     height={200}
                                     roundedCircle 
