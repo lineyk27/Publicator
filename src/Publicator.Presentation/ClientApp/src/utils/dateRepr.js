@@ -1,5 +1,5 @@
 
 export default function reprDate(datestr){
     let date = new Date(datestr);
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+    return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
 }

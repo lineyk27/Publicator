@@ -9,7 +9,9 @@ const initialState = {posts: [], lastPage: 0, catalogType: null, end: false};
 function postCatalogReducer(state=initialState, action){
     switch(action.type){
         case POST_CATALOG_LOAD:
-            if(action.type !== state.catalogType){
+            if(action.catalogType !== state.catalogType){
+                console.log("in action type non equalnes");
+                console.log(`action type = ${action.catalogType}, state type = ${state.catalogType}`);
                 return{
                     posts: action.posts,
                     lastPage: action.page,
@@ -17,6 +19,7 @@ function postCatalogReducer(state=initialState, action){
                     end: false
                 };
             }
+            console.log("Catalog types are equal");
             return {
                 ...state,
                 posts: [...state.posts, ...action.posts],

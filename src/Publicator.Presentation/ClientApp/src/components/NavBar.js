@@ -12,39 +12,33 @@ import {
     T_SIGNUP,
     ROUTE_SIGNUP,
     ROUTE_LOGIN,
-    ROUTE_PROFILE,
     ROUTE_BOOKMARKS,
-    ROUTE_SETTINGS,
     ROUTE_NEWPOST,
     T_PROFILE,
     T_NEWPOST,
     T_SETTINGS,
     T_BOOKMARKS,
-    T_LOGOUT
+    T_LOGOUT,
+    ROUTE_USER
 } from "../constants"
 import { logout } from "../actions/loginActions"
 import logo from "../logo.png"
 
 class NavBar extends React.Component{
     userPopover = () => {
-        const { t } = this.props;
+        const { t, userInfo } = this.props;
         return (
             <Popover>
                 <Popover.Content>
                     <ListGroup variant="flush" >
-                        <Link to={ROUTE_PROFILE} className="router-link"  >
+                        <Link to={`/users/${userInfo.nickname}`} >
                             <ListGroup.Item action>
                                 {t(T_PROFILE)}
                             </ListGroup.Item>
                         </Link>
-                        <Link to={ROUTE_BOOKMARKS} className="router-link" >
+                        <Link to={ROUTE_BOOKMARKS}>
                             <ListGroup.Item action>
                                 {t(T_BOOKMARKS)}
-                            </ListGroup.Item>
-                        </Link>
-                        <Link to={ROUTE_SETTINGS} className="router-link" >
-                            <ListGroup.Item action>
-                                {t(T_SETTINGS)}
                             </ListGroup.Item>
                         </Link>
                         <ListGroup.Item action onClick={this.handleLogout}>
@@ -62,7 +56,7 @@ class NavBar extends React.Component{
     render(){
         const { t, isAuthorized, userInfo } = this.props;
         return(
-                <Navbar bg="dark" variant="light" fixed="top" collapseOnSelect expand="md"  >
+                <Navbar bg="dark" className="p-0 pl-2 pr-3" variant="light" fixed="top" collapseOnSelect expand="md"  >
                     <Navbar.Brand>
                         <Link to="/hot">
                             <img src={logo} />

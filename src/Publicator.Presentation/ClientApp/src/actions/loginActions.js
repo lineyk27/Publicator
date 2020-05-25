@@ -5,7 +5,7 @@ import {
     LOGOUT
 } from "../actionTypes";
 import AccountAPI from "../api/accountApi";
-import { setToken, removeToken } from "../api";
+import { setToken, removeToken, requests, getAuthHeaders } from "../api";
 
 const loginBegin = () => ({
     type: LOGIN_BEGIN
@@ -29,6 +29,7 @@ function login (login, password){
                 console.log(response);
                 let token = response.data;
                 setToken(token);
+                requests.defaults.headers = getAuthHeaders();
                 // must be reconsidered
                 setCurrent()(dispatch);
             })

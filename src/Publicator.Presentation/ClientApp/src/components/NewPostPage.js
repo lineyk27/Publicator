@@ -184,7 +184,7 @@ class NewPostPage extends React.Component{
                     </Form.Group>
                     <div id="editor"/>
                     <Form.Group>
-                        <h5>{t(T_COMMUNITY)}</h5>
+                        <h5>Category</h5>
                         <Form.Control as="select" custom onChange={this.handleCommunityChange} >
                             {this.state.communities !== null &&
                                 (_.map(this.state.communities, (value, index) => {

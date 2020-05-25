@@ -79,6 +79,7 @@ class PostCatalogPage extends React.Component{
         event.persist();
         var period = this.state.periods[event.currentTarget.selectedIndex];
         this.setState({period: period}, () => {
+            this.props.unloadPostCatalog();
             this.handleHot();
         });
     }
@@ -90,7 +91,7 @@ class PostCatalogPage extends React.Component{
         }else if(catalogType === "new"){
             this.props.loadCatalogNew(lastPage+1, 10);
         }else if(catalogType === "bySubscription"){
-            this.props.loadCatalogNew(lastPage+1, 10);
+            this.props.loadCatalogBySubscription(lastPage+1, 10);
         }
     }
     getFocusStyle = (type) => {
@@ -165,7 +166,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    //    loadPostCatalog: bindActionCreators(loadPostCatalog, dispatch),
         unloadPostCatalog: bindActionCreators(unloadPostCatalog, dispatch),
         loadByCommunityPostCatalog: bindActionCreators(loadByCommunityPostCatalog, dispatch),
         loadCatalogBySubscription: bindActionCreators(loadBySubscriptionPostCatalog, dispatch),

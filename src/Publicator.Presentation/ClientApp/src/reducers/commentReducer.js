@@ -63,7 +63,7 @@ function commentReducer(state=initialState, action){
             };
         case CREATE_COMMENT_SUCCESFULL:
             let comments = state.comments;
-            let comment = searchCommentById(action.replyCommentId, comments, 1);
+            let comment = searchCommentById(action.replyCommentId, comments);
             if(comment !== null) {
                 comment.replies.push(action.payload);
                 return {
@@ -95,13 +95,13 @@ function commentReducer(state=initialState, action){
     }
 }
 
-function searchCommentById(commentId, commentTree, level){
-    if( Array.isArray(commentTree) || commentTree.length !== 0){
+function searchCommentById(commentId, commentTree){
+    if( Array.isArray(commentTree) && commentTree.length !== 0){
        for(let i = 0; i < commentTree.length; i++){
             if(commentTree[i].id === commentId){
-                return {comment: commentTree[i], level};
+                return {comment: commentTree[i]};
             }
-            return searchCommentById(commentId, commentTree[i].replies, level+1);
+            return searchCommentById(commentId, commentTree[i].replies);
         }
     }
     return null;
