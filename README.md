@@ -9,6 +9,8 @@ Used frameworks and libraries
 - .NET Core 3.0
 - ASP NET Core 3.0
 - Entity Framework Core 3.0
+- ReactJS
+- Redux
 
 Installation instructions:
 1. clone the repository 
