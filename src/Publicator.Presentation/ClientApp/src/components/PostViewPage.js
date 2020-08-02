@@ -78,7 +78,7 @@ class PostViewPage extends React.Component{
                             <Link to={`/users/${postInfo.creatorUser?.nickname}`}>{postInfo.creatorUser.nickname}</Link>
                         </span>
                         <br/>
-                        <span className="text-muted">{t(T_COMMUNITY)}:&nbsp; 
+                        <span className="text-muted">Category :&nbsp; 
                             <Link to={`/communities/${postInfo.community.id}`}>{postInfo.community.name}</Link>
                         </span>
                         <hr/>

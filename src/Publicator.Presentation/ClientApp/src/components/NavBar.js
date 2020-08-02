@@ -69,7 +69,7 @@ class NavBar extends React.Component{
                                 <Link to={"/hot"}>{t(T_HOME)}</Link>
                             </Nav.Item>
                             <Nav.Item as={Col}>
-                                <Link to={ROUTE_COMMUNITIES}>{t(T_COMMUNITIES)}</Link>
+                                <Link to={ROUTE_COMMUNITIES}>Categories</Link>
                             </Nav.Item>
                         </Nav>
                         <Nav>
