@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.Exceptions;
-using Publicator.Infrastructure.Entities;
+using Publicator.Infrastructure.Models;
 using Publicator.Infrastructure.Interfaces;
 using System.Diagnostics;
 

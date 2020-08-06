@@ -1,5 +1,5 @@
 ﻿using System;
-using Publicator.Infrastructure.Entities;
+using Publicator.Infrastructure.Models;
 using Publicator.Infrastructure.Interfaces;
 
 namespace Publicator.Infrastructure

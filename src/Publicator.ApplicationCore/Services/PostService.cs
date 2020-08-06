@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.Exceptions;
-using Publicator.Infrastructure.Entities;
+using Publicator.Infrastructure.Models;
 using Publicator.Infrastructure.Interfaces;
 
 namespace Publicator.ApplicationCore.Services

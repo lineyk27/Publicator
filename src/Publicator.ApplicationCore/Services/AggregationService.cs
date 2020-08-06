@@ -3,7 +3,7 @@ using System.Linq;
 using AutoMapper;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.DTO;
-using Publicator.Infrastructure.Entities;
+using Publicator.Infrastructure.Models;
 
 namespace Publicator.ApplicationCore.Services
 {

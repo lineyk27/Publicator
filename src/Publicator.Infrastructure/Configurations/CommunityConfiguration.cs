@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Publicator.Infrastructure.Entities;
+using Publicator.Infrastructure.Models;
 
 namespace Publicator.Infrastructure.Configurations
 {

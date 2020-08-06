@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Publicator.Infrastructure.Entities
+namespace Publicator.Infrastructure.Models
 {
     public class UserCommunity : BaseEntity
     {

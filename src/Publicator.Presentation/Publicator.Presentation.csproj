@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Publicator.ApplicationCore\Publicator.ApplicationCore.csproj" />
+    <ProjectReference Include="..\Publicator.Infrastructure.Models\Publicator.Infrastructure.Models.csproj" />
     <ProjectReference Include="..\Publicator.Infrastructure\Publicator.Infrastructure.csproj" />
   </ItemGroup>
 

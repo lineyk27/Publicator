@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Publicator.Infrastructure.Entities;
+using Publicator.Infrastructure.Models;
 
 namespace Publicator.ApplicationCore.Contracts
 {

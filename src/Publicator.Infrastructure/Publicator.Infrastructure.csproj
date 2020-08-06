@@ -17,4 +17,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Publicator.Infrastructure.Models\Publicator.Infrastructure.Models.csproj" />
+  </ItemGroup>
+
 </Project>

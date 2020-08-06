@@ -13,7 +13,7 @@ using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.DTO;
 using Publicator.Presentation.Helpers;
 using Publicator.Presentation.RequestModels;
-using Publicator.Infrastructure.Entities;
+using Publicator.Infrastructure.Models;
 
 namespace Publicator.Presentation.Controllers
 {

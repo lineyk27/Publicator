@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using AutoMapper;
-using Publicator.Infrastructure.Entities;
+using Publicator.Infrastructure.Models;
 using Publicator.ApplicationCore.DTO;
 
 namespace Publicator.ApplicationCore

@@ -1,4 +1,4 @@
-﻿using Publicator.Infrastructure.Entities;
+﻿using Publicator.Infrastructure.Models;
 
 namespace Publicator.Infrastructure.Interfaces
 {

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.DTO;
-using Publicator.Infrastructure.Entities;
+using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
 using Publicator.Presentation.ResponseModels;
 

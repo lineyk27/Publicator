@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Publicator.Infrastructure.Entities
+namespace Publicator.Infrastructure.Models
 {
     public class User : BaseEntity
     {

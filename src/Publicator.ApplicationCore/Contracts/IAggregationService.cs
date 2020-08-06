@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Publicator.ApplicationCore.DTO;
-using Publicator.Infrastructure.Entities;
+using Publicator.Infrastructure.Models;
 
 namespace Publicator.ApplicationCore.Contracts
 {

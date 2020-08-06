@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.DTO;
-using Publicator.Infrastructure.Entities;
+using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
 
 namespace Publicator.Presentation.Controllers.Api
