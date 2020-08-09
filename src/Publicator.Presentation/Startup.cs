@@ -15,6 +15,8 @@ using Publicator.ApplicationCore.Helpers;
 using Publicator.Presentation.Helpers;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Publicator.Presentation.Handlers;
+using Publicator.Core;
+using MediatR;
 
 namespace Publicator.Presentation
 {
@@ -37,6 +39,9 @@ namespace Publicator.Presentation
 
             services.AddInfrastructureServices();
             services.AddApplicationCoreServices();
+            services.AddCoreServices();
+            //services.AddTransient<IMediator, Mediator>();
+            services.AddLogging();
 
             services.Configure<JWTSettings>(_configuration.GetSection("JWTSettings"));
             services.Configure<EmailSettings>(_configuration.GetSection("EmailSettings"));

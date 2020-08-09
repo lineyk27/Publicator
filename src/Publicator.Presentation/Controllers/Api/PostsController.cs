@@ -8,6 +8,8 @@ using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.DTO;
 using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
+using Publicator.Core.Requests;
+using MediatR;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -18,10 +20,12 @@ namespace Publicator.Presentation.Controllers.Api
         private ICommunityService _communityService;
         private ITagService _tagService;
         private IMapper _mapper;
-        IAggregationService _aggregationService;
+        private IAggregationService _aggregationService;
+        private IMediator _mediator;
         public PostsController(
             IPostService postService, 
-            IMapper mapper, 
+            IMapper mapper,
+            IMediator mediator,
             IUserService userService,
             ICommunityService communityService,
             ITagService tagService,
@@ -33,6 +37,7 @@ namespace Publicator.Presentation.Controllers.Api
             _userService = userService;
             _communityService = communityService;
             _tagService = tagService;
+            _mediator = mediator;
         }
         /// <summary>
         /// Method return hot posts with paging and filtering
@@ -47,12 +52,10 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _postService.PageSize = model.PageSize;
-            _postService.Page = model.Page;
-            _postService.Period = model.Period;
+            var req = new ListHotPosts() { Page = model.Page, PageSize = model.PageSize, Period = model.Period };
 
-            var posts = await _postService.GetHotAsync();
-            var user = await _userService.TryGetCurrentAsync();
+            var posts = await _mediator.Send(req);
+
             var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
             return Ok(postsDTO);
         }
@@ -92,11 +95,10 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _postService.Page = model.Page;
-            _postService.PageSize = model.PageSize;
+            var req = new ListNewPosts() { Page = model.Page, PageSize = model.PageSize };
 
-            var posts = await _postService.GetNewAsync();
-            var curruser = await _userService.TryGetCurrentAsync();
+            var posts = await _mediator.Send(req);
+
             var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
             return Ok(postsDTO);
         }

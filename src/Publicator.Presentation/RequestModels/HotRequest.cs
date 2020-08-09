@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Publicator.ApplicationCore;
+using Publicator.Core;
 
 namespace Publicator.Presentation.RequestModels
 {
