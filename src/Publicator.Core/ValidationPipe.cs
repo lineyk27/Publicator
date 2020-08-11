@@ -12,21 +12,9 @@ namespace Publicator.Core
     class ValidationPipe<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private IEnumerable<IValidator<TRequest>> _validators { get; set; }
-        private ILogger<ValidationPipe<TRequest, TResponse>> _logger{ get; set; }
-        public ValidationPipe(
-            IEnumerable<IValidator<TRequest>> validators, 
-            ILogger<ValidationPipe<TRequest, TResponse>> logger
-            )
-        {
-            _logger = logger;
-            _validators = validators;
-        }
-
+        public ValidationPipe(IEnumerable<IValidator<TRequest>> validators) => _validators = validators;
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            if (!(request is IBaseRequest))
-                return await next();
-
             var context = new ValidationContext(request);
             
             var errors = _validators
