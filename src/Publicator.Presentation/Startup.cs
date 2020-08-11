@@ -1,7 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +15,6 @@ using Publicator.Presentation.Helpers;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Publicator.Presentation.Handlers;
 using Publicator.Core;
-using MediatR;
 
 namespace Publicator.Presentation
 {
@@ -40,7 +38,7 @@ namespace Publicator.Presentation
             services.AddInfrastructureServices();
             services.AddApplicationCoreServices();
             services.AddCoreServices();
-            //services.AddTransient<IMediator, Mediator>();
+
             services.AddLogging();
 
             services.Configure<JWTSettings>(_configuration.GetSection("JWTSettings"));

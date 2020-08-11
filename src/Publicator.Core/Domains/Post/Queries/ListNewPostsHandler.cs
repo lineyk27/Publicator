@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Publicator.Core.Requests;
+using Publicator.Core.Domains.Post.Queries;
 using Publicator.Infrastructure;
 using Publicator.Infrastructure.Models;
 

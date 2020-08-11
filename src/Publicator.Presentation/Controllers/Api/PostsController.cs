@@ -8,8 +8,8 @@ using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.DTO;
 using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
-using Publicator.Core.Requests;
 using MediatR;
+using Publicator.Core.Domains.Post.Queries;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -52,7 +52,7 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var req = new ListHotPosts() { Page = model.Page, PageSize = model.PageSize, Period = model.Period };
+            var req = new ListHotPosts(model.Period, model.Page,model.PageSize);
 
             var posts = await _mediator.Send(req);
 
@@ -95,7 +95,7 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var req = new ListNewPosts() { Page = model.Page, PageSize = model.PageSize };
+            var req = new ListNewPosts(model.Page, model.PageSize);
 
             var posts = await _mediator.Send(req);
 

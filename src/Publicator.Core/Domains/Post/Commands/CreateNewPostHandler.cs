@@ -11,7 +11,7 @@ namespace Publicator.Core.Domains.Post.Commands
         private readonly PublicatorDbContext _context;
         public CreateNewPostHandler(PublicatorDbContext context) => _context = context;
         public async Task<Infrastructure.Models.Post> Handle(
-            CreateNewPost request, 
+            CreateNewPost request,
             CancellationToken cancellationToken)
         {
             var post = new Infrastructure.Models.Post()
@@ -20,13 +20,10 @@ namespace Publicator.Core.Domains.Post.Commands
                 Content = request.Content,
                 CommunityId = request.CommunityId,
                 CreationDate = DateTime.Now,
-                CreatorUserId = request.UserId
+                CreatorUserId = (Guid)request.UserId
             };
 
             _context.Posts.Add(post);
-
-            if (cancellationToken.IsCancellationRequested)
-                return null;
 
             await _context.SaveChangesAsync(cancellationToken);
 

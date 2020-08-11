@@ -20,8 +20,7 @@ namespace Publicator.Core.Domains.Post.Queries
             var posts = (from p in _context.Posts
                          join s in _context.SubscriptionNewPosts on p.Id equals s.PostId
                          where s.UserId == request.UserId
-                         select p
-                         );
+                         select p );
 
             return await Task.Run(() => posts.ToList());
         }

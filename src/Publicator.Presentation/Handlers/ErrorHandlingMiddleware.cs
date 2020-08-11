@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Publicator.ApplicationCore.Exceptions;
 using Publicator.Presentation.Helpers;
 
@@ -9,20 +10,23 @@ namespace Publicator.Presentation.Handlers
 {
     public class ErrorHandlingMiddleware
     {
-        private readonly RequestDelegate next;
-        public ErrorHandlingMiddleware(RequestDelegate next)
+        private readonly RequestDelegate _next;
+        private readonly ILogger<ErrorHandlingMiddleware> _logger;
+        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
         {
-            this.next = next;
+            _logger = logger;
+            _next = next;
         }
 
         public async Task Invoke(HttpContext context)
         {
             try
             {
-                await next(context);
+                await _next(context);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occured");
                 await HandleExceptionAsync(context, ex);
             }
         }

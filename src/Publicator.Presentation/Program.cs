@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 
 namespace Publicator.Presentation
@@ -15,6 +16,12 @@ namespace Publicator.Presentation
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureLogging((webHostBuilder ,logBuilder) =>
+                    {
+                        logBuilder.ClearProviders();
+                        logBuilder.AddConsole();
+                        logBuilder.AddConfiguration(webHostBuilder.Configuration);
+                    });
                 });
     }
 }

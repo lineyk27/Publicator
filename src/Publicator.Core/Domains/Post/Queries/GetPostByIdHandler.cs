@@ -13,16 +13,14 @@ namespace Publicator.Core.Domains.Post.Queries
     {
         private readonly PublicatorDbContext _context;
         public GetPostByIdHandler(PublicatorDbContext context) => _context = context;
-        public Task<Infrastructure.Models.Post> Handle(GetPostById request, CancellationToken cancellationToken)
+        public async Task<Infrastructure.Models.Post> Handle(GetPostById request, CancellationToken cancellationToken)
         {
             var post = (from p in _context.Posts
                         where p.Id == request.PostId
                         select p
                 ).SingleOrDefault();
 
-
-
-            return null;
+            return await Task.FromResult(post);
         }
     }
 }
