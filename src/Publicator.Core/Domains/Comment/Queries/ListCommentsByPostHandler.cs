@@ -8,7 +8,8 @@ using Publicator.Infrastructure;
 
 namespace Publicator.Core.Domains.Comment.Queries
 {
-    class ListCommentsByPostHandler : IRequestHandler<ListCommentsByPost, IEnumerable<Infrastructure.Models.Comment>>
+    class ListCommentsByPostHandler : 
+        IRequestHandler<ListCommentsByPost, IEnumerable<Infrastructure.Models.Comment>>
     {
         private readonly PublicatorDbContext _context;
         public ListCommentsByPostHandler(PublicatorDbContext context) => _context = context;
@@ -33,7 +34,9 @@ namespace Publicator.Core.Domains.Comment.Queries
                             where c.ParentRepliedCommentId == null
                             select c);
 
-            comments = comments.Skip(request.PageSize * (request.Page - 1)).Take(request.PageSize);
+            comments = comments
+                .Skip(request.PageSize * (request.Page - 1))
+                .Take(request.PageSize);
 
             return await Task.Run(() => comments.ToList());
         }

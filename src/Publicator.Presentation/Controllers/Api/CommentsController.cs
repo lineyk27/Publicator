@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.Presentation.RequestModels;
 using Publicator.Infrastructure.Models;
 using Publicator.ApplicationCore.DTO;
-using Microsoft.AspNetCore.Authorization;
+using Publicator.Core.Domains.Comment.Commands;
+using MediatR;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -16,11 +18,18 @@ namespace Publicator.Presentation.Controllers.Api
         ICommentService _commentsService;
         IPostService _postService;
         IMapper _mapper;
-        public CommentsController(ICommentService commentService, IPostService postService, IMapper mapper)
+        IMediator _mediator;
+        public CommentsController(
+            ICommentService commentService, 
+            IPostService postService, 
+            IMapper mapper,
+            IMediator mediator
+            )
         {
             _commentsService = commentService;
             _postService = postService;
             _mapper = mapper;
+            _mediator = mediator;
         }
         /// <summary>
         /// Get post's comments
@@ -55,12 +64,13 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var post = await _postService.GetByIdAsync(model.PostId);
-            var parent = model.ParentCommentId != null
-                ? await _commentsService.GetByIdAsync((Guid)model.ParentCommentId)
-                : null;
+            var comment = await _mediator.Send(new CreateNewComment()
+            {
+                Content = model.Text,
+                PostId = model.PostId,
+                ParentRepliedCommentId = model.ParentCommentId
+            });
 
-            var comment = await _commentsService.AddToPost(post, model.Text, parent);
             var commentDTO = _mapper.Map<Comment, CommentDTO>(comment);
             return Ok(commentDTO);
         }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Publicator.Infrastructure.Models;
 using Publicator.Infrastructure;
 
 namespace Publicator.Core.Domains.Post.Queries
