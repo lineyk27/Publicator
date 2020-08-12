@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -22,12 +24,40 @@ namespace Publicator.Core.Domains.Post.Commands
                 CreationDate = DateTime.Now,
                 CreatorUserId = (Guid)request.UserId
             };
-
+            
             _context.Posts.Add(post);
 
             await _context.SaveChangesAsync(cancellationToken);
 
+            AddTagsToPost(request.Tags, post.Id);
+
             return post;
+        }
+        private void AddTagsToPost(IEnumerable<string> tags, Guid postId)
+        {
+            foreach(string tag in tags)
+            {
+                var foundTag = (from t in _context.Tags
+                                where t.Name.Equals(tag)
+                                select t)
+                                .FirstOrDefault();
+
+                if (foundTag == null)
+                {
+                    foundTag = new Infrastructure.Models.Tag()
+                    {
+                        Name = tag
+                    };
+                    _context.Tags.Add(foundTag);
+                }
+
+                _context.PostTags.Add(new Infrastructure.Models.PostTag()
+                {
+                    TagId = foundTag.Id,
+                    PostId = postId
+                });
+            }
+            _context.SaveChanges();
         }
     }
 }

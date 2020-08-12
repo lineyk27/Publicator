@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Linq;
+using FluentValidation;
 
 namespace Publicator.Core.Domains.Post.Commands
 {
@@ -8,18 +9,20 @@ namespace Publicator.Core.Domains.Post.Commands
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage("Name is required")
+                .WithMessage("{PropertyName} is required")
                 .Length(5, 75)
-                .WithMessage($"From {5} to {75} characters");
+                .WithMessage("{PropertyName} length from {MinLength} to {MaxLength} characters");
             
             RuleFor(x => x.Content)
                 .NotEmpty()
-                .WithMessage("Content is required")
+                .WithMessage("{PropertyName} is required")
                 .Length(10, 5000)
-                .WithMessage($"From {10} to {5000} characters");
+                .WithMessage("{PropertyName} length from {MinLength} to {MaxLength} characters");
 
-            RuleFor(x => x.UserId).NotEmpty().WithMessage("Creator user id is required");
-            RuleFor(x => x.CommunityId).NotEmpty().WithMessage("Community id is required");
+            RuleFor(x => x.UserId).NotEmpty().WithMessage("{PropertyName} is required");
+            RuleFor(x => x.CommunityId).NotEmpty().WithMessage("{PropertyName} is required");
+            RuleFor(x => x.Tags).Must(x => x.Count() >= 1 && x.Count() <= 10);
+            RuleForEach(x => x.Tags).NotEmpty().Length(1, 20);
         }
     }
 }
