@@ -88,9 +88,9 @@ namespace Publicator.Presentation
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseRouting();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
