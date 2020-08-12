@@ -2,7 +2,7 @@
 
 namespace Publicator.Core.Domains.User.Queries
 {
-    class CurrentUserId
+    public class CurrentUserId
     {
         public Guid? UserId { get; set; }
     }

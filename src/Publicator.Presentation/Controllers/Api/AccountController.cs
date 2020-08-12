@@ -3,7 +3,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Claims;
-using System.Diagnostics;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -56,6 +55,7 @@ namespace Publicator.Presentation.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Nickname),
                     new Claim(ClaimTypes.Role, user.Role.Name)
                 }),

@@ -10,6 +10,7 @@ using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
 using MediatR;
 using Publicator.Core.Domains.Post.Queries;
+using Publicator.Core.Domains.Post.Commands;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -204,11 +205,20 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var community = model.CommunityId == null ? null : await _communityService.GetByIdAsync((Guid)model.CommunityId);
+            //var community = model.CommunityId == null ? null : await _communityService.GetByIdAsync((Guid)model.CommunityId);
 
-            var tags =  await _tagService.CreateAsync(model.Tags);
+            //var tags =  await _tagService.CreateAsync(model.Tags);
+
+            //var post = await _postService.CreateAsync(model.Name, model.Content, community, tags);
+
+            var post = await _mediator.Send(new CreateNewPost()
+            {
+                Name = model.Name,
+                Content = model.Content,
+                CommunityId = (Guid)model.CommunityId,
+                Tags = model.Tags
+            });
             
-            var post = await _postService.CreateAsync(model.Name, model.Content, community, tags);
             var postDTO = _mapper.Map<Post, PostDTO>(post);
             return Ok(postDTO);
         }
