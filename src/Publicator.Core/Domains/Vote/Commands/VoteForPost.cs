@@ -4,7 +4,7 @@ using System;
 
 namespace Publicator.Core.Domains.Vote.Commands
 {
-    class VoteForPost : CurrentUserId, IRequest<Infrastructure.Models.Vote>
+    public class VoteForPost : LoggedInUser, IRequest<Infrastructure.Models.Vote>
     {
         public Guid PostId { get; set; }
         public bool Up { get; set; }

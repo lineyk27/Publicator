@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
+using MediatR;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.DTO;
+using Publicator.Core.Domains.Vote.Commands;
 using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
 
@@ -13,10 +15,12 @@ namespace Publicator.Presentation.Controllers.Api
     {
         private IPostService _postService;
         private IMapper _mapper;
-        public VotesController(IPostService postService, IMapper mapper)
+        private IMediator _mediator;
+        public VotesController(IPostService postService, IMapper mapper, IMediator mediator)
         {
             _postService = postService;
             _mapper = mapper;
+            _mediator = mediator;
         }
         /// <summary>
         /// Get current voote of user (up, down or unvoted)
@@ -51,10 +55,16 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var post = await _postService.GetByIdAsync(model.PostId);
-            var current = await _postService.VoteAsync(post, model.Up);
+            //var post = await _postService.GetByIdAsync(model.PostId);
+            //var current = await _postService.VoteAsync(post, model.Up);
 
-            var voteDTO = _mapper.Map<Vote, VoteDTO>(current);
+            var vote = await _mediator.Send(new VoteForPost()
+            {
+                Up = model.Up,
+                PostId = model.PostId
+            });
+
+            var voteDTO = _mapper.Map<Vote, VoteDTO>(vote);
             return Ok(voteDTO);
         }
         /// <summary>

@@ -18,7 +18,7 @@ namespace Publicator.Core.Domains.User.Queries
             RequestHandlerDelegate<TResponse> next
             )
         {
-            if (!(request is CurrentUserId user))
+            if (!(request is LoggedInUser user))
                 return await next();
 
                 var userId = _httpContext.HttpContext?.User?.Claims?
@@ -27,7 +27,7 @@ namespace Publicator.Core.Domains.User.Queries
             if(userId != null)
             {
                 Guid id = Guid.Parse(userId);
-                (request as CurrentUserId).UserId = id;
+                (request as LoggedInUser).UserId = id;
             }
 
             return await next();
