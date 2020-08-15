@@ -1,4 +1,6 @@
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,26 +23,33 @@ namespace Publicator.Presentation
     public class Startup
     {
         private IConfiguration _configuration;
-        public Startup(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        public Startup(IConfiguration configuration) => _configuration = configuration;
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpContextAccessor();
             services
-                .AddMvc(options => options.EnableEndpointRouting = false)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-                .AddNewtonsoftJson(options =>
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                );
+                .AddControllers(options => options.EnableEndpointRouting = false)
+                //.SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                //.AddNewtonsoftJson(options =>
+                //    {
+                //        //options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                //        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                //    })
+                .AddJsonOptions(configuration =>
+                {
+                    configuration.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    //configuration.JsonSerializerOptions.IgnoreNullValues = true;
+                });
 
             services.AddInfrastructureServices();
             services.AddApplicationCoreServices();
             services.AddCoreServices();
 
             services.AddLogging();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                //c.DescribeAllEnumsAsStrings();
+            });
 
             services.Configure<JWTSettings>(_configuration.GetSection("JWTSettings"));
             services.Configure<EmailSettings>(_configuration.GetSection("EmailSettings"));
@@ -90,7 +99,7 @@ namespace Publicator.Presentation
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                c.RoutePrefix = string.Empty;
+                c.RoutePrefix = "swagger";
             });
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));

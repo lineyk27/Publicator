@@ -31,6 +31,8 @@ namespace Publicator.Core.Domains.User.Commands
             if (existedUser.Nickname.Equals(request.Nickname))
                 result.RegisterResultCode = RegisterResultEnum.NicknameAlreadyExist;
 
+            // TODO: send mail for confirm on email of user
+
             return await Task.FromResult(result);
         }
     }

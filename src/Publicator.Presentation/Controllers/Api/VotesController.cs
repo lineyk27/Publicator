@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using MediatR;
 using Publicator.ApplicationCore.Contracts;
-using Publicator.ApplicationCore.DTO;
+using Publicator.Core.DTO;
 using Publicator.Core.Domains.Vote.Commands;
 using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
@@ -58,14 +58,13 @@ namespace Publicator.Presentation.Controllers.Api
             //var post = await _postService.GetByIdAsync(model.PostId);
             //var current = await _postService.VoteAsync(post, model.Up);
 
-            var vote = await _mediator.Send<Vote>(new VoteForPost()
+            var vote = await _mediator.Send(new VoteForPost()
             {
                 Up = model.Up,
                 PostId = model.PostId
             });
 
-            var voteDTO = _mapper.Map<Vote, VoteDTO>(vote);
-            return Ok(voteDTO);
+            return Ok(vote);
         }
         /// <summary>
         /// Get's current rating of post

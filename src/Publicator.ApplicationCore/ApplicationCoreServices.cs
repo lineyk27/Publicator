@@ -10,7 +10,7 @@ namespace Publicator.ApplicationCore
     {
         public static IServiceCollection AddApplicationCoreServices(this IServiceCollection services)
         {
-            services.AddAutoMapper(Assembly.GetAssembly(typeof(PublicatorProfile)));
+            //services.AddAutoMapper(Assembly.GetAssembly(typeof(PublicatorProfile)));
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ICommentService, CommentService>();

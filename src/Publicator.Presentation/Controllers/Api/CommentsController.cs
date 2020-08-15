@@ -7,7 +7,7 @@ using AutoMapper;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.Presentation.RequestModels;
 using Publicator.Infrastructure.Models;
-using Publicator.ApplicationCore.DTO;
+using Publicator.Core.DTO;
 using Publicator.Core.Domains.Comment.Commands;
 using MediatR;
 
@@ -64,15 +64,14 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var comment = await _mediator.Send<Comment>(new CreateNewComment()
+            var comment = await _mediator.Send<CommentDTO>(new CreateNewComment()
             {
                 Content = model.Text,
                 PostId = model.PostId,
                 ParentRepliedCommentId = model.ParentCommentId
             });
 
-            var commentDTO = _mapper.Map<Comment, CommentDTO>(comment);
-            return Ok(commentDTO);
+            return Ok(comment);
         }
     }
 }
