@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +20,6 @@ namespace Publicator.Presentation.Controllers
         private IUserService _userService;
         private IMediator _mediator;
         public AccountController(IUserService userService,
-            IMapper mapper,
             IMediator mediator
             ) 
             : base()
@@ -81,7 +79,7 @@ namespace Publicator.Presentation.Controllers
         /// </summary>
         /// <param name="id">Id of user to confirm</param>
         /// <param name="token">Token for user to confirm</param>
-        /// <returns>If user confirmed - true, else false of erroro if user not found</returns>
+        /// <returns>If user confirmed - true, else false of error if user not found</returns>
         // GET: api/account/confirm?id=231..54&token=351..35
         [Route("confirm")]
         [HttpGet]
