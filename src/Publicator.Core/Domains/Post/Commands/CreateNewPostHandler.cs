@@ -3,16 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
+using Publicator.Core.DTO;
 using Publicator.Infrastructure;
 
 namespace Publicator.Core.Domains.Post.Commands
 {
-    class CreateNewPostHandler : IRequestHandler<CreateNewPost, Infrastructure.Models.Post>
+    class CreateNewPostHandler : IRequestHandler<CreateNewPost, PostDTO>
     {
         private readonly PublicatorDbContext _context;
-        public CreateNewPostHandler(PublicatorDbContext context) => _context = context;
-        public async Task<Infrastructure.Models.Post> Handle(
+        private readonly IMapper _mapper;
+        public CreateNewPostHandler(PublicatorDbContext context, IMapper mapper) 
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+        public async Task<PostDTO> Handle(
             CreateNewPost request,
             CancellationToken cancellationToken)
         {
@@ -31,7 +38,7 @@ namespace Publicator.Core.Domains.Post.Commands
 
             AddTagsToPost(request.Tags, post.Id);
 
-            return post;
+            return _mapper.Map<Infrastructure.Models.Post, PostDTO>(post);
         }
         private void AddTagsToPost(IEnumerable<string> tags, Guid postId)
         {

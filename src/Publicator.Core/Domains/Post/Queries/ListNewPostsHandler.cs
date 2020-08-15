@@ -2,20 +2,28 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using Publicator.Core.Domains.Post.Queries;
+using Publicator.Core.DTO;
 using Publicator.Infrastructure;
 using Publicator.Infrastructure.Models;
 
 namespace Publicator.Core.Handlers
 {
-    class ListNewPostsHandler : IRequestHandler<ListNewPosts, IEnumerable<Post>>
+    class ListNewPostsHandler : IRequestHandler<ListNewPosts, IEnumerable<PostDTO>>
     {
         private readonly PublicatorDbContext _context;
-
-        public ListNewPostsHandler(PublicatorDbContext context) => _context = context;
-
-        public async Task<IEnumerable<Post>> Handle(ListNewPosts request, CancellationToken cancellationToken)
+        private readonly IMapper _mapper;
+        public ListNewPostsHandler(PublicatorDbContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+        public async Task<IEnumerable<PostDTO>> Handle(
+            ListNewPosts request, 
+            CancellationToken cancellationToken
+            )
         {
             var posts = (from p in _context.Posts
                          orderby p.CreationDate
@@ -23,10 +31,9 @@ namespace Publicator.Core.Handlers
                          ).Skip(request.PageSize * (request.Page - 1))
                          .Take(request.PageSize);
 
-            if (cancellationToken.IsCancellationRequested)
-                return null;
+            var dtos = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
 
-            return await Task.Run(() => posts.ToList());
+            return await Task.Run(() => dtos.ToList());
         }
     }
 }

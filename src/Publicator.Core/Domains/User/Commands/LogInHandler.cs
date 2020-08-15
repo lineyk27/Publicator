@@ -68,7 +68,7 @@ namespace Publicator.Core.Domains.User.Commands
         }
         private bool CheckPassword(string password, Infrastructure.Models.User user)
         {
-            SHA256 algo = SHA256.Create();
+            using SHA256 algo = SHA256.Create();
             algo.Initialize();
             byte[] bytes = Encoding.UTF8.GetBytes(password);
             byte[] hashed = algo.ComputeHash(bytes);

@@ -1,16 +1,25 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
+using Publicator.Core.DTO;
 using Publicator.Infrastructure;
 
 namespace Publicator.Core.Domains.Comment.Commands
 {
-    class CreateNewCommentHandler : IRequestHandler<CreateNewComment, Infrastructure.Models.Comment>
+    class CreateNewCommentHandler :
+        IRequestHandler<CreateNewComment, CommentDTO>
     {
         private readonly PublicatorDbContext _context;
-        public CreateNewCommentHandler(PublicatorDbContext context) => _context = context;
-        public async Task<Infrastructure.Models.Comment> Handle(
+        private readonly IMapper _mapper;
+        public CreateNewCommentHandler(PublicatorDbContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+        
+        public async Task<CommentDTO> Handle(
             CreateNewComment request, 
             CancellationToken cancellationToken
             )
@@ -28,7 +37,9 @@ namespace Publicator.Core.Domains.Comment.Commands
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return newComment;
+            var dto = _mapper.Map<Infrastructure.Models.Comment, CommentDTO>(newComment);
+
+            return dto;
         }
     }
 }

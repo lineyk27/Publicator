@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using MediatR;
+using Publicator.Core.Domains.User.Queries;
+using Publicator.Core.DTO;
 
 namespace Publicator.Core.Domains.Post.Commands
 {
-    public class CreateNewPost : User.Queries.LoggedInUser, IRequest<Infrastructure.Models.Post>
+    public class CreateNewPost : LoggedInUser, IRequest<PostDTO>
     {
         public string Name { get; set; }
         public string Content { get; set; }

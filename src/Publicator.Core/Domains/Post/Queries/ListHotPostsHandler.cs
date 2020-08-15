@@ -7,16 +7,21 @@ using MediatR;
 using Publicator.Infrastructure.Models;
 using Publicator.Infrastructure;
 using Publicator.Core.Domains.Post.Queries;
+using Publicator.Core.DTO;
+using AutoMapper;
 
 namespace Publicator.Core.Handlers
 {
-    class ListHotPostsHandler : IRequestHandler<ListHotPosts, IEnumerable<Post>>
+    class ListHotPostsHandler : IRequestHandler<ListHotPosts, IEnumerable<PostDTO>>
     {
         private readonly PublicatorDbContext _context;
-
-        public ListHotPostsHandler(PublicatorDbContext context) => _context = context;
-
-        public async Task<IEnumerable<Post>> Handle(ListHotPosts request, CancellationToken cancellationToken)
+        private readonly IMapper _mapper;
+        public ListHotPostsHandler(PublicatorDbContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+        public async Task<IEnumerable<PostDTO>> Handle(ListHotPosts request, CancellationToken cancellationToken)
         {
             var startDate = DateTime.Now.AddDays(-(int)request.Period);
             
@@ -26,8 +31,10 @@ namespace Publicator.Core.Handlers
                          select p)
                          .Skip(request.PageSize * (request.Page-1))
                          .Take(request.PageSize);
-            
-            return await Task.Run((() => posts.ToList()));
+
+            var dtos = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+
+            return await Task.Run(() => dtos.ToList());
         }
     }
 }

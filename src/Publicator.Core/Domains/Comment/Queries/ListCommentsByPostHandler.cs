@@ -2,18 +2,26 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Publicator.Core.DTO;
 using Publicator.Infrastructure;
 
 namespace Publicator.Core.Domains.Comment.Queries
 {
-    class ListCommentsByPostHandler : 
-        IRequestHandler<ListCommentsByPost, IEnumerable<Infrastructure.Models.Comment>>
+    class ListCommentsByPostHandler :
+        IRequestHandler<ListCommentsByPost, IEnumerable<CommentDTO>>
     {
         private readonly PublicatorDbContext _context;
-        public ListCommentsByPostHandler(PublicatorDbContext context) => _context = context;
-        public async Task<IEnumerable<Infrastructure.Models.Comment>> Handle(
+        private readonly IMapper _mapper;
+        public ListCommentsByPostHandler(PublicatorDbContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+        
+        public async Task<IEnumerable<CommentDTO>> Handle(
             ListCommentsByPost request, 
             CancellationToken cancellationToken
             )
@@ -38,7 +46,11 @@ namespace Publicator.Core.Domains.Comment.Queries
                 .Skip(request.PageSize * (request.Page - 1))
                 .Take(request.PageSize);
 
-            return await Task.Run(() => comments.ToList());
+            var dtos = _mapper.Map<
+                IEnumerable<Infrastructure.Models.Comment>,
+                IEnumerable<CommentDTO>>(await comments.ToListAsync());
+
+            return dtos;
         }
     }
 }

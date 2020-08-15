@@ -2,16 +2,24 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
+using Publicator.Core.DTO;
 using Publicator.Infrastructure;
 
 namespace Publicator.Core.Domains.Vote.Commands
 {
-    class VoteForPostHandler : IRequestHandler<VoteForPost, Infrastructure.Models.Vote>
+    class VoteForPostHandler : IRequestHandler<VoteForPost, VoteDTO>
     {
         private readonly PublicatorDbContext _context;
-        public VoteForPostHandler(PublicatorDbContext context) => _context = context;
-        public async Task<Infrastructure.Models.Vote> Handle(
+        private readonly IMapper _mapper;
+        public VoteForPostHandler(PublicatorDbContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+        
+        public async Task<VoteDTO> Handle(
             VoteForPost request, 
             CancellationToken cancellationToken
             )
@@ -55,7 +63,9 @@ namespace Publicator.Core.Domains.Vote.Commands
             
             await _context.SaveChangesAsync(cancellationToken);
 
-            return currentVote;
+            var dto = _mapper.Map<Infrastructure.Models.Vote, VoteDTO>(currentVote);
+
+            return dto;
         }
     }
 }

@@ -40,6 +40,7 @@ namespace Publicator.Presentation
             services.AddCoreServices();
 
             services.AddLogging();
+            services.AddSwaggerGen();
 
             services.Configure<JWTSettings>(_configuration.GetSection("JWTSettings"));
             services.Configure<EmailSettings>(_configuration.GetSection("EmailSettings"));
@@ -84,6 +85,13 @@ namespace Publicator.Presentation
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 

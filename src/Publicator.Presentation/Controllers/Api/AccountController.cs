@@ -39,6 +39,7 @@ namespace Publicator.Presentation.Controllers
         // POST: api/account/login
         [HttpPost]
         [Route("login")]
+        [ProducesResponseType(typeof(string), 200)]
         public async Task<IActionResult> Login([FromBody]LoginRequest model)
         {
             if (!ModelState.IsValid) {
@@ -61,6 +62,7 @@ namespace Publicator.Presentation.Controllers
         // POST: api/account/register
         [HttpPost]
         [Route("register")]
+        [ProducesResponseType(typeof(RegisterResult), 200)]
         public async Task<IActionResult> Register([FromBody]RegisterRequest model)
         {
             if (!ModelState.IsValid)
@@ -84,6 +86,7 @@ namespace Publicator.Presentation.Controllers
         /// <returns>If user confirmed - true, else false of erroro if user not found</returns>
         // GET: api/account/confirm?id=231..54&token=351..35
         [Route("confirm")]
+        [HttpGet]
         public async Task<IActionResult> ConfirmAccount([FromQuery] Guid id, [FromQuery]string token)
         {
             User user;
@@ -105,7 +108,9 @@ namespace Publicator.Presentation.Controllers
         /// <returns>UserDTO of authenticated user</returns>
         // GET: /api/account/current
         [Authorize]
+        [HttpGet]
         [Route("current")]
+        [ProducesResponseType(typeof(UserDTO), 200)]
         public async Task<IActionResult> CurrentUser()
         {
             var user = await _mediator.Send<User>(new LoggedInUser());
