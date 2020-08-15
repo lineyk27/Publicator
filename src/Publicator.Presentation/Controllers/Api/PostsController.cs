@@ -127,19 +127,20 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/posts/user?username=john03&page=3&pagesize=20
         [HttpGet]
         [Route("user")]
+        [ProducesResponseType(typeof(IEnumerable<PostDTO>), 200)]
         public async Task<IActionResult> GetByCreatorUser([FromQuery]UserPostsRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
-            _postService.Page = model.Page;
-            _postService.PageSize = model.PageSize;
 
-            var user = await _userService.GetByUsernameAsync(model.Username);
-            var posts = await _postService.GetByCreatorAsync(user);
-            var curruser = await _userService.TryGetCurrentAsync();
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
-            return Ok(postsDTO);
+            var posts = await _mediator.Send(new ListPostsByCreatorUser()
+            {
+                Page = model.Page,
+                PageSize = model.PageSize,
+                Username = model.Username
+            });
+
+            return Ok(posts);
         }
         /// <summary>
         /// Get posts posted in community
@@ -197,16 +198,11 @@ namespace Publicator.Presentation.Controllers.Api
         [Authorize]
         [HttpPost]
         [Route("create")]
+        [ProducesResponseType(typeof(PostDTO), 200)]
         public async Task<IActionResult> CreatePost([FromBody]CreatePostRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            //var community = model.CommunityId == null ? null : await _communityService.GetByIdAsync((Guid)model.CommunityId);
-
-            //var tags =  await _tagService.CreateAsync(model.Tags);
-
-            //var post = await _postService.CreateAsync(model.Name, model.Content, community, tags);
 
             var post = await _mediator.Send(new CreateNewPost()
             {

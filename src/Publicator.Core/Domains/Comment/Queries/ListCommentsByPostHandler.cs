@@ -40,12 +40,10 @@ namespace Publicator.Core.Domains.Comment.Queries
                                        select p1) on c.PostId equals p.Id
                             
                             where c.ParentRepliedCommentId == null
-                            select c);
-
-            comments = comments
-                .Skip(request.PageSize * (request.Page - 1))
-                .Take(request.PageSize);
-
+                            select c)
+                            .Skip(request.PageSize * (request.Page - 1))
+                            .Take(request.PageSize);
+            
             var dtos = _mapper.Map<
                 IEnumerable<Infrastructure.Models.Comment>,
                 IEnumerable<CommentDTO>>(await comments.ToListAsync());

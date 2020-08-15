@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Publicator.Core.Domains.Post.Queries;
 using Publicator.Core.DTO;
 using Publicator.Infrastructure;
@@ -31,9 +32,9 @@ namespace Publicator.Core.Handlers
                          ).Skip(request.PageSize * (request.Page - 1))
                          .Take(request.PageSize);
 
-            var dtos = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
+            var dtos = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(await posts.ToListAsync());
 
-            return await Task.Run(() => dtos.ToList());
+            return dtos;
         }
     }
 }

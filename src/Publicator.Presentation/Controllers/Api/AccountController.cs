@@ -3,12 +3,10 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Publicator.ApplicationCore.Contracts;
 using Publicator.Core.DTO;
 using Publicator.Core.Domains.User.Commands;
 using Publicator.Core.Domains.User.Queries;
 using Publicator.Presentation.RequestModels;
-using Publicator.Infrastructure.Models;
 
 namespace Publicator.Presentation.Controllers
 {
@@ -17,16 +15,8 @@ namespace Publicator.Presentation.Controllers
     /// </summary>
     public class AccountController : BaseController
     {
-        private IUserService _userService;
         private IMediator _mediator;
-        public AccountController(IUserService userService,
-            IMediator mediator
-            ) 
-            : base()
-        {
-            _userService = userService;
-            _mediator = mediator;
-        }
+        public AccountController(IMediator mediator) => _mediator = mediator;
         /// <summary>
         /// Logim method, authenticate user
         /// </summary>
@@ -83,20 +73,16 @@ namespace Publicator.Presentation.Controllers
         // GET: api/account/confirm?id=231..54&token=351..35
         [Route("confirm")]
         [HttpGet]
+        [ProducesResponseType(typeof(RegistrationConfirmationResult), 200)]
         public async Task<IActionResult> ConfirmAccount([FromQuery] Guid id, [FromQuery]string token)
         {
-            User user;
-            try
-            {
-                user = await _userService.GetByIdAsync(id);
-            }
-            catch
-            {
-                return StatusCode(400);
-            }
-            bool result = _userService.ConfirmAccount(user, token);
+            var result = await _mediator.Send(new ConfirmAccountRegistration() 
+            { 
+                UserId = id,
+                ConfirmationToken = token
+            });
 
-            return Ok(new { Confirmed = result });
+            return Ok(result);
         }
         /// <summary>
         /// Method to return current authenticated user
@@ -112,23 +98,6 @@ namespace Publicator.Presentation.Controllers
             var user = await _mediator.Send(new LoggedInUser());
 
             return Ok(user);
-        }
-        /// <summary>
-        /// Change user pic
-        /// </summary>
-        /// <param name="model">Model with image url</param>
-        /// <returns>Ok if all ok</returns>
-        // PUT: api/account/picture
-        [HttpPut]
-        [Authorize]
-        [Route("picture")]
-        public IActionResult ChangeUserPicture(ChangePictureRequest model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            _userService.ChangeUserPicture(model.Url);
-            return Ok();
         }
     }
 }

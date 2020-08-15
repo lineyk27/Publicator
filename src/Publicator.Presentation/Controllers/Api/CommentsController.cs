@@ -1,36 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using AutoMapper;
-using Publicator.ApplicationCore.Contracts;
 using Publicator.Presentation.RequestModels;
-using Publicator.Infrastructure.Models;
 using Publicator.Core.DTO;
 using Publicator.Core.Domains.Comment.Commands;
+using Publicator.Core.Domains.Comment.Queries;
 using MediatR;
 
 namespace Publicator.Presentation.Controllers.Api
 {
     public class CommentsController : BaseController
     {
-        ICommentService _commentsService;
-        IPostService _postService;
-        IMapper _mapper;
         IMediator _mediator;
-        public CommentsController(
-            ICommentService commentService, 
-            IPostService postService, 
-            IMapper mapper,
-            IMediator mediator
-            )
-        {
-            _commentsService = commentService;
-            _postService = postService;
-            _mapper = mapper;
-            _mediator = mediator;
-        }
+        public CommentsController(IMediator mediator) => _mediator = mediator;
         /// <summary>
         /// Get post's comments
         /// </summary>
@@ -39,16 +22,20 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/comments/post?postid=123..23
         [HttpGet]
         [Route("post")]
+        [ProducesResponseType(typeof(IEnumerable<CommentDTO>), 200)]
         public async Task<IActionResult> GetByPost([FromQuery]CommentsRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var post = await _postService.GetByIdAsync(model.PostId);
+            var comments = await _mediator.Send(new ListCommentsByPost() 
+            { 
+                Page = model.Page,
+                PageSize = model.PageSize,
+                PostId = model.PostId
+            });
 
-            var comments = await _commentsService.GetByPostAsync(post);
-            var commentsDTO = _mapper.Map<IEnumerable<Comment>, IEnumerable<CommentDTO>>(comments);
-            return Ok(commentsDTO);
+            return Ok(comments);
         }
         /// <summary>
         /// Create comment to post
