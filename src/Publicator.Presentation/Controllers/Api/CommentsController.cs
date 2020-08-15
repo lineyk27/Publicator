@@ -64,7 +64,7 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var comment = await _mediator.Send(new CreateNewComment()
+            var comment = await _mediator.Send<Comment>(new CreateNewComment()
             {
                 Content = model.Text,
                 PostId = model.PostId,

@@ -58,7 +58,7 @@ namespace Publicator.Presentation.Controllers.Api
             //var post = await _postService.GetByIdAsync(model.PostId);
             //var current = await _postService.VoteAsync(post, model.Up);
 
-            var vote = await _mediator.Send(new VoteForPost()
+            var vote = await _mediator.Send<Vote>(new VoteForPost()
             {
                 Up = model.Up,
                 PostId = model.PostId

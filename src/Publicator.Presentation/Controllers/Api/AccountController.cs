@@ -1,16 +1,13 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using System.Threading.Tasks;
-using System.Security.Claims;
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.DTO;
-using Publicator.Presentation.Helpers;
+using Publicator.Core.Domains.User.Commands;
+using Publicator.Core.Domains.User.Queries;
 using Publicator.Presentation.RequestModels;
 using Publicator.Infrastructure.Models;
 
@@ -22,16 +19,17 @@ namespace Publicator.Presentation.Controllers
     public class AccountController : BaseController
     {
         private IUserService _userService;
-        private JWTSettings _jwtSettings;
         private IMapper _mapper;
+        private IMediator _mediator;
         public AccountController(IUserService userService,
-            IOptions<JWTSettings> options, 
-            IMapper mapper) 
+            IMapper mapper,
+            IMediator mediator
+            ) 
             : base()
         {
             _userService = userService;
-            _jwtSettings = options.Value;
             _mapper = mapper;
+            _mediator = mediator;
         }
         /// <summary>
         /// Logim method, authenticate user
@@ -47,27 +45,13 @@ namespace Publicator.Presentation.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _userService.LoginAsync(model.Login, model.Password);
-
-            var tokenhandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
-            var tokendescriptor = new SecurityTokenDescriptor()
+            var tokenKey = await _mediator.Send(new LogIn()
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Nickname),
-                    new Claim(ClaimTypes.Role, user.Role.Name)
-                }),
-                Audience = _jwtSettings.Audience,
-                Issuer = _jwtSettings.Issuer,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenhandler.CreateToken(tokendescriptor);
-            var tokenkey = tokenhandler.WriteToken(token);
-
-            return Ok(tokenkey);
+                Login = model.Login,
+                Password = model.Password
+            });
+            
+            return Ok(tokenKey);
         }
         /// <summary>
         /// Register user method
@@ -82,12 +66,15 @@ namespace Publicator.Presentation.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (model.Password != model.ConfirmPassword)
-                return BadRequest(ModelState);
+            var result = await _mediator.Send<RegisterResult>(new Register()
+            {
+                Email = model.Email,
+                Nickname = model.Username,
+                Password = model.Password,
+                ConfirmPassword = model.ConfirmPassword
+            });
 
-            await _userService.RegisterAsync(model.Username, model.Email, model.Password);
-
-            return Ok();
+            return Ok(result);
         }
         /// <summary>
         /// Method for confirm account by email
@@ -121,7 +108,8 @@ namespace Publicator.Presentation.Controllers
         [Route("current")]
         public async Task<IActionResult> CurrentUser()
         {
-            var user = await _userService.GetCurrentUserAsync();
+            var user = await _mediator.Send<User>(new LoggedInUser());
+
             var dto = _mapper.Map<User, UserDTO>(user);
             return Ok(dto);
         }

@@ -211,7 +211,7 @@ namespace Publicator.Presentation.Controllers.Api
 
             //var post = await _postService.CreateAsync(model.Name, model.Content, community, tags);
 
-            var post = await _mediator.Send(new CreateNewPost()
+            var post = await _mediator.Send<Post>(new CreateNewPost()
             {
                 Name = model.Name,
                 Content = model.Content,

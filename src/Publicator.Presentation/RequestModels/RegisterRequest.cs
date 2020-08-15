@@ -16,6 +16,7 @@ namespace Publicator.Presentation.RequestModels
         public string Password { get; set; }
         [Required]
         [DataType(DataType.Password, ErrorMessage = "Wrong confirm password format")]
+        [Compare("Password", ErrorMessage = "Password and confirm password must be equals")]
         public string ConfirmPassword { get; set; }
     }
 }
