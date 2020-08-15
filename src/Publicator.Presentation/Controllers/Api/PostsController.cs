@@ -5,12 +5,13 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Publicator.ApplicationCore.Contracts;
-using Publicator.ApplicationCore.DTO;
+using Publicator.Core.DTO;
 using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
 using MediatR;
 using Publicator.Core.Domains.Post.Queries;
 using Publicator.Core.Domains.Post.Commands;
+using Publicator.Core.Domains.User.Queries;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -48,6 +49,7 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: /api/posts/hot?period=month&page=3&pagesize=20
         [HttpGet]
         [Route("hot")]
+        [ProducesResponseType(typeof(IEnumerable<PostDTO>), 200)]
         public async Task<IActionResult> GetHot([FromQuery]HotPostsRequest model)
         {
             if (!ModelState.IsValid)
@@ -57,8 +59,7 @@ namespace Publicator.Presentation.Controllers.Api
 
             var posts = await _mediator.Send(req);
 
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
-            return Ok(postsDTO);
+            return Ok(posts);
         }
         /// <summary>
         /// Method return subscription posts with paging and filtering
@@ -68,20 +69,19 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/posts/subscription?username=john03&page=3&pagesize=20
         [HttpGet]
         [Route("subscription")]
+        [ProducesResponseType(typeof(IEnumerable<PostDTO>), 200)]
         public async Task<IActionResult> GetBySubscription([FromQuery]PageRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            //var user = await _userService.GetByUsernameAsync(model.UserName);
+            var posts = await _mediator.Send(new ListPostsBySubscription()
+            {
+                Page = model.Page,
+                PageSize = model.PageSize
+            });
 
-            _postService.Page = model.Page;
-            _postService.PageSize = model.PageSize;
-
-            var posts = await _postService.GetBySubscriptionAsync();
-            var curruser = await _userService.TryGetCurrentAsync();
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
-            return Ok(postsDTO);
+            return Ok(posts);
         }
         /// <summary>
         /// Get new posts from all posts
@@ -91,17 +91,15 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/posts/new?page=3&pagesize=20
         [HttpGet]
         [Route("new")]
+        [ProducesResponseType(typeof(IEnumerable<PostDTO>), 200)]
         public async Task<IActionResult> GetNew([FromQuery]PageRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var req = new ListNewPosts(model.Page, model.PageSize);
+            var posts = await _mediator.Send(new ListNewPosts(model.Page, model.PageSize));
 
-            var posts = await _mediator.Send(req);
-
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
-            return Ok(postsDTO);
+            return Ok(posts);
         }
         /// <summary>
         /// Get post by id
@@ -111,15 +109,15 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/posts/123..1ef3
         [HttpGet]
         [Route("{id:guid}")]
+        [ProducesResponseType(typeof(PostDTO), 200)]
         public async Task<IActionResult> GetById(Guid id)
         {
-            //[FromRoute]IdRequest model
-            //if (ModelState.IsValid)
-            //    return BadRequest();
-            var curruser = await _userService.TryGetCurrentAsync();
-            var post = await _postService.GetByIdAsync(id);
-            var postDTO = _aggregationService.AggregateWithBookmarkVote(post, curruser);
-            return Ok(postDTO);
+            var post = await _mediator.Send(new GetPostById() { PostId = id });
+            var loggedUser = await _mediator.Send(new LoggedInUser());
+
+            // TODO: add aggregation
+            //var postDTO = _aggregationService.AggregateWithBookmarkVote(post, loggedUser);
+            return Ok(post);
         }
         /// <summary>
         /// Get posts created by user
@@ -133,7 +131,7 @@ namespace Publicator.Presentation.Controllers.Api
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
+            
             _postService.Page = model.Page;
             _postService.PageSize = model.PageSize;
 
@@ -187,7 +185,6 @@ namespace Publicator.Presentation.Controllers.Api
                 community,
                 null);
 
-            var curruser = await _userService.TryGetCurrentAsync();
             var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
             return Ok(postsDTO);
         }
@@ -211,7 +208,7 @@ namespace Publicator.Presentation.Controllers.Api
 
             //var post = await _postService.CreateAsync(model.Name, model.Content, community, tags);
 
-            var post = await _mediator.Send<Post>(new CreateNewPost()
+            var post = await _mediator.Send(new CreateNewPost()
             {
                 Name = model.Name,
                 Content = model.Content,
@@ -219,8 +216,7 @@ namespace Publicator.Presentation.Controllers.Api
                 Tags = model.Tags
             });
             
-            var postDTO = _mapper.Map<Post, PostDTO>(post);
-            return Ok(postDTO);
+            return Ok(post);
         }
     }
 }

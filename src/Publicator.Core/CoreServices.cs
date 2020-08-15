@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ namespace Publicator.Core
             var configuration = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
             services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
 
+            services.AddAutoMapper(Assembly.GetAssembly(typeof(PublicatorProfile)));
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipe<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CurrentUserPipe<,>));

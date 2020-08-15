@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Publicator.ApplicationCore.Contracts;
-using Publicator.ApplicationCore.DTO;
+using Publicator.Core.DTO;
 using Publicator.Core.Domains.User.Commands;
 using Publicator.Core.Domains.User.Queries;
 using Publicator.Presentation.RequestModels;
@@ -19,7 +19,6 @@ namespace Publicator.Presentation.Controllers
     public class AccountController : BaseController
     {
         private IUserService _userService;
-        private IMapper _mapper;
         private IMediator _mediator;
         public AccountController(IUserService userService,
             IMapper mapper,
@@ -28,7 +27,6 @@ namespace Publicator.Presentation.Controllers
             : base()
         {
             _userService = userService;
-            _mapper = mapper;
             _mediator = mediator;
         }
         /// <summary>
@@ -113,10 +111,9 @@ namespace Publicator.Presentation.Controllers
         [ProducesResponseType(typeof(UserDTO), 200)]
         public async Task<IActionResult> CurrentUser()
         {
-            var user = await _mediator.Send<User>(new LoggedInUser());
+            var user = await _mediator.Send(new LoggedInUser());
 
-            var dto = _mapper.Map<User, UserDTO>(user);
-            return Ok(dto);
+            return Ok(user);
         }
         /// <summary>
         /// Change user pic
