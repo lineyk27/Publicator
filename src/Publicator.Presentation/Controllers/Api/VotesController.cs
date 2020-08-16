@@ -55,9 +55,6 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            //var post = await _postService.GetByIdAsync(model.PostId);
-            //var current = await _postService.VoteAsync(post, model.Up);
-
             var vote = await _mediator.Send(new VoteForPost()
             {
                 Up = model.Up,
@@ -80,7 +77,7 @@ namespace Publicator.Presentation.Controllers.Api
                 return BadRequest(ModelState);
 
             var post = await _postService.GetByIdAsync(model.PostId);
-            return Ok(new {CurrentRating = post.CurrentRating});
+            return Ok(new { post.CurrentRating });
         }
     }
 }

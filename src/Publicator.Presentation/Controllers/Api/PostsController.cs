@@ -17,28 +17,8 @@ namespace Publicator.Presentation.Controllers.Api
 {
     public class PostsController : BaseController
     {
-        private IPostService _postService;
-        private IUserService _userService;
-        private ICommunityService _communityService;
-        private IMapper _mapper;
         private IMediator _mediator;
-        public PostsController(
-            IPostService postService, 
-            IMapper mapper,
-            IMediator mediator,
-            IUserService userService,
-            ICommunityService communityService,
-            ITagService tagService,
-            IAggregationService aggregationService)
-        {
-            //_aggregationService = aggregationService;
-            _postService = postService;
-            _mapper = mapper;
-            _userService = userService;
-            _communityService = communityService;
-            //_tagService = tagService;
-            _mediator = mediator;
-        }
+        public PostsController(IMediator mediator) => _mediator = mediator;
         /// <summary>
         /// Method return hot posts with paging and filtering
         /// </summary>
@@ -161,34 +141,6 @@ namespace Publicator.Presentation.Controllers.Api
             });
             
             return Ok(posts);
-        }
-        /// <summary>
-        /// Get posts by search search
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        // GET: api/posts/search?query=any query search&startdate=2019-10-21&enddate=2019-12-31&page=3&pagesize=20
-        [HttpGet]
-        [Route("search")]
-        public async Task<IActionResult> GetBySearch([FromQuery]SearchRequest model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            _postService.Page = model.Page;
-            _postService.PageSize = model.PageSize;
-
-            var community = model.CommunityId != null ? await _communityService.GetByIdAsync((Guid)model.CommunityId) : null;
-            
-            var posts = await _postService.GetBySearchAsync(
-                model.Query,
-                model.StartDate,
-                model.EndDate,
-                model.MinimumRating,
-                community,
-                null);
-
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
-            return Ok(postsDTO);
         }
         /// <summary>
         /// Post created post
