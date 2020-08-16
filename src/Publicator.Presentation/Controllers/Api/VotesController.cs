@@ -1,27 +1,22 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.Core.DTO;
 using Publicator.Core.Domains.Vote.Commands;
 using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
+using Publicator.Core.Domains.Post.Queries;
+using Publicator.Core.Domains.Vote.Queries;
 
 namespace Publicator.Presentation.Controllers.Api
 {
     public class VotesController : BaseController
     {
-        private IPostService _postService;
-        private IMapper _mapper;
         private IMediator _mediator;
-        public VotesController(IPostService postService, IMapper mapper, IMediator mediator)
-        {
-            _postService = postService;
-            _mapper = mapper;
-            _mediator = mediator;
-        }
+        public VotesController(IMediator mediator) => _mediator = mediator;
         /// <summary>
         /// Get current voote of user (up, down or unvoted)
         /// </summary>
@@ -31,15 +26,18 @@ namespace Publicator.Presentation.Controllers.Api
         [Authorize]
         [HttpGet]
         [Route("current")]
+        [ProducesResponseType(typeof(VoteDTO), 200)]
         public async Task<IActionResult> GetCurrentUserVote([FromQuery]CurrentVoteRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var post = await _postService.GetByIdAsync(model.PostId);
-            var currentvote = await _postService.CurrentVoteAsync(post);
-            var voteDTO = _mapper.Map<Vote, VoteDTO>(currentvote);
-            return Ok(voteDTO);
+            var vote = await _mediator.Send<VoteDTO>(new GetCurrentVote()
+            {
+                PostId = model.PostId
+            });
+
+            return Ok(vote);
         }
         /// <summary>
         /// Vote post
@@ -55,7 +53,7 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var vote = await _mediator.Send(new VoteForPost()
+            var vote = await _mediator.Send<VoteDTO>(new VoteForPost()
             {
                 Up = model.Up,
                 PostId = model.PostId
@@ -70,13 +68,18 @@ namespace Publicator.Presentation.Controllers.Api
         /// <returns>Current rating</returns>
         // GET: api/votes/rating?postId=123..23
         [HttpGet]
-        [Route("rating")]
+        [Route("rating")]// TODO: return type need to be reconsidered
+        [ProducesResponseType(typeof(int), 200)]
         public async Task<IActionResult> CurrentRating([FromQuery]CurrentVoteRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var post = await _postService.GetByIdAsync(model.PostId);
+            var post = await _mediator.Send(new GetPostById()
+            {
+                PostId = model.PostId
+            });
+
             return Ok(new { post.CurrentRating });
         }
     }
