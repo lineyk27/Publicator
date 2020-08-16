@@ -51,7 +51,6 @@ namespace Publicator.Presentation
                 //c.DescribeAllEnumsAsStrings();
             });
 
-            services.Configure<JWTSettings>(_configuration.GetSection("JWTSettings"));
             services.Configure<EmailSettings>(_configuration.GetSection("EmailSettings"));
             var jwtsettings = _configuration.GetSection("JWTSettings").Get<JWTSettings>();
             var key = Encoding.ASCII.GetBytes(jwtsettings.SecretKey);

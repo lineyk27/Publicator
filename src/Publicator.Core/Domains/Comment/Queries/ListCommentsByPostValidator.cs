@@ -7,8 +7,6 @@ namespace Publicator.Core.Domains.Comment.Queries
         public ListCommentsByPostValidator()
         {
             RuleFor(x => x.PostId).NotEmpty().WithMessage("Post id is required");
-            RuleFor(x => x.Page).NotEmpty().WithMessage("Page is required").GreaterThan(0);
-            RuleFor(x => x.PageSize).NotEmpty().WithMessage("Page size is required").GreaterThan(0);
         }
     }
 }

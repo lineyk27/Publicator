@@ -30,8 +30,6 @@ namespace Publicator.Presentation.Controllers.Api
 
             var comments = await _mediator.Send(new ListCommentsByPost() 
             { 
-                Page = model.Page,
-                PageSize = model.PageSize,
                 PostId = model.PostId
             });
 

@@ -20,18 +20,19 @@ namespace Publicator.Core.Domains.Post.Queries
         }
         public async Task<PostDTO> Handle(GetPostById request, CancellationToken cancellationToken)
         {
-            var post = (from p in _context.Posts.Include("PostTags.Tag")
+            var post = await (from p in _context.Posts
+                                                .Include("PostTags.Tag")
                                                 .Include(x => x.Community)
                                                 .Include(x => x.CreatorUser)
                                                 .Include(x => x.Bookmarks)
                                                 .Include(x => x.Votes)
-                        where p.Id == request.PostId
-                        select p
-                ).SingleOrDefault();
+                              where p.Id.Equals(request.PostId)
+                              select p
+                ).FirstOrDefaultAsync();
 
             var dto = _mapper.Map<Infrastructure.Models.Post, PostDTO>(post);
 
-            return await Task.FromResult(dto);
+            return dto;
         }
     }
 }

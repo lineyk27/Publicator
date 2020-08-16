@@ -29,20 +29,14 @@ namespace Publicator.Core.Domains.Comment.Queries
             // up to 6 levels of comments
             var comments = (from c in _context
                             .Comments
-                            .Include(x => x.RepliesComments)
-                            .ThenInclude(x => x.Select(x => x.RepliesComments))
-                            .ThenInclude(x => x.Select(x => x.RepliesComments))
-                            .ThenInclude(x => x.Select(x => x.RepliesComments))
-                            .ThenInclude(x => x.Select(x => x.RepliesComments))
-                            
-                            join p in (from p1 in _context.Posts 
-                                       where p1.Id == request.PostId
-                                       select p1) on c.PostId equals p.Id
-                            
-                            where c.ParentRepliedCommentId == null
-                            select c)
-                            .Skip(request.PageSize * (request.Page - 1))
-                            .Take(request.PageSize);
+                            .Include("RepliesComments.User")
+                            .Include("RepliesComments.RepliesComments.User")
+                            .Include("RepliesComments.RepliesComments.RepliesComments.User")
+                            .Include("RepliesComments.RepliesComments.RepliesComments.RepliesComments.User")
+                            .Include("RepliesComments.RepliesComments.RepliesComments.RepliesComments" +
+                            ".RepliesComments.User")
+                            where c.ParentRepliedCommentId == null && c.PostId == request.PostId
+                            select c);
             
             var dtos = _mapper.Map<
                 IEnumerable<Infrastructure.Models.Comment>,

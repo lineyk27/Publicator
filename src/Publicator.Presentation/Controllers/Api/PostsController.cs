@@ -20,9 +20,7 @@ namespace Publicator.Presentation.Controllers.Api
         private IPostService _postService;
         private IUserService _userService;
         private ICommunityService _communityService;
-        private ITagService _tagService;
         private IMapper _mapper;
-        private IAggregationService _aggregationService;
         private IMediator _mediator;
         public PostsController(
             IPostService postService, 
@@ -33,12 +31,12 @@ namespace Publicator.Presentation.Controllers.Api
             ITagService tagService,
             IAggregationService aggregationService)
         {
-            _aggregationService = aggregationService;
+            //_aggregationService = aggregationService;
             _postService = postService;
             _mapper = mapper;
             _userService = userService;
             _communityService = communityService;
-            _tagService = tagService;
+            //_tagService = tagService;
             _mediator = mediator;
         }
         /// <summary>
@@ -75,7 +73,7 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var posts = await _mediator.Send(new ListPostsBySubscription()
+            var posts = await _mediator.Send<IEnumerable<PostDTO>>(new ListPostsBySubscription()
             {
                 Page = model.Page,
                 PageSize = model.PageSize
@@ -155,11 +153,14 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var community = await _communityService.GetByIdAsync(model.CommunityId);
-            var posts = await _postService.GetByCommunity(community);
-            var curruser = await _userService.TryGetCurrentAsync();
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
-            return Ok(postsDTO);
+            var posts = await _mediator.Send(new ListPostsByCommunity()
+            {
+                CommunityId = model.CommunityId,
+                Page = model.Page,
+                PageSize = model.PageSize
+            });
+            
+            return Ok(posts);
         }
         /// <summary>
         /// Get posts by search search

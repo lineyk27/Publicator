@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +7,8 @@ using Publicator.ApplicationCore.DTO;
 using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
 using Publicator.Presentation.ResponseModels;
+using MediatR;
+using Publicator.Core.Domains.User.Queries;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -16,11 +17,14 @@ namespace Publicator.Presentation.Controllers.Api
         IMapper _mapper;
         IUserService _userService;
         IPostService _postService;
+        IMediator _mediator;
         public UsersController(IMapper mapper,
             IUserService userService,
-            IPostService postService)
+            IPostService postService,
+            IMediator mediator)
         {
             _mapper = mapper;
+            _mediator = mediator;
             _userService = userService;
             _postService = postService;
         }
@@ -100,9 +104,12 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await _userService.GetByUsernameAsync(model.Username);
-            var userDTO = _mapper.Map<User, UserDTO>(user);
-            return Ok(userDTO);
+            var user = await _mediator.Send(new GetByUsername()
+            {
+                Username = model.Username
+            });
+
+            return Ok(user);
         }
     }
 }
