@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -9,12 +8,12 @@ using Publicator.Infrastructure;
 
 namespace Publicator.Core.Domains.User.Queries
 {
-    class GetCurrentSubscriptionHandler : IRequestHandler<SubscribeToUser, SubscriptionResult>
+    class GetCurrentSubscriptionHandler : IRequestHandler<GetCurrentSubscription, SubscriptionResult>
     {
         private readonly PublicatorDbContext _context;
         public GetCurrentSubscriptionHandler(PublicatorDbContext context) => _context = context; 
         public async Task<SubscriptionResult> Handle(
-            SubscribeToUser request, 
+            GetCurrentSubscription request, 
             CancellationToken cancellationToken
             )
         {
@@ -25,7 +24,7 @@ namespace Publicator.Core.Domains.User.Queries
                                             where s.SubscriberUserId.Equals(request.UserId) &&
                                                     s.SubscriptionUser.Nickname.Equals(subscriptionUser.Id)
                                             select s
-                                            ).FirstOrDefaultAsync();
+                                            ).FirstOrDefaultAsync(cancellationToken);
 
             var result = new SubscriptionResult();
 

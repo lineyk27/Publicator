@@ -47,7 +47,7 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var subscription = await _mediator.Send(new GetCurrentSubscription()
+            var subscription = await _mediator.Send<SubscriptionResult>(new GetCurrentSubscription()
             {
                 SubscriberUsername = model.Username
             });

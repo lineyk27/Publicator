@@ -23,13 +23,13 @@ namespace Publicator.Core.Domains.User.Commands
 
             var currentSubscription = await (from s in _context.UserSubscriptions.Include(x => x.SubscriptionUser)
                                             where s.SubscriberUserId.Equals(request.UserId) &&
-                                                    s.SubscriptionUser.Nickname.Equals(subscriptionUser.Id)
+                                                    s.SubscriptionUserId.Equals(subscriptionUser.Id)
                                             select s
                                             ).FirstOrDefaultAsync();
 
             var result = new SubscriptionResult();
 
-            if(currentSubscription != null)
+            if(currentSubscription == null)
             {
                 _context.UserSubscriptions.Add(new UserSubscription()
                 {
