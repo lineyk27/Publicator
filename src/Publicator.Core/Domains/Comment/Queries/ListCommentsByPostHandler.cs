@@ -29,6 +29,7 @@ namespace Publicator.Core.Domains.Comment.Queries
             // up to 6 levels of comments
             var comments = (from c in _context
                             .Comments
+                            .Include("User")
                             .Include("RepliesComments.User")
                             .Include("RepliesComments.RepliesComments.User")
                             .Include("RepliesComments.RepliesComments.RepliesComments.User")

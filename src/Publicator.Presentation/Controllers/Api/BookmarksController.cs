@@ -4,28 +4,20 @@ using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using Publicator.ApplicationCore.Contracts;
 using Publicator.ApplicationCore.DTO;
-using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
-using Publicator.Presentation.ResponseModels;
 using System.Collections.Generic;
+using MediatR;
+using Publicator.Core.Domains.Post.Queries;
+using Publicator.Core.Domains.Post.Commands;
 
 namespace Publicator.Presentation.Controllers.Api
 {
     public class BookmarksController : BaseController
     {
-        IPostService _postService;
-        IMapper _mapper;
-        IAggregationService _aggregationService;
-        IUserService _userService;
-        public BookmarksController(IPostService postService, 
-            IMapper mapper, 
-            IAggregationService aggregationService,
-            IUserService userService)
+        IMediator _mediator;
+        public BookmarksController(IMediator mediator)
         {
-            _postService = postService;
-            _mapper = mapper;
-            _aggregationService = aggregationService;
-            _userService = userService;
+            _mediator = mediator;
         }
         /// <summary>
         /// Get user bookmarks posts
@@ -35,12 +27,12 @@ namespace Publicator.Presentation.Controllers.Api
         [Authorize]
         [HttpGet]
         [Route("current")]
+        [ProducesResponseType(typeof(IEnumerable<PostDTO>), 200)]
         public async Task<IActionResult> GetBookmarks()
         {
-            var posts = await _postService.GetBookmarks();
-            var curruser = await _userService.TryGetCurrentAsync();
-            var postsDTO = _mapper.Map<IEnumerable<Post>, IEnumerable<PostDTO>>(posts);
-            return Ok(postsDTO);
+            var posts = await _mediator.Send(new ListBookmarkedPosts());
+
+            return Ok(posts);
         }
         /// <summary>
         /// Create bookmark (or delete if it already exists)
@@ -51,17 +43,18 @@ namespace Publicator.Presentation.Controllers.Api
         [Authorize]
         [HttpPut]
         [Route("create")]
+        [ProducesResponseType(typeof(BookmarkResult), 200)]
         public async Task<IActionResult> CreateBookmark([FromBody]BookmarkRequest model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var post = await _postService.GetByIdAsync(model.PostId);
-            var current = await _postService.AddToBookmarkAsync(post);
+            var result = await _mediator.Send<BookmarkResult>(new AddPostToBookmarks()
+            {
+                PostId = model.PostId
+            });
 
-            var currentState = new CurrentStateResponse() { State = current };
-            
-            return Ok(currentState);
+            return Ok(result);
 
         }
     }

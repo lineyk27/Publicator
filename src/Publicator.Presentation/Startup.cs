@@ -29,16 +29,9 @@ namespace Publicator.Presentation
             services.AddHttpContextAccessor();
             services
                 .AddControllers(options => options.EnableEndpointRouting = false)
-                //.SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-                //.AddNewtonsoftJson(options =>
-                //    {
-                //        //options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                //        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                //    })
                 .AddJsonOptions(configuration =>
                 {
                     configuration.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                    //configuration.JsonSerializerOptions.IgnoreNullValues = true;
                 });
 
             services.AddInfrastructureServices();
@@ -46,10 +39,7 @@ namespace Publicator.Presentation
             services.AddCoreServices();
 
             services.AddLogging();
-            services.AddSwaggerGen(c =>
-            {
-                //c.DescribeAllEnumsAsStrings();
-            });
+            services.AddSwaggerGen();
 
             services.Configure<EmailSettings>(_configuration.GetSection("EmailSettings"));
             var jwtsettings = _configuration.GetSection("JWTSettings").Get<JWTSettings>();
