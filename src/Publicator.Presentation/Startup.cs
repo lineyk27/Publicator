@@ -66,7 +66,7 @@ namespace Publicator.Presentation
                 });
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/build";
+                configuration.RootPath = "../WebClient/build";
             });
 
         }
@@ -105,7 +105,7 @@ namespace Publicator.Presentation
             
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "../WebClient";
                 if (env.IsDevelopment())
                 {
                     spa.UseReactDevelopmentServer(npmScript: "start");
