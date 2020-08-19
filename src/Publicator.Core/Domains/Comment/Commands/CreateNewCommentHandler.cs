@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Publicator.Core.DTO;
 using Publicator.Infrastructure;
 
@@ -13,10 +14,16 @@ namespace Publicator.Core.Domains.Comment.Commands
     {
         private readonly PublicatorDbContext _context;
         private readonly IMapper _mapper;
-        public CreateNewCommentHandler(PublicatorDbContext context, IMapper mapper)
+        private readonly ILogger<CreateNewCommentHandler> _logger;
+        public CreateNewCommentHandler(
+            PublicatorDbContext context, 
+            IMapper mapper, 
+            ILogger<CreateNewCommentHandler> logger
+            )
         {
             _context = context;
             _mapper = mapper;
+            _logger = logger;
         }
         
         public async Task<CommentDTO> Handle(
@@ -36,6 +43,8 @@ namespace Publicator.Core.Domains.Comment.Commands
             _context.Comments.Add(newComment);
 
             await _context.SaveChangesAsync(cancellationToken);
+
+            _logger.LogInformation("Created new comment with id: {0}", newComment.Id);
 
             var dto = _mapper.Map<Infrastructure.Models.Comment, CommentDTO>(newComment);
 

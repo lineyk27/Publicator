@@ -12,6 +12,7 @@ using Publicator.Core.Exceptions;
 using Publicator.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Publicator.Core.Domains.User.Commands
 {
@@ -19,10 +20,16 @@ namespace Publicator.Core.Domains.User.Commands
     {
         private readonly PublicatorDbContext _context;
         private readonly JWTSettings _jwtSettings;
-        public LogInHandler(PublicatorDbContext context, IOptions<JWTSettings> options)
+        private readonly ILogger<LogInHandler> _logger;
+        public LogInHandler(
+            PublicatorDbContext context, 
+            IOptions<JWTSettings> options, 
+            ILogger<LogInHandler> logger
+            )
         {
             _context = context;
             _jwtSettings = options.Value;
+            _logger = logger;
         }
         public async Task<string> Handle(LogIn request, CancellationToken cancellationToken)
         {
@@ -38,10 +45,12 @@ namespace Publicator.Core.Domains.User.Commands
                 var isPasswordGood = CheckPassword(request.Password, user);
                 if (isPasswordGood)
                 {
+                    _logger.LogInformation("Succesfull acthentication");
                     var tokenKey = GetAuthToken(user);
                     return await Task.FromResult(tokenKey);
                 }
             }
+            _logger.LogInformation("Wrong authentification for user");
             throw new FailedAuthenticationException();
         }
         private string GetAuthToken(Infrastructure.Models.User user)

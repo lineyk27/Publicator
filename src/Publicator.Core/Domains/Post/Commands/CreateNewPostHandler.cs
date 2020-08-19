@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using Microsoft.Extensions.Logging;
+using Publicator.Core.Domains.Comment.Commands;
 using Publicator.Core.DTO;
 using Publicator.Infrastructure;
 
@@ -14,10 +16,16 @@ namespace Publicator.Core.Domains.Post.Commands
     {
         private readonly PublicatorDbContext _context;
         private readonly IMapper _mapper;
-        public CreateNewPostHandler(PublicatorDbContext context, IMapper mapper) 
+        private readonly ILogger<CreateNewPostHandler> _logger;
+        public CreateNewPostHandler(
+            PublicatorDbContext context, 
+            IMapper mapper,
+            ILogger<CreateNewPostHandler> logger
+            ) 
         {
             _context = context;
             _mapper = mapper;
+            _logger = logger;
         }
         public async Task<PostDTO> Handle(
             CreateNewPost request,
@@ -35,6 +43,8 @@ namespace Publicator.Core.Domains.Post.Commands
             _context.Posts.Add(post);
 
             await _context.SaveChangesAsync(cancellationToken);
+
+            _logger.LogInformation("Created post with id: {}", post.Id);
 
             AddTagsToPost(request.Tags, post.Id);
 
