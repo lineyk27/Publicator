@@ -1,12 +1,9 @@
 ﻿using System.Threading.Tasks;
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Publicator.ApplicationCore.Contracts;
 using Publicator.Core.DTO;
 using Publicator.Core.Domains.Vote.Commands;
-using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
 using Publicator.Core.Domains.Post.Queries;
 using Publicator.Core.Domains.Vote.Queries;

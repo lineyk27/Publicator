@@ -5,8 +5,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Publicator.ApplicationCore.Contracts;
-using Publicator.ApplicationCore.DTO;
+using Publicator.Core.DTO;
 using Publicator.Core.Domains.Community.Queries;
 using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
@@ -20,7 +19,7 @@ namespace Publicator.Presentation.Controllers.Api
     public class CommunitiesController : BaseController
     {
         private IMediator _mediator;
-        public CommunitiesController(ICommunityService communityService, IMapper mapper, IMediator mediator)
+        public CommunitiesController(IMediator mediator)
         {
             _mediator = mediator;
         }

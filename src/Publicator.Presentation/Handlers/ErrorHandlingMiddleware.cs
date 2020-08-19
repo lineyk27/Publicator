@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Publicator.ApplicationCore.Exceptions;
+using Publicator.Core.Exceptions;
 using Publicator.Presentation.Helpers;
 
 namespace Publicator.Presentation.Handlers
@@ -35,10 +35,10 @@ namespace Publicator.Presentation.Handlers
         {
             var code = HttpStatusCode.InternalServerError;
 
-            if (ex is ResourceNotFoundException) code = HttpStatusCode.NotFound;
-            else if (ex is AuthentificationException) code = HttpStatusCode.Unauthorized;
-            else if (ex is ResourceException) code = HttpStatusCode.Conflict;
-            else code = HttpStatusCode.BadRequest;
+            //if (ex is ResourceNotFoundException) code = HttpStatusCode.NotFound;
+            //else if (ex is AuthentificationException) code = HttpStatusCode.Unauthorized;
+            //else if (ex is ResourceException) code = HttpStatusCode.Conflict;
+            code = HttpStatusCode.BadRequest;
 
             var result = new Error() { Message = ex.Message };
 

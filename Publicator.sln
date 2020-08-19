@@ -3,17 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Publicator.ApplicationCore", "src\Publicator.ApplicationCore\Publicator.ApplicationCore.csproj", "{C1224DB2-FB70-4216-B7F6-44ABB30AEE64}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Publicator.Infrastructure", "src\Publicator.Infrastructure\Publicator.Infrastructure.csproj", "{FDD4BC7C-908B-4490-89CF-1CBA193286E7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Publicator.Presentation", "src\Publicator.Presentation\Publicator.Presentation.csproj", "{395991E6-5B14-4034-B958-007513F116B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publicator.UnitTests", "src\Publicator.UnitTests\Publicator.UnitTests.csproj", "{AFC009F8-D73E-4433-A8F7-2B5140E353F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publicator.Infrastructure.Models", "src\Publicator.Infrastructure.Models\Publicator.Infrastructure.Models.csproj", "{9776DF9F-E0BF-487B-9881-97C6577AA486}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Publicator.Infrastructure.Models", "src\Publicator.Infrastructure.Models\Publicator.Infrastructure.Models.csproj", "{9776DF9F-E0BF-487B-9881-97C6577AA486}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publicator.Core", ""src\Publicator.Core\Publicator.Core.csproj", "{1EEC31C6-A771-42C8-A5FD-CC36088D0AA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Publicator.Core", "src\Publicator.Core\Publicator.Core.csproj", "{1EEC31C6-A771-42C8-A5FD-CC36088D0AA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C1224DB2-FB70-4216-B7F6-44ABB30AEE64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1224DB2-FB70-4216-B7F6-44ABB30AEE64}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1224DB2-FB70-4216-B7F6-44ABB30AEE64}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1224DB2-FB70-4216-B7F6-44ABB30AEE64}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FDD4BC7C-908B-4490-89CF-1CBA193286E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FDD4BC7C-908B-4490-89CF-1CBA193286E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDD4BC7C-908B-4490-89CF-1CBA193286E7}.Release|Any CPU.ActiveCfg = Release|Any CPU

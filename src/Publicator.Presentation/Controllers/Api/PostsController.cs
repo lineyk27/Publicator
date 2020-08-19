@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Publicator.ApplicationCore.Contracts;
 using Publicator.Core.DTO;
 using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;

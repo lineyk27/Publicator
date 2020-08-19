@@ -11,8 +11,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Publicator.Infrastructure;
-using Publicator.ApplicationCore;
-using Publicator.ApplicationCore.Helpers;
 using Publicator.Presentation.Helpers;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Publicator.Presentation.Handlers;
@@ -35,13 +33,13 @@ namespace Publicator.Presentation
                 });
 
             services.AddInfrastructureServices();
-            services.AddApplicationCoreServices();
+            //services.AddApplicationCoreServices();
             services.AddCoreServices();
 
             services.AddLogging();
             services.AddSwaggerGen();
 
-            services.Configure<EmailSettings>(_configuration.GetSection("EmailSettings"));
+            //services.Configure<EmailSettings>(_configuration.GetSection("EmailSettings"));
             var jwtsettings = _configuration.GetSection("JWTSettings").Get<JWTSettings>();
             var key = Encoding.ASCII.GetBytes(jwtsettings.SecretKey);
             services.AddAuthentication(options =>
