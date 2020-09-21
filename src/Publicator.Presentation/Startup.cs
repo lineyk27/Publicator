@@ -36,6 +36,8 @@ namespace Publicator.Presentation
             //services.AddApplicationCoreServices();
             services.AddCoreServices();
 
+            services.AddResponseCaching();
+
             services.AddLogging();
             services.AddSwaggerGen();
 
@@ -81,6 +83,8 @@ namespace Publicator.Presentation
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseResponseCaching();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

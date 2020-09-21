@@ -27,6 +27,8 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpGet]
         [Route("hot")]
         [ProducesResponseType(typeof(IEnumerable<PostDTO>), 200)]
+        [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any,
+            VaryByQueryKeys = new[] { "period", "page", "pageSize" })]
         public async Task<IActionResult> GetHot([FromQuery]HotPostsRequest model)
         {
             if (!ModelState.IsValid)
@@ -69,6 +71,8 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpGet]
         [Route("new")]
         [ProducesResponseType(typeof(IEnumerable<PostDTO>), 200)]
+        [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any,
+            VaryByQueryKeys = new[] { "page", "pageSize" })]
         public async Task<IActionResult> GetNew([FromQuery]PageRequest model)
         {
             if (!ModelState.IsValid)
@@ -86,6 +90,8 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/posts/123..1ef3
         [HttpGet]
         [Route("{id:guid}")]
+        [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any,
+            VaryByQueryKeys = new[] { "id" })]
         [ProducesResponseType(typeof(PostDTO), 200)]
         public async Task<IActionResult> GetById(Guid id)
         {
