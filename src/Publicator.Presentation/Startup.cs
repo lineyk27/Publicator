@@ -1,15 +1,12 @@
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using Publicator.Infrastructure;
 using Publicator.Presentation.Helpers;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -33,7 +30,6 @@ namespace Publicator.Presentation
                 });
 
             services.AddInfrastructureServices();
-            //services.AddApplicationCoreServices();
             services.AddCoreServices();
 
             services.AddResponseCaching();
@@ -41,7 +37,6 @@ namespace Publicator.Presentation
             services.AddLogging();
             services.AddSwaggerGen();
 
-            //services.Configure<EmailSettings>(_configuration.GetSection("EmailSettings"));
             var jwtsettings = _configuration.GetSection("JWTSettings").Get<JWTSettings>();
             var key = Encoding.ASCII.GetBytes(jwtsettings.SecretKey);
             services.AddAuthentication(options =>
