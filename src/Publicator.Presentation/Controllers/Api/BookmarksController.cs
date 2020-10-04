@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
+using System.Collections.Generic;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Publicator.Core.DTO;
-using System.Collections.Generic;
-using MediatR;
 using Publicator.Core.Domains.Post.Queries;
 using Publicator.Core.Domains.Post.Commands;
 
