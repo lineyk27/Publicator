@@ -3,9 +3,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Publicator.Core.DTO;
-using Publicator.Infrastructure.Models;
-using Publicator.Presentation.RequestModels;
-using Publicator.Presentation.ResponseModels;
 using MediatR;
 using Publicator.Core.Domains.User.Queries;
 using Publicator.Core.Domains.Post.Queries;
@@ -25,9 +22,9 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/users/post?postid=123..23
         [HttpGet]
         [Route("post")]
-        public async Task<IActionResult> GetByPost([FromRoute]IdRequest model)
+        public async Task<IActionResult> GetByPost([FromRoute]GetPostById model)
         {
-            var post = await _mediator.Send(new GetPostById() { PostId = model.Id });
+            var post = await _mediator.Send(model);
 
             var user = await _mediator.Send(new GetUserById() { UserId = post.Id });
 
@@ -42,14 +39,11 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpGet]
         [Route("currentSubscription")]
         [ProducesResponseType(typeof(SubscriptionResult), 200)]
-        public async Task<IActionResult> GetCurrentSubscription([FromQuery]UsernameRequest model){            
+        public async Task<IActionResult> GetCurrentSubscription([FromQuery]GetCurrentSubscription model){            
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var subscription = await _mediator.Send<SubscriptionResult>(new GetCurrentSubscription()
-            {
-                SubscriberUsername = model.Username
-            });
+            var subscription = await _mediator.Send<SubscriptionResult>(model);
 
             return Ok(subscription);
         }
@@ -63,15 +57,12 @@ namespace Publicator.Presentation.Controllers.Api
         [Authorize]
         [Route("subscribe")]
         [ProducesResponseType(typeof(SubscriptionResult), 200)]
-        public async Task<IActionResult> SubscribeUser([FromBody]UsernameRequest model)
+        public async Task<IActionResult> SubscribeUser([FromBody]SubscribeToUser model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var subscription = await _mediator.Send<SubscriptionResult>(new SubscribeToUser()
-            {
-                SubscriberUsername = model.Username
-            });
+            var subscription = await _mediator.Send<SubscriptionResult>(model);
 
             return Ok(subscription);
         }
@@ -83,15 +74,12 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/users?username=john03
         [HttpGet]
         [ProducesResponseType(typeof(UserDTO), 200)]
-        public async Task<IActionResult> GetByUsername([FromQuery]UsernameRequest model)
+        public async Task<IActionResult> GetByUsername([FromQuery]GetByUsername model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await _mediator.Send(new GetByUsername()
-            {
-                Username = model.Username
-            });
+            var user = await _mediator.Send(model);
 
             return Ok(user);
         }

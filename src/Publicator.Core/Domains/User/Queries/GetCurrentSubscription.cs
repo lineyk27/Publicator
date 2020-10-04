@@ -5,6 +5,6 @@ namespace Publicator.Core.Domains.User.Queries
 {
     public class GetCurrentSubscription : LoggedInUser, IRequest<SubscriptionResult>
     {
-        public string SubscriberUsername { get; set; }
+        public string Username { get; set; }
     }
 }

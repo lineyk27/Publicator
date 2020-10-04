@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Publicator.Presentation.RequestModels;
 using Publicator.Core.DTO;
 using Publicator.Core.Domains.Comment.Commands;
 using Publicator.Core.Domains.Comment.Queries;
@@ -23,15 +22,12 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpGet]
         [Route("post")]
         [ProducesResponseType(typeof(IEnumerable<CommentDTO>), 200)]
-        public async Task<IActionResult> GetByPost([FromQuery]CommentsRequest model)
+        public async Task<IActionResult> GetByPost([FromQuery]ListCommentsByPost model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var comments = await _mediator.Send(new ListCommentsByPost() 
-            { 
-                PostId = model.PostId
-            });
+            var comments = await _mediator.Send(model);
 
             return Ok(comments);
         }
@@ -44,17 +40,12 @@ namespace Publicator.Presentation.Controllers.Api
         [Authorize]
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateComment(CreateCommentRequest model)
+        public async Task<IActionResult> CreateComment(CreateNewComment model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var comment = await _mediator.Send<CommentDTO>(new CreateNewComment()
-            {
-                Content = model.Text,
-                PostId = model.PostId,
-                ParentRepliedCommentId = model.ParentCommentId
-            });
+            var comment = await _mediator.Send<CommentDTO>(model);
 
             return Ok(comment);
         }

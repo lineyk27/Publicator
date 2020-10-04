@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using AutoMapper;
 using Publicator.Core.DTO;
-using Publicator.Presentation.RequestModels;
 using System.Collections.Generic;
 using MediatR;
 using Publicator.Core.Domains.Post.Queries;
@@ -43,15 +41,12 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpPut]
         [Route("create")]
         [ProducesResponseType(typeof(BookmarkResult), 200)]
-        public async Task<IActionResult> CreateBookmark([FromBody]BookmarkRequest model)
+        public async Task<IActionResult> CreateBookmark([FromBody]AddPostToBookmarks model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _mediator.Send<BookmarkResult>(new AddPostToBookmarks()
-            {
-                PostId = model.PostId
-            });
+            var result = await _mediator.Send<BookmarkResult>(model);
 
             return Ok(result);
 

@@ -1,6 +1,6 @@
 ﻿namespace Publicator.Core
 {
-    interface IPageRequest
+    public interface IPageRequest
     {
         int PageSize { get; set; }
         int Page { get; set; }

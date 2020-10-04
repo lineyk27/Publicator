@@ -5,7 +5,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Publicator.Core.DTO;
-using Publicator.Infrastructure.Models;
 using Publicator.Presentation.RequestModels;
 using MediatR;
 using Publicator.Core.Domains.Post.Queries;
@@ -29,14 +28,13 @@ namespace Publicator.Presentation.Controllers.Api
         [ProducesResponseType(typeof(IEnumerable<PostDTO>), 200)]
         [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any,
             VaryByQueryKeys = new[] { "period", "page", "pageSize" })]
-        public async Task<IActionResult> GetHot([FromQuery]HotPostsRequest model)
+        public async Task<IActionResult> GetHot([FromQuery]ListHotPosts model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var req = new ListHotPosts(model.Period, model.Page,model.PageSize);
-
-            var posts = await _mediator.Send(req);
+            
+            var posts = await _mediator.Send(model);
 
             return Ok(posts);
         }
@@ -49,16 +47,12 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpGet]
         [Route("subscription")]
         [ProducesResponseType(typeof(IEnumerable<PostDTO>), 200)]
-        public async Task<IActionResult> GetBySubscription([FromQuery]PageRequest model)
+        public async Task<IActionResult> GetBySubscription([FromQuery]ListPostsBySubscription model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var posts = await _mediator.Send<IEnumerable<PostDTO>>(new ListPostsBySubscription()
-            {
-                Page = model.Page,
-                PageSize = model.PageSize
-            });
+            var posts = await _mediator.Send<IEnumerable<PostDTO>>(model);
 
             return Ok(posts);
         }
@@ -73,12 +67,12 @@ namespace Publicator.Presentation.Controllers.Api
         [ProducesResponseType(typeof(IEnumerable<PostDTO>), 200)]
         [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any,
             VaryByQueryKeys = new[] { "page", "pageSize" })]
-        public async Task<IActionResult> GetNew([FromQuery]PageRequest model)
+        public async Task<IActionResult> GetNew([FromQuery]ListNewPosts model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var posts = await _mediator.Send(new ListNewPosts(model.Page, model.PageSize));
+            var posts = await _mediator.Send(model);
 
             return Ok(posts);
         }
@@ -111,17 +105,12 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpGet]
         [Route("user")]
         [ProducesResponseType(typeof(IEnumerable<PostDTO>), 200)]
-        public async Task<IActionResult> GetByCreatorUser([FromQuery]UserPostsRequest model)
+        public async Task<IActionResult> GetByCreatorUser([FromQuery]ListPostsByCreatorUser model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var posts = await _mediator.Send(new ListPostsByCreatorUser()
-            {
-                Page = model.Page,
-                PageSize = model.PageSize,
-                Username = model.Username
-            });
+            var posts = await _mediator.Send(model);
 
             return Ok(posts);
         }
@@ -133,17 +122,12 @@ namespace Publicator.Presentation.Controllers.Api
         // GET: api/posts/community?communityid=123..32&page=3&pagesize=20
         [HttpGet]
         [Route("community")]
-        public async Task<IActionResult> GetByCommunity([FromQuery]CommunityPostsRequest model)
+        public async Task<IActionResult> GetByCommunity([FromQuery]ListPostsByCommunity model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var posts = await _mediator.Send(new ListPostsByCommunity()
-            {
-                CommunityId = model.CommunityId,
-                Page = model.Page,
-                PageSize = model.PageSize
-            });
+            var posts = await _mediator.Send(model);
             
             return Ok(posts);
         }
@@ -157,18 +141,12 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpPost]
         [Route("create")]
         [ProducesResponseType(typeof(PostDTO), 200)]
-        public async Task<IActionResult> CreatePost([FromBody]CreatePostRequest model)
+        public async Task<IActionResult> CreatePost([FromBody]CreateNewPost model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var post = await _mediator.Send(new CreateNewPost()
-            {
-                Name = model.Name,
-                Content = model.Content,
-                CommunityId = (Guid)model.CommunityId,
-                Tags = model.Tags
-            });
+            var post = await _mediator.Send<PostDTO>(model);
             
             return Ok(post);
         }

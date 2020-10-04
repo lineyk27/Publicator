@@ -8,10 +8,5 @@ namespace Publicator.Core.Domains.Post.Queries
     {
         public int PageSize { get ; set; }
         public int Page { get ; set; }
-        public ListNewPosts(int page, int pageSize)
-        {
-            Page = page;
-            PageSize = pageSize;
-        }
     }
 }

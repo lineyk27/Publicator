@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Publicator.Core
 {
@@ -15,7 +14,7 @@ namespace Publicator.Core
         public ValidationPipe(IEnumerable<IValidator<TRequest>> validators) => _validators = validators;
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            var context = new ValidationContext(request);
+            var context = new FluentValidation.ValidationContext(request);
             
             var errors = _validators
                 .Select(x => x.Validate(request))

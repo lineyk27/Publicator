@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using AutoMapper;
-using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +19,6 @@ namespace Publicator.Core
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipe<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CurrentUserPipe<,>));
-            services.AddValidatorsFromAssemblyContaining(typeof(IPageRequest));
             return services;
         }
     }

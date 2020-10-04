@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Publicator.Core.DTO;
 using Publicator.Core.Domains.Vote.Commands;
-using Publicator.Presentation.RequestModels;
 using Publicator.Core.Domains.Post.Queries;
 using Publicator.Core.Domains.Vote.Queries;
 
@@ -24,15 +23,12 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpGet]
         [Route("current")]
         [ProducesResponseType(typeof(VoteDTO), 200)]
-        public async Task<IActionResult> GetCurrentUserVote([FromQuery]CurrentVoteRequest model)
+        public async Task<IActionResult> GetCurrentUserVote([FromQuery]GetCurrentVote model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var vote = await _mediator.Send<VoteDTO>(new GetCurrentVote()
-            {
-                PostId = model.PostId
-            });
+            var vote = await _mediator.Send<VoteDTO>(model);
 
             return Ok(vote);
         }
@@ -45,16 +41,12 @@ namespace Publicator.Presentation.Controllers.Api
         [Authorize]
         [HttpPut]
         [Route("vote")]
-        public async Task<IActionResult> VoteAsync([FromBody]VoteRequest model)
+        public async Task<IActionResult> VoteAsync([FromBody]VoteForPost model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var vote = await _mediator.Send<VoteDTO>(new VoteForPost()
-            {
-                Up = model.Up,
-                PostId = model.PostId
-            });
+            var vote = await _mediator.Send<VoteDTO>(model);
 
             return Ok(vote);
         }
@@ -67,15 +59,12 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpGet]
         [Route("rating")]// TODO: return type need to be reconsidered
         [ProducesResponseType(typeof(int), 200)]
-        public async Task<IActionResult> CurrentRating([FromQuery]CurrentVoteRequest model)
+        public async Task<IActionResult> CurrentRating([FromQuery]GetPostById model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var post = await _mediator.Send(new GetPostById()
-            {
-                PostId = model.PostId
-            });
+            var post = await _mediator.Send(model);
 
             return Ok(new { post.CurrentRating });
         }

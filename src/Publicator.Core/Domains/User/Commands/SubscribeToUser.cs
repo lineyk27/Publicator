@@ -5,6 +5,6 @@ namespace Publicator.Core.Domains.User.Commands
 {
     public class SubscribeToUser : LoggedInUser, IRequest<SubscriptionResult>
     {
-        public string SubscriberUsername { get; set; }
+        public string Username { get; set; }
     }
 }

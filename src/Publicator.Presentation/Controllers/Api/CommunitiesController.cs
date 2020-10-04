@@ -31,15 +31,12 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpGet]
         [Route("{id}")]
         [ProducesResponseType(typeof(CommunityDTO), 200)]
-        public async Task<IActionResult> GetById([FromRoute]IdRequest model)
+        public async Task<IActionResult> GetById([FromRoute]GetCommunityById model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var community = await _mediator.Send(new GetCommunityById() 
-            { 
-                CommunityId = model.Id
-            });
+            var community = await _mediator.Send(model);
             
             return Ok(community);
         }

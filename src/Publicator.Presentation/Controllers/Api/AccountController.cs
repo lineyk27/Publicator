@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Publicator.Core.DTO;
 using Publicator.Core.Domains.User.Commands;
 using Publicator.Core.Domains.User.Queries;
-using Publicator.Presentation.RequestModels;
 
 namespace Publicator.Presentation.Controllers
 {
@@ -26,17 +25,13 @@ namespace Publicator.Presentation.Controllers
         [HttpPost]
         [Route("login")]
         [ProducesResponseType(typeof(string), 200)]
-        public async Task<IActionResult> Login([FromBody]LoginRequest model)
+        public async Task<IActionResult> Login([FromBody]LogIn model)
         {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
 
-            var tokenKey = await _mediator.Send(new LogIn()
-            {
-                Login = model.Login,
-                Password = model.Password
-            });
+            var tokenKey = await _mediator.Send(model);
             
             return Ok(tokenKey);
         }
@@ -49,18 +44,12 @@ namespace Publicator.Presentation.Controllers
         [HttpPost]
         [Route("register")]
         [ProducesResponseType(typeof(RegisterResult), 200)]
-        public async Task<IActionResult> Register([FromBody]RegisterRequest model)
+        public async Task<IActionResult> Register([FromBody]Register model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _mediator.Send<RegisterResult>(new Register()
-            {
-                Email = model.Email,
-                Nickname = model.Username,
-                Password = model.Password,
-                ConfirmPassword = model.ConfirmPassword
-            });
+            var result = await _mediator.Send(model);
 
             return Ok(result);
         }

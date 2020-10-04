@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using FluentValidation.AspNetCore;
 using Publicator.Infrastructure;
 using Publicator.Presentation.Helpers;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -24,6 +25,7 @@ namespace Publicator.Presentation
             services.AddHttpContextAccessor();
             services
                 .AddControllers(options => options.EnableEndpointRouting = false)
+                .AddFluentValidation()
                 .AddJsonOptions(configuration =>
                 {
                     configuration.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());

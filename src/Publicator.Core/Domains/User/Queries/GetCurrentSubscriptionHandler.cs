@@ -18,11 +18,11 @@ namespace Publicator.Core.Domains.User.Queries
             )
         {
             var subscriptionUser = await _context.Users
-                .FirstOrDefaultAsync(x => x.Nickname.Equals(request.SubscriberUsername));
+                .FirstOrDefaultAsync(x => x.Nickname.Equals(request.Username));
 
             var currentSubscription = await(from s in _context.UserSubscriptions.Include(x => x.SubscriptionUser)
-                                            where s.SubscriberUserId.Equals(request.UserId) &&
-                                                    s.SubscriptionUser.Nickname.Equals(subscriptionUser.Id)
+                                            where s.SubscriberUserId == request.UserId &&
+                                                    s.SubscriptionUserId == subscriptionUser.Id
                                             select s
                                             ).FirstOrDefaultAsync(cancellationToken);
 
