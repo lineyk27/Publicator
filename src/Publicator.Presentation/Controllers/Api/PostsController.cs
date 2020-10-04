@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Publicator.Core.DTO;
-using Publicator.Presentation.RequestModels;
 using MediatR;
 using Publicator.Core.Domains.Post.Queries;
 using Publicator.Core.Domains.Post.Commands;
-using Publicator.Core.Domains.User.Queries;
 
 namespace Publicator.Presentation.Controllers.Api
 {
     public class PostsController : BaseController
     {
-        private IMediator _mediator;
+        private readonly IMediator _mediator;
         public PostsController(IMediator mediator) => _mediator = mediator;
         /// <summary>
         /// Method return hot posts with paging and filtering
@@ -90,7 +87,7 @@ namespace Publicator.Presentation.Controllers.Api
         public async Task<IActionResult> GetById(Guid id)
         {
             var post = await _mediator.Send(new GetPostById() { PostId = id });
-            var loggedUser = await _mediator.Send(new LoggedInUser());
+            //var loggedUser = await _mediator.Send(new LoggedInUser());
 
             // TODO: add aggregation
             //var postDTO = _aggregationService.AggregateWithBookmarkVote(post, loggedUser);

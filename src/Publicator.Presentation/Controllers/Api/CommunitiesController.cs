@@ -3,13 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Publicator.Core.DTO;
 using Publicator.Core.Domains.Community.Queries;
-using Publicator.Infrastructure.Models;
-using Publicator.Presentation.RequestModels;
-using Publicator.Presentation.ResponseModels;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -18,7 +14,7 @@ namespace Publicator.Presentation.Controllers.Api
     /// </summary>
     public class CommunitiesController : BaseController
     {
-        private IMediator _mediator;
+        private readonly IMediator _mediator;
         public CommunitiesController(IMediator mediator)
         {
             _mediator = mediator;
