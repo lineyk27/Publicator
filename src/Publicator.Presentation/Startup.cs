@@ -18,7 +18,7 @@ namespace Publicator.Presentation
 {
     public class Startup
     {
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
         public Startup(IConfiguration configuration) => _configuration = configuration;
         public void ConfigureServices(IServiceCollection services)
         {
