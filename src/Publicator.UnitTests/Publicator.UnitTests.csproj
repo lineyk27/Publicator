@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Publicator.Presentation\Publicator.Presentation.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CoreTests\" />
+  </ItemGroup>
+
 </Project>

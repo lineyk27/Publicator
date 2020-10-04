@@ -4,7 +4,7 @@ using Publicator.Infrastructure;
 
 namespace Publicator.UnitTests.InfrastructureTests
 {
-    class TestWithDbContext : IDisposable
+    public class TestWithDbContext : IDisposable
     {
         protected readonly PublicatorDbContext dbContext;
         public TestWithDbContext()
