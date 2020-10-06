@@ -5,6 +5,7 @@ namespace Publicator.Core.Domains.User.Commands
     {
         Succesfull = 0,
         EmailAlreadyExist = 1,
-        NicknameAlreadyExist = 2
+        NicknameAlreadyExist = 2,
+        BadCrendentials = 3
     }
 }

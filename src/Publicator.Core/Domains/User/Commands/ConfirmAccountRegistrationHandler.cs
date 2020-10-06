@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Publicator.Infrastructure;
 
@@ -12,13 +13,16 @@ namespace Publicator.Core.Domains.User.Commands
     {
         private readonly PublicatorDbContext _context;
         private readonly ILogger<ConfirmAccountRegistrationHandler> _logger;
+        private readonly UserManager<Infrastructure.Models.User> _userManager;
         public ConfirmAccountRegistrationHandler(
             PublicatorDbContext context, 
-            ILogger<ConfirmAccountRegistrationHandler> logger
+            ILogger<ConfirmAccountRegistrationHandler> logger,
+            UserManager<Infrastructure.Models.User> userManager
             )
         {
             _context = context;
             _logger = logger;
+            _userManager = userManager;
         }
         public async Task<RegistrationConfirmationResult> Handle(
             ConfirmAccountRegistration request, 
@@ -27,36 +31,32 @@ namespace Publicator.Core.Domains.User.Commands
         {
             var result = new RegistrationConfirmationResult();
 
-            var user = (from u in _context.Users
-                        where u.Id.Equals(request.UserId)
-                        select u)
-                        .FirstOrDefault();
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user != null)
+            {
+                if (user.EmailConfirmed == true)
+                {
+                    result.Result = RegistrationConfirmationEnum.AlreadyConfirmed;
+                    _logger.LogInformation("An attempt to confirm already confirmed account by email: {0}", request.Email);
+                    return result;
+                }
 
-            if (user == null)
-            {
-                result.Result = RegistrationConfirmationEnum.BadConfirmation;
-                _logger.LogWarning("User to confirm account was not found by id: {}", request.UserId);
-            }
-            if (user.EmailConfirmed)
-            {
-                result.Result = RegistrationConfirmationEnum.AlreadyConfirmed;
-                _logger.LogWarning("User's account was already confirmed by id: {}", request.UserId);
-            }
-            else
-            {
-                result.Result = RegistrationConfirmationEnum.ConfirmationSuccesfull;
-                user.EmailConfirmed = true;
-                _context.Users.Update(user);
-                await _context.SaveChangesAsync(cancellationToken);
-                _logger.LogError("User's account confirmation succesfull");
+                var confirmResult = await _userManager.ConfirmEmailAsync(user, request.Token);
 
+                if (confirmResult.Succeeded)
+                {
+                    result.Result = RegistrationConfirmationEnum.ConfirmationSuccesfull;
+                    _logger.LogInformation("Confirmation of email was succesfull for email: {0}", request.Email);
+                    return result;
+                }
+                else
+                {
+                    result.Result = RegistrationConfirmationEnum.BadConfirmation;
+                    _logger.LogWarning(confirmResult.Errors.FirstOrDefault().Description);
+                    return result;
+                }
             }
-            if (!request.ConfirmationToken.Equals(request.UserId))
-            {
-                result.Result = RegistrationConfirmationEnum.BadConfirmation;
-                _logger.LogWarning("Bad confirmation token: {}", request.ConfirmationToken);
-            }
-
+            result.Result = RegistrationConfirmationEnum.BadConfirmation;
             return result;
         }
     }

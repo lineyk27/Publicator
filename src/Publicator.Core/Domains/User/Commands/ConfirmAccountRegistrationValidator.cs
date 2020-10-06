@@ -6,8 +6,8 @@ namespace Publicator.Core.Domains.User.Commands
     {
         public ConfirmAccountRegistrationValidator()
         {
-            RuleFor(x => x.UserId).NotEmpty();
-            RuleFor(x => x.ConfirmationToken).NotEmpty();
+            RuleFor(x => x.Email).EmailAddress();
+            RuleFor(x => x.Token).NotEmpty();
         }
     }
 }

@@ -13,45 +13,55 @@ using Publicator.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Identity;
 
 namespace Publicator.Core.Domains.User.Commands
 {
-    class LogInHandler : IRequestHandler<LogIn, string>
+    class LogInHandler : IRequestHandler<LogIn, LoginResult>
     {
         private readonly PublicatorDbContext _context;
         private readonly JWTSettings _jwtSettings;
         private readonly ILogger<LogInHandler> _logger;
+        private readonly UserManager<Infrastructure.Models.User> _userManager;
+        private readonly SignInManager<Infrastructure.Models.User> _signInManager;
         public LogInHandler(
             PublicatorDbContext context, 
             IOptions<JWTSettings> options, 
-            ILogger<LogInHandler> logger
+            ILogger<LogInHandler> logger,
+            UserManager<Infrastructure.Models.User> userManager,
+            SignInManager<Infrastructure.Models.User> signInManager
             )
         {
             _context = context;
             _jwtSettings = options.Value;
             _logger = logger;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
-        public async Task<string> Handle(LogIn request, CancellationToken cancellationToken)
+        public async Task<LoginResult> Handle(LogIn request, CancellationToken cancellationToken)
         {
-            var user = (from u in _context.Users
-                        where (u.Email.Equals(request.Login) || 
-                               u.UserName.Equals(request.Login)
-                               ) &&  u.EmailConfirmed
-                        select u
-                        ).FirstOrDefault();
+            var result = new LoginResult();
+            var user = await _userManager.FindByEmailAsync(request.Login);
 
-            if(user != null)
+            if(!user.EmailConfirmed)
             {
-                var isPasswordGood = CheckPassword(request.Password, user);
-                if (isPasswordGood)
-                {
-                    _logger.LogInformation("Succesfull acthentication");
-                    var tokenKey = GetAuthToken(user);
-                    return await Task.FromResult(tokenKey);
-                }
+                result.Result = LoginResultEnum.IsNotConfirmed;
+                return result;
             }
-            _logger.LogInformation("Wrong authentification for user");
-            throw new FailedAuthenticationException();
+
+            var signinRes = await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
+
+            if (signinRes.Succeeded)
+            {
+                result.Result = LoginResultEnum.Succesfull;
+                result.Token = GetAuthToken(user);
+                return result;
+            }
+            else
+            {
+                result.Result = LoginResultEnum.BadCredentials;
+                return result;
+            }
         }
         private string GetAuthToken(Infrastructure.Models.User user)
         {
@@ -63,7 +73,6 @@ namespace Publicator.Core.Domains.User.Commands
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName),
-                    //new Claim(ClaimTypes.Role, user.Role.Name)
                 }),
                 Audience = _jwtSettings.Audience,
                 Issuer = _jwtSettings.Issuer,

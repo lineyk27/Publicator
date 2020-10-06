@@ -24,7 +24,7 @@ namespace Publicator.Presentation.Controllers
         // POST: api/account/login
         [HttpPost]
         [Route("login")]
-        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(LoginResult), 200)]
         public async Task<IActionResult> Login([FromBody]LogIn model)
         {
             if (!ModelState.IsValid) {
@@ -59,17 +59,16 @@ namespace Publicator.Presentation.Controllers
         /// <param name="id">Id of user to confirm</param>
         /// <param name="token">Token for user to confirm</param>
         /// <returns>If user confirmed - true, else false of error if user not found</returns>
-        // GET: api/account/confirm?id=231..54&token=351..35
+        // GET: api/account/confirm?email=email...com&token=123a...xyz
         [Route("confirm")]
         [HttpGet]
         [ProducesResponseType(typeof(RegistrationConfirmationResult), 200)]
-        public async Task<IActionResult> ConfirmAccount([FromQuery] Guid id, [FromQuery]string token)
+        public async Task<IActionResult> ConfirmAccount([FromQuery]ConfirmAccountRegistration model)
         {
-            var result = await _mediator.Send(new ConfirmAccountRegistration() 
-            { 
-                UserId = id,
-                ConfirmationToken = token
-            });
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _mediator.Send(model);
 
             return Ok(result);
         }

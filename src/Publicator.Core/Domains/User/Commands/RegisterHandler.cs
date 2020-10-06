@@ -42,10 +42,24 @@ namespace Publicator.Core.Domains.User.Commands
             {
                 JoinDate = DateTime.Now,
                 UserName = request.Nickname,
-                Email = request.Email
-            });
+                Email = request.Email,
+            }, request.Password);
 
             var result = new RegisterResult();
+
+            if (userNameExist != null)
+            {
+                _logger.LogInformation("A try to register account with Username that is already exist");
+                result.RegisterResultCode = RegisterResultEnum.NicknameAlreadyExist;
+                return result;
+            }
+
+            if (emailExist != null)
+            {
+                _logger.LogInformation("A try to register account on email that is already exist");
+                result.RegisterResultCode = RegisterResultEnum.EmailAlreadyExist;
+                return result;
+            }
 
             if (result2.Succeeded)
             {
@@ -60,20 +74,11 @@ namespace Publicator.Core.Domains.User.Commands
                 result.RegisterResultCode = RegisterResultEnum.Succesfull;
                 return result;
             }
-
-            if (userNameExist != null)
+            else
             {
-                _logger.LogInformation("A try to register account with Username that is already exist");
-                result.RegisterResultCode = RegisterResultEnum.NicknameAlreadyExist;
+                result.RegisterResultCode = RegisterResultEnum.BadCrendentials;
+                return result
             }
-
-            if (emailExist != null)
-            {
-                _logger.LogInformation("A try to register account on email that is already exist");
-                result.RegisterResultCode = RegisterResultEnum.EmailAlreadyExist;
-            }
-
-            return result;
         }
     }
 }

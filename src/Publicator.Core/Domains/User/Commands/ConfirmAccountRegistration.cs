@@ -5,7 +5,7 @@ namespace Publicator.Core.Domains.User.Commands
 {
     public class ConfirmAccountRegistration : IRequest<RegistrationConfirmationResult>
     {
-        public Guid UserId { get; set; }
-        public string ConfirmationToken { get; set; }
+        public string Email { get; set; }
+        public string Token { get; set; }
     }
 }

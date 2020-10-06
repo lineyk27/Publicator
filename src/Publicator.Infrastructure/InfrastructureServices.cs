@@ -19,9 +19,10 @@ namespace Publicator.Infrastructure
 
             services
                 .AddIdentity<User, IdentityRole<Guid>>()
-                .AddEntityFrameworkStores<PublicatorDbContext>();
+                .AddEntityFrameworkStores<PublicatorDbContext>()
+                .AddDefaultTokenProviders();
 
-            
+
             return services;
         }
     }

@@ -5,13 +5,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Publicator.Core.Domains.User.Queries
 {
     class CurrentUserPipe<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly IHttpContextAccessor _httpContext;
-        public CurrentUserPipe(IHttpContextAccessor httpContext) => _httpContext = httpContext;
+        private readonly ILogger<CurrentUserPipe<TRequest, TResponse>> _logger;
+        public CurrentUserPipe(
+            IHttpContextAccessor httpContext,
+            ILogger<CurrentUserPipe<TRequest, TResponse>> logger
+            )
+        {
+            _httpContext = httpContext;
+            _logger = logger;
+        }
         public async Task<TResponse> Handle(
             TRequest request, 
             CancellationToken cancellationToken, 
@@ -28,6 +37,10 @@ namespace Publicator.Core.Domains.User.Queries
             {
                 Guid id = Guid.Parse(userId);
                 (request as LoggedInUser).UserId = id;
+            }
+            else
+            {
+                _logger.LogTrace("The user was not authenticated");
             }
 
             return await next();
