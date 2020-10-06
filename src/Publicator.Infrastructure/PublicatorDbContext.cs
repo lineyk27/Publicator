@@ -13,9 +13,7 @@ namespace Publicator.Infrastructure
         public PublicatorDbContext() : base()
         {}
         public PublicatorDbContext(DbContextOptions<PublicatorDbContext> options) : base(options)
-        {
-            Database.EnsureDeleted();
-        }
+        {}
         public DbSet<Post> Posts { get; set; }
         public DbSet<Bookmark> Bookmarks { get; set; }
         public DbSet<Comment> Comments { get; set; }
@@ -31,7 +29,7 @@ namespace Publicator.Infrastructure
         {
             base.OnModelCreating(builder);
 
-            //Seed.Seed.AddData(builder);
+            Seed.Seed.AddData(builder);
 
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new PostConfiguration());

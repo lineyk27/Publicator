@@ -16,6 +16,7 @@ namespace Publicator.Infrastructure.Seed
             // seed users
             var user1 = new User()
             {
+                Id = Guid.NewGuid(),
                 Email = "lineyk27gg@gmail.com",
                 UserName = "lineyk27",
                 // decode - 12345678
@@ -36,6 +37,7 @@ namespace Publicator.Infrastructure.Seed
             // seed communities
             var community1 = new Community()
             {
+                Id = Guid.NewGuid(),
                 Name = "Cars",
                 Description = "Community for car lovers.",
                 CreationDate = DateTime.Now,
@@ -44,6 +46,7 @@ namespace Publicator.Infrastructure.Seed
             };
             var community2 = new Community()
             {
+                Id = Guid.NewGuid(),
                 Name = "Sport",
                 Description = "Community footbal, basketall, tenis and other.",
                 CreationDate = DateTime.Now,
