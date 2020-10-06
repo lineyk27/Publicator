@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -37,7 +38,7 @@ namespace Publicator.Core.Domains.Post.Commands
             {
                 _context.Bookmarks.Add(new Infrastructure.Models.Bookmark()
                 {
-                    UserId = request.UserId,
+                    UserId = (Guid)request.UserId,
                     PostId = request.PostId
                 });
                 await _context.SaveChangesAsync(cancellationToken);

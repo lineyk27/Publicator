@@ -20,7 +20,7 @@ namespace Publicator.Core.Domains.User.Queries
         public async Task<UserDTO> Handle(GetByUsername request, CancellationToken cancellationToken)
         {
             var user = (from u in _context.Users
-                        where u.Nickname.Equals(request.Username)
+                        where u.UserName.Equals(request.Username)
                         select u)
                         .FirstOrDefault();
 

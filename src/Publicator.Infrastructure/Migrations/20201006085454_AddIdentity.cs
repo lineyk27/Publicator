@@ -3,32 +3,49 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Publicator.Infrastructure.Migrations
 {
-    public partial class AddInitialSeed : Migration
+    public partial class AddIdentity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Roles",
+                name: "AspNetRoles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(maxLength: 32, nullable: true)
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "States",
+                name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(maxLength: 32, nullable: true)
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    JoinDate = table.Column<DateTime>(type: "smalldatetime", nullable: false),
+                    PictureUrl = table.Column<string>(maxLength: 256, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_States", x => x.Id);
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -44,34 +61,107 @@ namespace Publicator.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    Nickname = table.Column<string>(maxLength: 64, nullable: true),
-                    JoinDate = table.Column<DateTime>(type: "smalldatetime", nullable: false),
-                    BeginStateDate = table.Column<DateTime>(nullable: false),
-                    EndStateDate = table.Column<DateTime>(nullable: false),
-                    PictureName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 128, nullable: true),
-                    PasswordHash = table.Column<string>(maxLength: 64, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false, defaultValue: false),
-                    StateId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<Guid>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
+                    ProviderDisplayName = table.Column<string>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(nullable: false),
                     RoleId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_Users_Roles_RoleId",
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Roles",
+                        principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Users_States_StateId",
-                        column: x => x.StateId,
-                        principalTable: "States",
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -84,16 +174,16 @@ namespace Publicator.Infrastructure.Migrations
                     Name = table.Column<string>(maxLength: 64, nullable: true),
                     Description = table.Column<string>(maxLength: 256, nullable: true),
                     CreationDate = table.Column<DateTime>(nullable: false),
-                    PictureName = table.Column<string>(maxLength: 512, nullable: true),
+                    PictureUrl = table.Column<string>(maxLength: 512, nullable: true),
                     CreatorUserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Communities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Communities_Users_CreatorUserId",
+                        name: "FK_Communities_AspNetUsers_CreatorUserId",
                         column: x => x.CreatorUserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -110,15 +200,15 @@ namespace Publicator.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_UserSubscriptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserSubscriptions_Users_SubscriberUserId",
+                        name: "FK_UserSubscriptions_AspNetUsers_SubscriberUserId",
                         column: x => x.SubscriberUserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserSubscriptions_Users_SubscriptionUserId",
+                        name: "FK_UserSubscriptions_AspNetUsers_SubscriptionUserId",
                         column: x => x.SubscriptionUserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
@@ -140,9 +230,9 @@ namespace Publicator.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserTags_Users_UserId",
+                        name: "FK_UserTags_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -157,7 +247,7 @@ namespace Publicator.Infrastructure.Migrations
                     CreationDate = table.Column<DateTime>(type: "smalldatetime", nullable: false),
                     CurrentRating = table.Column<int>(nullable: false, defaultValue: 0),
                     CreatorUserId = table.Column<Guid>(nullable: false),
-                    CommunityId = table.Column<Guid>(nullable: true)
+                    CommunityId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -167,13 +257,12 @@ namespace Publicator.Infrastructure.Migrations
                         column: x => x.CommunityId,
                         principalTable: "Communities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Posts_Users_CreatorUserId",
-                        column: x => x.CreatorUserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Posts_AspNetUsers_CreatorUserId",
+                        column: x => x.CreatorUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -194,9 +283,9 @@ namespace Publicator.Infrastructure.Migrations
                         principalTable: "Communities",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_UserCommunities_Users_UserId",
+                        name: "FK_UserCommunities_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
@@ -206,7 +295,7 @@ namespace Publicator.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     CreationDate = table.Column<DateTime>(type: "smalldatetime", nullable: false),
-                    UserId = table.Column<Guid>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false),
                     PostId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -219,9 +308,9 @@ namespace Publicator.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Bookmarks_Users_UserId",
+                        name: "FK_Bookmarks_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
@@ -252,9 +341,9 @@ namespace Publicator.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comments_Users_UserId",
+                        name: "FK_Comments_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
@@ -290,9 +379,9 @@ namespace Publicator.Infrastructure.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
                     PostId = table.Column<Guid>(nullable: false),
-                    SubscriptionUserId = table.Column<Guid>(nullable: true),
-                    SubscriptionTagId = table.Column<Guid>(nullable: true),
-                    SubscriptionCommunityId = table.Column<Guid>(nullable: true)
+                    SubscriptionUserId = table.Column<Guid>(nullable: false),
+                    SubscriptionTagId = table.Column<Guid>(nullable: false),
+                    SubscriptionCommunityId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -313,17 +402,16 @@ namespace Publicator.Infrastructure.Migrations
                         column: x => x.SubscriptionTagId,
                         principalTable: "Tags",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SubscriptionNewPosts_Users_SubscriptionUserId",
+                        name: "FK_SubscriptionNewPosts_AspNetUsers_SubscriptionUserId",
                         column: x => x.SubscriptionUserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_SubscriptionNewPosts_Users_UserId",
+                        name: "FK_SubscriptionNewPosts_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
@@ -347,57 +435,50 @@ namespace Publicator.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Votes_Users_UserId",
+                        name: "FK_Votes_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.InsertData(
-                table: "Roles",
-                columns: new[] { "Id", "Name" },
-                values: new object[,]
-                {
-                    { new Guid("f795bc3b-e497-411c-836d-60c517012cf2"), "Administrator" },
-                    { new Guid("de7c41e3-7e54-4e9d-8b6a-0e63f7add81d"), "Moderator" },
-                    { new Guid("924ce58d-7660-4474-9fea-9ef0f49b7e16"), "Simple" }
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetRoleClaims_RoleId",
+                table: "AspNetRoleClaims",
+                column: "RoleId");
 
-            migrationBuilder.InsertData(
-                table: "States",
-                columns: new[] { "Id", "Name" },
-                values: new object[,]
-                {
-                    { new Guid("27a2854d-dc5a-4892-ae5c-6bc30437bfb7"), "Active" },
-                    { new Guid("87577908-c729-48f3-b09f-c04336eb3f01"), "Freezed" }
-                });
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "AspNetRoles",
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "BeginStateDate", "Email", "EndStateDate", "JoinDate", "Nickname", "PasswordHash", "PictureName", "RoleId", "StateId" },
-                values: new object[] { new Guid("9d2d2d20-477a-4505-bd84-a3938d69d1f2"), new DateTime(2020, 5, 23, 3, 55, 35, 898, DateTimeKind.Local).AddTicks(6515), "lineyk27gg@gmail.com", new DateTime(2050, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 5, 23, 3, 55, 35, 893, DateTimeKind.Local).AddTicks(4011), "lineyk27", "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f", "https://res.cloudinary.com/dgepkksyl/image/upload/v1590192208/user_pics/IMG_0572_ut5cxl.jpg", new Guid("924ce58d-7660-4474-9fea-9ef0f49b7e16"), new Guid("27a2854d-dc5a-4892-ae5c-6bc30437bfb7") });
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserClaims_UserId",
+                table: "AspNetUserClaims",
+                column: "UserId");
 
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "BeginStateDate", "Email", "EndStateDate", "JoinDate", "Nickname", "PasswordHash", "PictureName", "RoleId", "StateId" },
-                values: new object[] { new Guid("46df7653-85fb-458b-b092-6efcc2ef8466"), new DateTime(2020, 5, 23, 3, 55, 35, 899, DateTimeKind.Local).AddTicks(1428), "lineyk27@gmail.com", new DateTime(2050, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 5, 23, 3, 55, 35, 899, DateTimeKind.Local).AddTicks(1389), "kit22", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", "https://res.cloudinary.com/dgepkksyl/image/upload/v1590194554/user_pics/index_gz1sqk.jpg", new Guid("924ce58d-7660-4474-9fea-9ef0f49b7e16"), new Guid("27a2854d-dc5a-4892-ae5c-6bc30437bfb7") });
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserLogins_UserId",
+                table: "AspNetUserLogins",
+                column: "UserId");
 
-            migrationBuilder.InsertData(
-                table: "Communities",
-                columns: new[] { "Id", "CreationDate", "CreatorUserId", "Description", "Name", "PictureName" },
-                values: new object[,]
-                {
-                    { new Guid("b3f45e42-ef6f-45ae-9b21-e2fba6bb7d3e"), new DateTime(2020, 5, 23, 3, 55, 35, 899, DateTimeKind.Local).AddTicks(3439), new Guid("9d2d2d20-477a-4505-bd84-a3938d69d1f2"), "Community for car lovers.", "Cars", "https://res.cloudinary.com/dgepkksyl/image/upload/v1590193947/user_pics/cars2_c5wyqk.jpg" },
-                    { new Guid("48c6645d-3fa4-42a0-9753-ca6917fd56c3"), new DateTime(2020, 5, 23, 3, 55, 35, 899, DateTimeKind.Local).AddTicks(5498), new Guid("9d2d2d20-477a-4505-bd84-a3938d69d1f2"), "Community footbal, basketall, tenis and other.", "Sport", "https://res.cloudinary.com/dgepkksyl/image/upload/v1590193942/user_pics/sport2_fs0yab.jpg" },
-                    { new Guid("52ebf60b-f971-4895-b374-9eaa8cdc0870"), new DateTime(2020, 5, 23, 3, 55, 35, 899, DateTimeKind.Local).AddTicks(5566), new Guid("9d2d2d20-477a-4505-bd84-a3938d69d1f2"), "Community for those who love cooking.", "Food", "https://res.cloudinary.com/dgepkksyl/image/upload/v1590193991/user_pics/food2_uckrcb.jpg" },
-                    { new Guid("c31b4695-c41b-4596-9446-1e875fe90d4a"), new DateTime(2020, 5, 23, 3, 55, 35, 899, DateTimeKind.Local).AddTicks(5575), new Guid("9d2d2d20-477a-4505-bd84-a3938d69d1f2"), "IT industry communicates here.", "Programming", "https://res.cloudinary.com/dgepkksyl/image/upload/v1590193952/user_pics/programing_wlmjj4.jpg" },
-                    { new Guid("88420b23-b6e7-42dd-b975-a3924bbaa271"), new DateTime(2020, 5, 23, 3, 55, 35, 899, DateTimeKind.Local).AddTicks(5580), new Guid("9d2d2d20-477a-4505-bd84-a3938d69d1f2"), "Culture life.", "Culture", "https://res.cloudinary.com/dgepkksyl/image/upload/v1590193976/user_pics/culture2_hdclpb.jpg" }
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_RoleId",
+                table: "AspNetUserRoles",
+                column: "RoleId");
 
-            migrationBuilder.InsertData(
-                table: "UserSubscriptions",
-                columns: new[] { "Id", "SubscriberUserId", "SubscriptionUserId" },
-                values: new object[] { new Guid("0be926b0-1071-4058-a697-6da3d6d4af33"), new Guid("9d2d2d20-477a-4505-bd84-a3938d69d1f2"), new Guid("46df7653-85fb-458b-b092-6efcc2ef8466") });
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "AspNetUsers",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers",
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookmarks_PostId",
@@ -485,16 +566,6 @@ namespace Publicator.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_RoleId",
-                table: "Users",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_StateId",
-                table: "Users",
-                column: "StateId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserSubscriptions_SubscriberUserId",
                 table: "UserSubscriptions",
                 column: "SubscriberUserId");
@@ -528,6 +599,21 @@ namespace Publicator.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AspNetRoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserLogins");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
                 name: "Bookmarks");
 
             migrationBuilder.DropTable(
@@ -552,6 +638,9 @@ namespace Publicator.Infrastructure.Migrations
                 name: "Votes");
 
             migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
                 name: "Tags");
 
             migrationBuilder.DropTable(
@@ -561,13 +650,7 @@ namespace Publicator.Infrastructure.Migrations
                 name: "Communities");
 
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
-
-            migrationBuilder.DropTable(
-                name: "States");
+                name: "AspNetUsers");
         }
     }
 }

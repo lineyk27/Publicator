@@ -33,9 +33,9 @@ namespace Publicator.Core.Domains.User.Commands
         }
         public async Task<string> Handle(LogIn request, CancellationToken cancellationToken)
         {
-            var user = (from u in _context.Users.Include(x => x.Role)
+            var user = (from u in _context.Users
                         where (u.Email.Equals(request.Login) || 
-                               u.Nickname.Equals(request.Login)
+                               u.UserName.Equals(request.Login)
                                ) &&  u.EmailConfirmed
                         select u
                         ).FirstOrDefault();
@@ -62,8 +62,8 @@ namespace Publicator.Core.Domains.User.Commands
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Nickname),
-                    new Claim(ClaimTypes.Role, user.Role.Name)
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    //new Claim(ClaimTypes.Role, user.Role.Name)
                 }),
                 Audience = _jwtSettings.Audience,
                 Issuer = _jwtSettings.Issuer,

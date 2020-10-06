@@ -11,7 +11,7 @@ namespace Publicator.Infrastructure.Models
         public int CurrentRating { get; set; }
         public Guid CreatorUserId { get; set; }
         public User CreatorUser { get; set; }
-        public Guid? CommunityId { get; set; }
+        public Guid CommunityId { get; set; }
         public Community Community { get; set; }
         public ICollection<Vote> Votes{ get; set; }
         public ICollection<Comment> Comments { get; set; }

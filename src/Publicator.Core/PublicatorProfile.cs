@@ -10,7 +10,7 @@ namespace Publicator.Core
         public PublicatorProfile()
         {
             CreateMap<User, UserDTO>()
-                .ForMember(dto => dto.ImageUrl, e => e.MapFrom(x => x.PictureName));
+                .ForMember(dto => dto.ImageUrl, e => e.MapFrom(x => x.PictureUrl));
             CreateMap<Post, PostDTO>()
                 .ForMember(dto => dto.Tags, e => e.MapFrom(z => z.PostTags.Select(pt => pt.Tag)));
             CreateMap<Tag, TagDTO>();
@@ -18,7 +18,7 @@ namespace Publicator.Core
                 .ForMember(dto => dto.CreatorUser, e => e.MapFrom(z => z.User))
                 .ForMember(dto => dto.Replies, e => e.MapFrom(z => z.RepliesComments));
             CreateMap<Community, CommunityDTO>()
-                .ForMember(dto => dto.ImageUrl, e => e.MapFrom(x => x.PictureName));
+                .ForMember(dto => dto.ImageUrl, e => e.MapFrom(x => x.PictureUrl));
             CreateMap<Role, RoleDTO>();
             CreateMap<Vote, VoteDTO>()
                 .ForMember(dto => dto.Up, e => e.MapFrom(x => x.Up == true))

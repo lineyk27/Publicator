@@ -27,7 +27,7 @@ namespace Publicator.Core.Domains.Post.Queries
             )
         {
             var posts = (from p in _context.Posts
-                         where p.CreatorUser.Nickname.Equals(request.Username)
+                         where p.CreatorUser.UserName.Equals(request.Username)
                          select p)
                          .Skip((request.Page - 1) * request.PageSize)
                          .Take(request.PageSize);

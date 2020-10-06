@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Publicator.Infrastructure.Models;
 
@@ -14,7 +11,7 @@ namespace Publicator.Infrastructure.Configurations
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
             builder.Property(e => e.Name).HasMaxLength(64).IsUnicode();
-            builder.Property(e => e.PictureName).HasMaxLength(512);
+            builder.Property(e => e.PictureUrl).HasMaxLength(512);
             builder.Property(e => e.Description).HasMaxLength(256);
             builder
                 .HasOne(e => e.CreatorUser)

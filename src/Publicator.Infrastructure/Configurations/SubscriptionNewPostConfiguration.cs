@@ -23,6 +23,11 @@ namespace Publicator.Infrastructure.Configurations
                 .HasOne(e => e.SubscriptionCommunity)
                 .WithMany(e => e.SubscriptionNewPosts)
                 .HasForeignKey(e => e.SubscriptionCommunityId);
+            builder
+                .HasOne(e => e.SubscriptionUser)
+                .WithMany(e => e.SubscribersNewPosts)
+                .HasForeignKey(e => e.SubscriptionUserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

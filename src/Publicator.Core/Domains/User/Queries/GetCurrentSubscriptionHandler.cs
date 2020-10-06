@@ -18,7 +18,7 @@ namespace Publicator.Core.Domains.User.Queries
             )
         {
             var subscriptionUser = await _context.Users
-                .FirstOrDefaultAsync(x => x.Nickname.Equals(request.Username));
+                .FirstOrDefaultAsync(x => x.UserName.Equals(request.Username));
 
             var currentSubscription = await(from s in _context.UserSubscriptions.Include(x => x.SubscriptionUser)
                                             where s.SubscriberUserId == request.UserId &&

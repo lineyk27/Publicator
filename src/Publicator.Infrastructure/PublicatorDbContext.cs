@@ -1,17 +1,21 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Publicator.Infrastructure.Models;
 using Publicator.Infrastructure.Configurations;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace Publicator.Infrastructure
 {
-    public class PublicatorDbContext : DbContext
+    public class PublicatorDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public PublicatorDbContext() : base()
         {}
         public PublicatorDbContext(DbContextOptions<PublicatorDbContext> options) : base(options)
-        {}
+        {
+            Database.EnsureDeleted();
+        }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Bookmark> Bookmarks { get; set; }
         public DbSet<Comment> Comments { get; set; }
@@ -19,18 +23,15 @@ namespace Publicator.Infrastructure
         public DbSet<UserTag> UserTags{ get; set; }
         public DbSet<SubscriptionNewPost> SubscriptionNewPosts { get; set; }
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<State> States { get; set; }
         public DbSet<UserSubscription> UserSubscriptions { get; set; }
         public DbSet<Vote> Votes { get; set; }
         public DbSet<UserCommunity> UserCommunities { get; set; }
         public DbSet<Community> Communities { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            Seed.Seed.AddData(builder);
+            //Seed.Seed.AddData(builder);
 
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new PostConfiguration());
@@ -43,9 +44,7 @@ namespace Publicator.Infrastructure
             builder.ApplyConfiguration(new VoteConfiguration());
             builder.ApplyConfiguration(new UserCommunityConfiguration());
             builder.ApplyConfiguration(new CommunityConfiguration());
-            builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new UserTagConfiguration());
-            builder.ApplyConfiguration(new StateConfiguration());
         }
         public override void Dispose()
         {

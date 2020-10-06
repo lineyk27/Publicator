@@ -21,7 +21,7 @@ namespace Publicator.Core.Domains.User.Commands
         public async Task<RegisterResult> Handle(Register request, CancellationToken cancellationToken)
         {
             var existedUser = await (from u in _context.Users
-                               where u.Email.Equals(request.Email) || u.Nickname.Equals(request.Nickname)
+                               where u.Email.Equals(request.Email) || u.UserName.Equals(request.Nickname)
                                select u
                                ).FirstOrDefaultAsync();
 
@@ -41,7 +41,7 @@ namespace Publicator.Core.Domains.User.Commands
                 _logger.LogInformation("A try to register account on email that is already exist");
                 result.RegisterResultCode = RegisterResultEnum.EmailAlreadyExist;
             }
-            if (existedUser.Nickname.Equals(request.Nickname))
+            if (existedUser.UserName.Equals(request.Nickname))
             {
                 _logger.LogInformation("A try to register account with nickname that is already exist");
                 result.RegisterResultCode = RegisterResultEnum.NicknameAlreadyExist;

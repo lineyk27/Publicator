@@ -14,7 +14,11 @@ namespace Publicator.Infrastructure.Configurations
             builder.Property(e => e.CreationDate).HasColumnType("smalldatetime");
             builder.Property(e => e.Content).HasColumnType("nvarchar(max)");
             builder.Property(e => e.CurrentRating).HasDefaultValue(0);
-            builder.HasOne(e => e.CreatorUser).WithMany(e => e.Posts).HasForeignKey(e => e.CreatorUserId);
+            builder
+                .HasOne(e => e.CreatorUser)
+                .WithMany(e => e.Posts)
+                .HasForeignKey(e => e.CreatorUserId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(e => e.Votes).WithOne(e => e.Post).HasForeignKey(e => e.PostId);
             builder.HasMany(e => e.Comments).WithOne(e => e.Post).HasForeignKey(e => e.PostId);
             builder.HasMany(e => e.PostTags).WithOne(e => e.Post).HasForeignKey(e => e.PostId);
