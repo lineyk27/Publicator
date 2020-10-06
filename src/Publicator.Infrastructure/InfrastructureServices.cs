@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Publicator.Infrastructure.Models;
+using System;
 
 namespace Publicator.Infrastructure
 {
@@ -8,12 +11,17 @@ namespace Publicator.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
-            var conn = "DefaultConnection";
             services.AddDbContext<PublicatorDbContext>(options =>
             {
                 var Configuration = services.BuildServiceProvider().GetService<IConfiguration>();
-                options.UseSqlServer(Configuration.GetConnectionString(conn));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             }, ServiceLifetime.Transient);
+
+            services
+                .AddIdentity<User, IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<PublicatorDbContext>();
+
+            
             return services;
         }
     }

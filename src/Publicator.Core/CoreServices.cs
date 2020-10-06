@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Publicator.Core.Domains.User.Queries;
 using Publicator.Core.Helpers;
+using Publicator.Core.Services;
 
 namespace Publicator.Core
 {
@@ -19,6 +20,7 @@ namespace Publicator.Core
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipe<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CurrentUserPipe<,>));
+            services.AddTransient<IEmailService, EmailService>();
             return services;
         }
     }
