@@ -14,33 +14,34 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
+using Publicator.Core.Services;
 
 namespace Publicator.Core.Domains.User.Commands
 {
-    class LogInHandler : IRequestHandler<LogIn, LoginResult>
+    class LogInHandler : IRequestHandler<LogIn, LogInResult>
     {
         private readonly PublicatorDbContext _context;
-        private readonly JWTSettings _jwtSettings;
         private readonly ILogger<LogInHandler> _logger;
         private readonly UserManager<Infrastructure.Models.User> _userManager;
         private readonly SignInManager<Infrastructure.Models.User> _signInManager;
+        private readonly ITokenService _tokenService;
         public LogInHandler(
             PublicatorDbContext context, 
-            IOptions<JWTSettings> options, 
             ILogger<LogInHandler> logger,
+            ITokenService tokenService,
             UserManager<Infrastructure.Models.User> userManager,
             SignInManager<Infrastructure.Models.User> signInManager
             )
         {
             _context = context;
-            _jwtSettings = options.Value;
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
+            _tokenService = tokenService;
         }
-        public async Task<LoginResult> Handle(LogIn request, CancellationToken cancellationToken)
+        public async Task<LogInResult> Handle(LogIn request, CancellationToken cancellationToken)
         {
-            var result = new LoginResult();
+            var result = new LogInResult();
             var user = await _userManager.FindByEmailAsync(request.Login);
 
             if(!user.EmailConfirmed)
@@ -54,7 +55,7 @@ namespace Publicator.Core.Domains.User.Commands
             if (signinRes.Succeeded)
             {
                 result.Result = LoginResultEnum.Succesfull;
-                result.Token = GetAuthToken(user);
+                result.Token = _tokenService.GenerateToken(user);
                 return result;
             }
             else
@@ -62,42 +63,6 @@ namespace Publicator.Core.Domains.User.Commands
                 result.Result = LoginResultEnum.BadCredentials;
                 return result;
             }
-        }
-        private string GetAuthToken(Infrastructure.Models.User user)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
-            var tokendescriptor = new SecurityTokenDescriptor()
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.UserName),
-                }),
-                Audience = _jwtSettings.Audience,
-                Issuer = _jwtSettings.Issuer,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokendescriptor);
-            var tokenkey = tokenHandler.WriteToken(token);
-            
-            return tokenkey;
-        }
-        private bool CheckPassword(string password, Infrastructure.Models.User user)
-        {
-            using SHA256 algo = SHA256.Create();
-            algo.Initialize();
-            byte[] bytes = Encoding.UTF8.GetBytes(password);
-            byte[] hashed = algo.ComputeHash(bytes);
-
-            StringBuilder hashbuilder = new StringBuilder(hashed.Length);
-            foreach (var i in hashed)
-            {
-                hashbuilder.Append(i.ToString("x2"));
-            }
-
-            return hashbuilder.ToString().Equals(user.PasswordHash);
         }
     }
 }

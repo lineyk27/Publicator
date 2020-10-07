@@ -21,6 +21,8 @@ namespace Publicator.Core
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipe<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CurrentUserPipe<,>));
             services.AddTransient<IEmailService, EmailService>();
+            services.AddHttpClient();
+
             return services;
         }
     }

@@ -4,9 +4,8 @@ using System.Text;
 
 namespace Publicator.Core.Domains.User.Commands
 {
-    public class LogInResult
+    class FacebookUserAccessTokenValidation
     {
-        public LoginResultEnum Result { get; set; }
-        public string Token { get; set; }
+        public FacebookUserAccessTokenData Data { get; set; }
     }
 }

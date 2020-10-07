@@ -24,16 +24,34 @@ namespace Publicator.Presentation.Controllers
         // POST: api/account/login
         [HttpPost]
         [Route("login")]
-        [ProducesResponseType(typeof(LoginResult), 200)]
+        [ProducesResponseType(typeof(LogInResult), 200)]
         public async Task<IActionResult> Login([FromBody]LogIn model)
         {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
 
-            var tokenKey = await _mediator.Send(model);
+            var result = await _mediator.Send(model);
             
-            return Ok(tokenKey);
+            return Ok(result);
+        }
+        /// <summary>
+        /// Login using external provider Facebook
+        /// </summary>
+        /// <param name="model">Model with access token to access user data</param>
+        /// <returns>If auth successfull auth token, either - error</returns>
+        [HttpPost("loginFacebook")]
+        [ProducesResponseType(typeof(LogInResult), 200)]
+        public async Task<IActionResult> FacebookLogin([FromQuery]FacebookLogIn model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _mediator.Send(model);
+
+            return Ok(result);
         }
         /// <summary>
         /// Register user method
