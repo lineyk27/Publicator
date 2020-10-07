@@ -45,10 +45,8 @@ namespace Publicator.Presentation.Controllers
         public async Task<IActionResult> FacebookLogin([FromQuery]FacebookLogIn model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
-
+        
             var result = await _mediator.Send(model);
 
             return Ok(result);

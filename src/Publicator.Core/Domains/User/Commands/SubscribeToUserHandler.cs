@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Publicator.Infrastructure;
@@ -14,21 +15,23 @@ namespace Publicator.Core.Domains.User.Commands
     {
         private readonly PublicatorDbContext _context;
         private readonly ILogger<SubscribeToUserHandler> _logger;
+        private readonly UserManager<Infrastructure.Models.User> _userManager;
         public SubscribeToUserHandler(
             PublicatorDbContext context,
-            ILogger<SubscribeToUserHandler> logger
+            ILogger<SubscribeToUserHandler> logger,
+            UserManager<Infrastructure.Models.User> userManager
             )
         {
             _logger = logger;
             _context = context;
+            _userManager = userManager;
         }
         public async Task<SubscriptionResult> Handle(
             SubscribeToUser request,
             CancellationToken cancellationToken
             )
         {
-            var subscriptionUser = await _context.Users
-                .FirstOrDefaultAsync(x => x.UserName.Equals(request.Username));
+            var subscriptionUser = await _userManager.FindByNameAsync(request.Username);
 
             var currentSubscription = await (from s in _context.UserSubscriptions.Include(x => x.SubscriptionUser)
                                             where s.SubscriberUserId.Equals(request.UserId) &&
@@ -53,7 +56,6 @@ namespace Publicator.Core.Domains.User.Commands
             }
             else
             {
-
                 _context.UserSubscriptions.Remove(currentSubscription);
                 result.IsSubscribed = false;
                 _logger.LogInformation(
