@@ -26,7 +26,6 @@ namespace Publicator.Core.Domains.User.Commands
             "&access_token={0}";
 
         private readonly UserManager<Infrastructure.Models.User> _userManager;
-        private readonly SignInManager<Infrastructure.Models.User> _signInManager;
         private readonly IHttpClientFactory _clientFactory;
         private readonly IConfiguration _configuration;
         private readonly ITokenService _tokenService;
