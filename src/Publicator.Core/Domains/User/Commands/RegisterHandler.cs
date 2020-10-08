@@ -77,7 +77,7 @@ namespace Publicator.Core.Domains.User.Commands
             else
             {
                 result.RegisterResultCode = RegisterResultEnum.BadCrendentials;
-                return result
+                return result;
             }
         }
     }
