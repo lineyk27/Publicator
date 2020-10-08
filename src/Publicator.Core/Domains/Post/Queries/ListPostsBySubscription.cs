@@ -5,7 +5,7 @@ using Publicator.Core.DTO;
 
 namespace Publicator.Core.Domains.Post.Queries
 {
-    public class ListPostsBySubscription : LoggedInUser, 
+    public class ListPostsBySubscription : 
         IRequest<IEnumerable<PostDTO>>, 
         IPageRequest
     {

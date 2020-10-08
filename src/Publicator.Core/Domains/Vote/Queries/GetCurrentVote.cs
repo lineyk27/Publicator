@@ -5,7 +5,7 @@ using Publicator.Core.DTO;
 
 namespace Publicator.Core.Domains.Vote.Queries
 {
-    public class GetCurrentVote : LoggedInUser, IRequest<VoteDTO>
+    public class GetCurrentVote : IRequest<VoteDTO>
     {
         public Guid PostId { get; set; }
     }

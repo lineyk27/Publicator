@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Publicator.Core.DTO;
 using Publicator.Infrastructure;
+using Publicator.Core.Services;
 
 namespace Publicator.Core.Domains.Post.Queries
 {
@@ -15,18 +16,21 @@ namespace Publicator.Core.Domains.Post.Queries
     {
         private readonly PublicatorDbContext _context;
         private readonly IMapper _mapper;
-        public ListBookmarkedPostsHandler(PublicatorDbContext context, IMapper mapper)
+        private readonly IAuthService _authService;
+        public ListBookmarkedPostsHandler(PublicatorDbContext context, IMapper mapper, IAuthService authService)
         {
             _context = context;
             _mapper = mapper;
+            _authService = authService;
         }
         public async Task<IEnumerable<PostDTO>> Handle(
             ListBookmarkedPosts request, 
             CancellationToken cancellationToken
             )
         {
+            var userId = _authService.GetCurrentUserId();
             var posts = await (from b in _context.Bookmarks.Include(x => x.Post)
-                                where b.UserId.Equals(request.UserId)
+                                where b.UserId.Equals((Guid)userId)
                                 select b.Post
                                 ).ToListAsync();
 

@@ -6,7 +6,7 @@ using Publicator.Core.DTO;
 
 namespace Publicator.Core.Domains.Post.Queries
 {
-    public class ListBookmarkedPosts : LoggedInUser, IRequest<IEnumerable<PostDTO>>
+    public class ListBookmarkedPosts : IRequest<IEnumerable<PostDTO>>
     {
     }
 }

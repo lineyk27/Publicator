@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Publicator.Core.Domains.Comment.Commands;
 using Publicator.Core.DTO;
+using Publicator.Core.Services;
 using Publicator.Infrastructure;
 
 namespace Publicator.Core.Domains.Post.Commands
@@ -17,27 +18,32 @@ namespace Publicator.Core.Domains.Post.Commands
         private readonly PublicatorDbContext _context;
         private readonly IMapper _mapper;
         private readonly ILogger<CreateNewPostHandler> _logger;
+        private readonly IAuthService _authService;
         public CreateNewPostHandler(
             PublicatorDbContext context, 
             IMapper mapper,
-            ILogger<CreateNewPostHandler> logger
+            ILogger<CreateNewPostHandler> logger,
+            IAuthService authService
             ) 
         {
             _context = context;
             _mapper = mapper;
             _logger = logger;
+            _authService = authService;
         }
         public async Task<PostDTO> Handle(
             CreateNewPost request,
             CancellationToken cancellationToken)
         {
+
+            var userId = _authService.GetCurrentUserId();
             var post = new Infrastructure.Models.Post()
             {
                 Name = request.Name,
                 Content = request.Content,
                 CommunityId = request.CommunityId,
                 CreationDate = DateTime.Now,
-                CreatorUserId = (Guid)request.UserId
+                CreatorUserId = (Guid)userId
             };
             
             _context.Posts.Add(post);

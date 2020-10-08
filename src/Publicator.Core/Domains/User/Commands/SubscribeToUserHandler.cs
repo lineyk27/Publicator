@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Publicator.Core.Services;
 using Publicator.Infrastructure;
 using Publicator.Infrastructure.Models;
 
@@ -16,15 +17,18 @@ namespace Publicator.Core.Domains.User.Commands
         private readonly PublicatorDbContext _context;
         private readonly ILogger<SubscribeToUserHandler> _logger;
         private readonly UserManager<Infrastructure.Models.User> _userManager;
+        private readonly IAuthService _authService;
         public SubscribeToUserHandler(
             PublicatorDbContext context,
             ILogger<SubscribeToUserHandler> logger,
-            UserManager<Infrastructure.Models.User> userManager
+            UserManager<Infrastructure.Models.User> userManager,
+            IAuthService authService
             )
         {
             _logger = logger;
             _context = context;
             _userManager = userManager;
+            _authService = authService;
         }
         public async Task<SubscriptionResult> Handle(
             SubscribeToUser request,
@@ -33,8 +37,10 @@ namespace Publicator.Core.Domains.User.Commands
         {
             var subscriptionUser = await _userManager.FindByNameAsync(request.Username);
 
+            var userId = _authService.GetCurrentUserId();
+
             var currentSubscription = await (from s in _context.UserSubscriptions.Include(x => x.SubscriptionUser)
-                                            where s.SubscriberUserId.Equals(request.UserId) &&
+                                            where s.SubscriberUserId.Equals(userId) &&
                                                     s.SubscriptionUserId.Equals(subscriptionUser.Id)
                                             select s
                                             ).FirstOrDefaultAsync();
@@ -45,13 +51,13 @@ namespace Publicator.Core.Domains.User.Commands
             {
                 _context.UserSubscriptions.Add(new UserSubscription()
                 {
-                    SubscriberUserId = (Guid)request.UserId,
+                    SubscriberUserId = (Guid)userId,
                     SubscriptionUserId = subscriptionUser.Id,
                 });
                 result.IsSubscribed = true;
                 _logger.LogInformation(
                     "Added subscription of user with id {0} on user with id {1}",
-                    request.UserId,
+                    userId,
                     subscriptionUser.Id);
             }
             else
@@ -60,7 +66,7 @@ namespace Publicator.Core.Domains.User.Commands
                 result.IsSubscribed = false;
                 _logger.LogInformation(
                     "Removed subscription of user with id {0} on user with id {1}",
-                    request.UserId,
+                    userId,
                     subscriptionUser.Id);
             }
 

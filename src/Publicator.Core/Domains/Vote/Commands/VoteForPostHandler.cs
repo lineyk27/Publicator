@@ -6,6 +6,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Publicator.Core.DTO;
+using Publicator.Core.Services;
 using Publicator.Infrastructure;
 
 namespace Publicator.Core.Domains.Vote.Commands
@@ -15,11 +16,17 @@ namespace Publicator.Core.Domains.Vote.Commands
         private readonly PublicatorDbContext _context;
         private readonly IMapper _mapper;
         private readonly ILogger<VoteForPostHandler> _logger;
-        public VoteForPostHandler(PublicatorDbContext context, IMapper mapper, ILogger<VoteForPostHandler> logger)
+        private readonly IAuthService _authService;
+        public VoteForPostHandler(
+            PublicatorDbContext context, 
+            IMapper mapper, 
+            ILogger<VoteForPostHandler> logger,
+            IAuthService authService)
         {
             _context = context;
             _mapper = mapper;
             _logger = logger;
+            _authService = authService;
         }
         
         public async Task<VoteDTO> Handle(
@@ -27,6 +34,7 @@ namespace Publicator.Core.Domains.Vote.Commands
             CancellationToken cancellationToken
             )
         {
+            var userId = _authService.GetCurrentUserId();
             var currentVote = (from v in _context.Votes
                                where v.PostId == request.PostId
                                select v)
@@ -39,7 +47,7 @@ namespace Publicator.Core.Domains.Vote.Commands
                 var newVote = new Infrastructure.Models.Vote()
                 {
                     PostId = request.PostId,
-                    UserId = (Guid)request.UserId,
+                    UserId = (Guid)userId,
                     Up = request.Up,
                     CreationDate = DateTime.Now
                 };
@@ -47,20 +55,20 @@ namespace Publicator.Core.Domains.Vote.Commands
 
                 post.CurrentRating += request.Up ? 1 : -1;
 
-                _logger.LogInformation("Added new vote of user {0} on post {1}", request.UserId, request.PostId);
+                _logger.LogInformation("Added new vote of user {0} on post {1}", userId, request.PostId);
             }
             else
             {
                 if(currentVote.Up == request.Up)
                 {
 
-                    _logger.LogInformation("Removed a vote of user {0} on post {1}", request.UserId, request.PostId);
+                    _logger.LogInformation("Removed a vote of user {0} on post {1}", userId, request.PostId);
                     _context.Votes.Remove(currentVote);
                     post.CurrentRating += currentVote.Up ? -1 : 1;
                 }
                 else
                 {
-                    _logger.LogInformation("Added new vote of user {0} on post {1}", request.UserId, request.PostId);
+                    _logger.LogInformation("Added new vote of user {0} on post {1}", userId, request.PostId);
                     currentVote.Up = request.Up;
                     _context.Votes.Update(currentVote);
                     post.CurrentRating += currentVote.Up ? 2 : -2;

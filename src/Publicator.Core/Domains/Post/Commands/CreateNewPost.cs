@@ -6,7 +6,7 @@ using Publicator.Core.DTO;
 
 namespace Publicator.Core.Domains.Post.Commands
 {
-    public class CreateNewPost : LoggedInUser, IRequest<PostDTO>
+    public class CreateNewPost : IRequest<PostDTO>
     {
         public string Name { get; set; }
         public string Content { get; set; }

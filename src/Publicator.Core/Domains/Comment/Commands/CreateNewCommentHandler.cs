@@ -5,6 +5,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Publicator.Core.DTO;
+using Publicator.Core.Services;
 using Publicator.Infrastructure;
 
 namespace Publicator.Core.Domains.Comment.Commands
@@ -15,15 +16,18 @@ namespace Publicator.Core.Domains.Comment.Commands
         private readonly PublicatorDbContext _context;
         private readonly IMapper _mapper;
         private readonly ILogger<CreateNewCommentHandler> _logger;
+        private readonly IAuthService _authService;
         public CreateNewCommentHandler(
             PublicatorDbContext context, 
             IMapper mapper, 
-            ILogger<CreateNewCommentHandler> logger
+            ILogger<CreateNewCommentHandler> logger,
+            IAuthService authService
             )
         {
             _context = context;
             _mapper = mapper;
             _logger = logger;
+            _authService = authService;
         }
         
         public async Task<CommentDTO> Handle(
@@ -31,12 +35,14 @@ namespace Publicator.Core.Domains.Comment.Commands
             CancellationToken cancellationToken
             )
         {
+            var userId = _authService.GetCurrentUserId();
+
             var newComment = new Infrastructure.Models.Comment()
             {
                 Content = request.Content,
                 ParentRepliedCommentId = request.ParentRepliedCommentId,
                 PostId = request.PostId,
-                UserId = (Guid)request.UserId,
+                UserId = (Guid)userId,
                 CreationDate = DateTime.Now
             };
 

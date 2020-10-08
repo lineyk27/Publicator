@@ -5,7 +5,7 @@ using Publicator.Core.DTO;
 
 namespace Publicator.Core.Domains.Comment.Commands
 {
-    public class CreateNewComment : LoggedInUser, IRequest<CommentDTO>
+    public class CreateNewComment : IRequest<CommentDTO>
     {
         public string Content { get; set; }
         public Guid PostId{ get; set; }

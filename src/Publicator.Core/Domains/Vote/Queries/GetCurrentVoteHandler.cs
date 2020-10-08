@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Publicator.Core.DTO;
+using Publicator.Core.Services;
 using Publicator.Infrastructure;
 
 namespace Publicator.Core.Domains.Vote.Queries
@@ -12,10 +13,15 @@ namespace Publicator.Core.Domains.Vote.Queries
     {
         private readonly PublicatorDbContext _context;
         private readonly IMapper _mapper;
-        public GetCurrentVoteHandler(PublicatorDbContext context, IMapper mapper)
+        private readonly IAuthService _authService;
+        public GetCurrentVoteHandler(
+            PublicatorDbContext context, 
+            IMapper mapper,
+            IAuthService authService)
         {
             _context = context;
             _mapper = mapper;
+            _authService = authService;
         }
         
         public async Task<VoteDTO> Handle(
@@ -23,8 +29,9 @@ namespace Publicator.Core.Domains.Vote.Queries
             CancellationToken cancellationToken
             )
         {
+            var userId = _authService.GetCurrentUserId();
             var vote = (from v in _context.Votes
-                        where v.PostId == request.PostId && v.UserId == request.UserId
+                        where v.PostId == request.PostId && v.UserId == userId
                         select v)
                         .SingleOrDefault();
 

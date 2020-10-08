@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Publicator.Infrastructure;
 using Publicator.Core.DTO;
 using AutoMapper;
+using Publicator.Core.Services;
 
 namespace Publicator.Core.Domains.Post.Queries
 {
@@ -15,19 +16,22 @@ namespace Publicator.Core.Domains.Post.Queries
     {
         private readonly PublicatorDbContext _context;
         private readonly IMapper _mapper;
-        public ListPostsBySubscriptionHandler(PublicatorDbContext context, IMapper mapper)
+        private readonly IAuthService _authService;
+        public ListPostsBySubscriptionHandler(PublicatorDbContext context, IMapper mapper, IAuthService authService)
         { 
             _context = context;
             _mapper = mapper;
+            _authService = authService;
         }
         public async Task<IEnumerable<PostDTO>> Handle(
             ListPostsBySubscription request, 
             CancellationToken cancellationToken
             )
         {
+            var userId = _authService.GetCurrentUserId();
             var posts = (from p in _context.Posts
                          join s in _context.SubscriptionNewPosts on p.Id equals s.PostId
-                         where s.UserId == request.UserId
+                         where s.UserId == userId
                          select p)
                          .Skip((request.Page-1) * request.PageSize)
                          .Take(request.PageSize);
