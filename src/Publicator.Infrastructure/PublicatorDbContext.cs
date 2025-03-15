@@ -13,7 +13,9 @@ namespace Publicator.Infrastructure
         public PublicatorDbContext() : base()
         {}
         public PublicatorDbContext(DbContextOptions<PublicatorDbContext> options) : base(options)
-        {}
+        {
+            Database.EnsureCreated();
+        }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Bookmark> Bookmarks { get; set; }
         public DbSet<Comment> Comments { get; set; }
@@ -25,6 +27,7 @@ namespace Publicator.Infrastructure
         public DbSet<Vote> Votes { get; set; }
         public DbSet<UserCommunity> UserCommunities { get; set; }
         public DbSet<Community> Communities { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using MediatR;
-using Publicator.Core.Domains.User.Queries;
+﻿using MediatR;
 using Publicator.Core.DTO;
+using System;
+using System.Collections.Generic;
 
 namespace Publicator.Core.Domains.Post.Commands
 {

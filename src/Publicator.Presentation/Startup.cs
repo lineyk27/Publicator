@@ -1,18 +1,18 @@
-using System.Text;
-using System.Text.Json.Serialization;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using FluentValidation.AspNetCore;
-using Publicator.Infrastructure;
-using Publicator.Presentation.Helpers;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
-using Publicator.Presentation.Handlers;
 using Publicator.Core;
+using Publicator.Infrastructure;
+using Publicator.Presentation.Handlers;
+using Publicator.Presentation.Helpers;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Publicator.Presentation
 {
@@ -41,6 +41,7 @@ namespace Publicator.Presentation
 
             var jwtsettings = _configuration.GetSection("JWTSettings").Get<JWTSettings>();
             var key = Encoding.ASCII.GetBytes(jwtsettings.SecretKey);
+
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -61,12 +62,8 @@ namespace Publicator.Presentation
                         IssuerSigningKey = new SymmetricSecurityKey(key)
                     };
                 });
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "../WebClient/build";
-            });
-
         }
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -79,7 +76,7 @@ namespace Publicator.Presentation
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            //app.UseSpaStaticFiles();
 
             app.UseResponseCaching();
 
@@ -101,16 +98,17 @@ namespace Publicator.Presentation
             {
                 endpoints.MapControllers();
             });
-            
+
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "../WebClient";
+                spa.Options.SourcePath = "../ClientApp";
+
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.Options.DevServerPort = 5173;
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:5173/");
                 }
             });
-
         }
     }
 }

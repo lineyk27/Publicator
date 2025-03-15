@@ -1,15 +1,14 @@
-﻿using System;
+﻿using AutoMapper;
+using MediatR;
+using Microsoft.Extensions.Logging;
+using Publicator.Core.DTO;
+using Publicator.Core.Services;
+using Publicator.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
-using MediatR;
-using Microsoft.Extensions.Logging;
-using Publicator.Core.Domains.Comment.Commands;
-using Publicator.Core.DTO;
-using Publicator.Core.Services;
-using Publicator.Infrastructure;
 
 namespace Publicator.Core.Domains.Post.Commands
 {
@@ -19,12 +18,13 @@ namespace Publicator.Core.Domains.Post.Commands
         private readonly IMapper _mapper;
         private readonly ILogger<CreateNewPostHandler> _logger;
         private readonly IAuthService _authService;
+
         public CreateNewPostHandler(
-            PublicatorDbContext context, 
+            PublicatorDbContext context,
             IMapper mapper,
             ILogger<CreateNewPostHandler> logger,
             IAuthService authService
-            ) 
+            )
         {
             _context = context;
             _mapper = mapper;
@@ -35,30 +35,31 @@ namespace Publicator.Core.Domains.Post.Commands
             CreateNewPost request,
             CancellationToken cancellationToken)
         {
-
             var userId = _authService.GetCurrentUserId();
+            
             var post = new Infrastructure.Models.Post()
             {
                 Name = request.Name,
                 Content = request.Content,
                 CommunityId = request.CommunityId,
                 CreationDate = DateTime.Now,
-                CreatorUserId = (Guid)userId
+                CreatorUserId = userId.Value
             };
-            
+
             _context.Posts.Add(post);
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("Created post with id: {}", post.Id);
+            _logger.LogInformation("Created post with id: {id}", post.Id);
 
             AddTagsToPost(request.Tags, post.Id);
 
             return _mapper.Map<Infrastructure.Models.Post, PostDTO>(post);
         }
+
         private void AddTagsToPost(IEnumerable<string> tags, Guid postId)
         {
-            foreach(string tag in tags)
+            foreach (string tag in tags)
             {
                 var foundTag = (from t in _context.Tags
                                 where t.Name.Equals(tag)
@@ -80,6 +81,7 @@ namespace Publicator.Core.Domains.Post.Commands
                     PostId = postId
                 });
             }
+
             _context.SaveChanges();
         }
     }

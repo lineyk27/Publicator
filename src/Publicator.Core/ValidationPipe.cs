@@ -12,9 +12,9 @@ namespace Publicator.Core
     {
         private IEnumerable<IValidator<TRequest>> _validators { get; set; }
         public ValidationPipe(IEnumerable<IValidator<TRequest>> validators) => _validators = validators;
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            var context = new FluentValidation.ValidationContext(request);
+            var context = new ValidationContext(request);
             
             var errors = _validators
                 .Select(x => x.Validate(request))

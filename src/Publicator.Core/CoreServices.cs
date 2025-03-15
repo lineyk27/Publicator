@@ -16,7 +16,10 @@ namespace Publicator.Core
             services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
 
             services.AddAutoMapper(Assembly.GetAssembly(typeof(PublicatorProfile)));
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddMediatR(config =>
+            {
+                config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            });
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipe<,>));
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<ITokenService, TokenService>();

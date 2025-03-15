@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Publicator.Infrastructure.Models;
 
 namespace Publicator.Core.Services
 {
@@ -20,7 +16,7 @@ namespace Publicator.Core.Services
             var id = _httpContext.HttpContext?.User?.Claims?
                 .FirstOrDefault(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
 
-            if(id != null)
+            if (id != null)
             {
                 return Guid.Parse(id);
             }
