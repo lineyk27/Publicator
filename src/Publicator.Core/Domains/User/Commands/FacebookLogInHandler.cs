@@ -12,15 +12,15 @@ namespace Publicator.Core.Domains.User.Commands
 {
     class FacebookLogInHandler : IRequestHandler<FacebookLogIn, LogInResult>
     {
-        private static string AppAccessTokenAddressTemplate = 
+        private static readonly string AppAccessTokenAddressTemplate = 
             "https://graph.facebook.com/oauth/access_token?client_id={0}" +
             "&client_secret={1}" +
             "&grant_type=client_credentials";
 
-        private static string AccessTokenValidationAddressTemplate =
+        private static readonly string AccessTokenValidationAddressTemplate =
             "https://graph.facebook.com/debug_token?input_token={0}&access_token={1}";
 
-        private static string UserDataAccessAddressTemplate =
+        private static readonly string UserDataAccessAddressTemplate =
             "https://graph.facebook.com/v2.8/me" +
             "?fields=id,email,first_name,last_name,name,gender,locale,birthday,picture" +
             "&access_token={0}";

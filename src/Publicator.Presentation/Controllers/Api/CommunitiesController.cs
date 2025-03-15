@@ -23,7 +23,6 @@ namespace Publicator.Presentation.Controllers.Api
         /// <param name="model">Id of community model</param>
         /// <returns>Community by id</returns>
         [HttpGet]
-        [Route("{id}")]
         [ProducesResponseType(typeof(CommunityDTO), 200)]
         public async Task<IActionResult> GetById([FromRoute]GetCommunityById model)
         {

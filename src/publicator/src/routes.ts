@@ -1,9 +1,4 @@
-enum HotPeriod{
-    Day,
-    Week,
-    Month,
-    Year
-}
+import HotPeriod from "./Models/HotPeriodEnum";
 
 export default {
     home:"/home",

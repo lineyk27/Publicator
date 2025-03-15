@@ -8,9 +8,8 @@ namespace Publicator.Core.Domains.Vote.Commands
     {
         public VoteForPostValidator()
         {
-            RuleFor(x => x.PostId).NotEmpty().WithMessage("{PeopertyName} is required");
-            RuleFor(x => x.UserId).NotEmpty().WithMessage("{PeopertyName} is required");
-            RuleFor(x => x.Up).NotEmpty().WithMessage("{PeopertyName} is required");
+            RuleFor(x => x.PostId).NotEmpty().WithMessage("{PropertyName} is required");
+            RuleFor(x => x.Up).NotEmpty().WithMessage("{PropertyName} is required");
         }
     }
 }
