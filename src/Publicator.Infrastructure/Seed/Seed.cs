@@ -18,22 +18,30 @@ namespace Publicator.Infrastructure.Seed
             {
                 Id = Guid.NewGuid(),
                 Email = "lineyk27gg@gmail.com",
-                UserName = "lineyk27",
+                NormalizedEmail = "LINEYK27GG@GMAIL.COM",
+                NormalizedUserName = "LINEYK27GG@GMAIL.COM",
+                UserName = "LINEYK27GG@GMAIL.COM",
+                EmailConfirmed = true,
                 // decode - 12345678
                 PasswordHash = "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f",
                 JoinDate = DateTime.Now,
                 PictureUrl = "https://res.cloudinary.com/dgepkksyl/image/upload/v1590192208/user_pics/IMG_0572_ut5cxl.jpg"
             };
+
             var user2 = new User()
             {
                 Id = Guid.NewGuid(),
                 UserName = "kit22",
                 Email = "lineyk27@gmail.com",
+                NormalizedEmail = "LINEYK27@GMAIL.COM",
+                NormalizedUserName = "KIT22",
+                EmailConfirmed = true,
                 // decode - password
                 PasswordHash = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
                 JoinDate = DateTime.Now,
                 PictureUrl = "https://res.cloudinary.com/dgepkksyl/image/upload/v1590194554/user_pics/index_gz1sqk.jpg"
             };
+
             // seed communities
             var community1 = new Community()
             {

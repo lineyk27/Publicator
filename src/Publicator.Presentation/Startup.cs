@@ -2,7 +2,6 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +10,7 @@ using Publicator.Core;
 using Publicator.Infrastructure;
 using Publicator.Presentation.Handlers;
 using Publicator.Presentation.Helpers;
+using Serilog;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -22,46 +22,51 @@ namespace Publicator.Presentation
         public Startup(IConfiguration configuration) => _configuration = configuration;
         public void ConfigureServices(IServiceCollection services)
         {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            services.AddSerilog();
+
             services.AddHttpContextAccessor();
-            services
-                .AddControllers(options => options.EnableEndpointRouting = false)
-                .AddFluentValidation()
+            services.AddControllers(options => options.EnableEndpointRouting = false)
                 .AddJsonOptions(configuration =>
                 {
                     configuration.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
-            services.AddInfrastructureServices();
-            services.AddCoreServices();
+            services.AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
 
-            services.AddResponseCaching();
-
-            services.AddLogging();
             services.AddSwaggerGen();
 
             var jwtsettings = _configuration.GetSection("JWTSettings").Get<JWTSettings>();
-            var key = Encoding.ASCII.GetBytes(jwtsettings.SecretKey);
+            var key = Encoding.UTF8.GetBytes(jwtsettings.SecretKey);
 
             services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = true;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                }
-                ).AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = true;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateAudience = true,
-                        ValidAudience = jwtsettings.Audience,
-                        ValidateIssuer = true,
-                        ValidateLifetime = false,
-                        ValidIssuer = jwtsettings.Issuer,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key)
-                    };
-                });
+                    ValidateAudience = true,
+                    ValidAudience = jwtsettings.Audience,
+                    ValidateIssuer = true,
+                    ValidateLifetime = false,
+                    ValidIssuer = jwtsettings.Issuer,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+            });
+
+            services.AddExceptionHandler<ExceptionHandler>();
+
+            services.AddInfrastructureServices();
+            services.AddCoreServices();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -76,9 +81,9 @@ namespace Publicator.Presentation
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            //app.UseSpaStaticFiles();
+            app.UseExceptionHandler(_ => { });
 
-            app.UseResponseCaching();
+            app.UseAuthentication();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -86,10 +91,6 @@ namespace Publicator.Presentation
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Publicator API V1");
                 c.RoutePrefix = "swagger";
             });
-
-            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-
-            app.UseAuthentication();
 
             app.UseRouting();
             app.UseAuthorization();
@@ -99,14 +100,13 @@ namespace Publicator.Presentation
                 endpoints.MapControllers();
             });
 
-            app.UseSpa(spa =>
+            app.UseSpa(builder =>
             {
-                spa.Options.SourcePath = "../ClientApp";
+                builder.Options.SourcePath = "../ClientApp";
 
                 if (env.IsDevelopment())
                 {
-                    spa.Options.DevServerPort = 5173;
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:5173/");
+                    builder.UseProxyToSpaDevelopmentServer("http://localhost:5173/");
                 }
             });
         }

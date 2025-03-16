@@ -38,13 +38,6 @@ namespace Publicator.Core.Domains.User.Commands
             var userNameExist = await _userManager.FindByNameAsync(request.Nickname);
             var emailExist = await _userManager.FindByEmailAsync(request.Email);
 
-            var result2 =  await _userManager.CreateAsync(new Infrastructure.Models.User()
-            {
-                JoinDate = DateTime.Now,
-                UserName = request.Nickname,
-                Email = request.Email,
-            }, request.Password);
-
             var result = new RegisterResult();
 
             if (userNameExist != null)
@@ -60,6 +53,13 @@ namespace Publicator.Core.Domains.User.Commands
                 result.RegisterResultCode = RegisterResultEnum.EmailAlreadyExist;
                 return result;
             }
+
+            var result2 = await _userManager.CreateAsync(new Infrastructure.Models.User()
+            {
+                JoinDate = DateTime.Now,
+                UserName = request.Nickname,
+                Email = request.Email,
+            }, request.Password);
 
             if (result2.Succeeded)
             {

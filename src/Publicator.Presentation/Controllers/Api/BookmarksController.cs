@@ -46,7 +46,7 @@ namespace Publicator.Presentation.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _mediator.Send<BookmarkResult>(model);
+            var result = await _mediator.Send(model);
 
             return Ok(result);
 

@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Publicator.Core.DTO;
+using Microsoft.AspNetCore.Mvc;
 using Publicator.Core.Domains.Comment.Commands;
 using Publicator.Core.Domains.Comment.Queries;
-using MediatR;
+using Publicator.Core.DTO;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -22,7 +22,7 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpGet]
         [Route("post")]
         [ProducesResponseType(typeof(IEnumerable<CommentDTO>), 200)]
-        public async Task<IActionResult> GetByPost([FromQuery]ListCommentsByPost model)
+        public async Task<IActionResult> GetByPost([FromQuery] ListCommentsByPost model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

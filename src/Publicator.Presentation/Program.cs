@@ -16,12 +16,7 @@ namespace Publicator.Presentation
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.ConfigureLogging((webHostBuilder ,logBuilder) =>
-                    {
-                        logBuilder.ClearProviders();
-                        logBuilder.AddConsole();
-                        logBuilder.AddConfiguration(webHostBuilder.Configuration);
-                    });
+                    
                 });
     }
 }

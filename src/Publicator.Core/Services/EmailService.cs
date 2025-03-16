@@ -30,13 +30,12 @@ namespace Publicator.Core.Services
             message.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
             {
                 Text = String.Format("{0}, please confirm your Email,\n" +
-                "confirm link: https://localhost:5001/confirmEmail?email={1}&token={2}",
+                "confirmation link: https://localhost:5001/confirmEmail?email={1}&token={2}",
                 username, email, token)
             };
 
             using (var client = new SmtpClient())
             {
-                
                 client.Connect("smtp.gmail.com", 465, true);
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
 

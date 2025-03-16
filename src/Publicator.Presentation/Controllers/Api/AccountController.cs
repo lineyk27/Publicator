@@ -1,11 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Publicator.Core.DTO;
+using Microsoft.AspNetCore.Mvc;
 using Publicator.Core.Domains.User.Commands;
-using Publicator.Core.Domains.User.Queries;
+using Publicator.Core.DTO;
+using System.Threading.Tasks;
 
 namespace Publicator.Presentation.Controllers
 {
@@ -17,7 +15,7 @@ namespace Publicator.Presentation.Controllers
         private IMediator _mediator;
         public AccountController(IMediator mediator) => _mediator = mediator;
         /// <summary>
-        /// Logim method, authenticate user
+        /// Login method, authenticate user
         /// </summary>
         /// <param name="model">Model with login and password fields</param>
         /// <returns>If auth succesfull, return auth token, either - error</returns>
@@ -25,14 +23,13 @@ namespace Publicator.Presentation.Controllers
         [HttpPost]
         [Route("login")]
         [ProducesResponseType(typeof(LogInResult), 200)]
-        public async Task<IActionResult> Login([FromBody]LogIn model)
+        public async Task<IActionResult> Login([FromBody] LogIn model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            }
 
             var result = await _mediator.Send(model);
-            
+
             return Ok(result);
         }
         /// <summary>
@@ -42,11 +39,11 @@ namespace Publicator.Presentation.Controllers
         /// <returns>If auth successfull auth token, either - error</returns>
         [HttpPost("loginFacebook")]
         [ProducesResponseType(typeof(LogInResult), 200)]
-        public async Task<IActionResult> FacebookLogin([FromQuery]FacebookLogIn model)
+        public async Task<IActionResult> FacebookLogin([FromQuery] FacebookLogIn model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-        
+
             var result = await _mediator.Send(model);
 
             return Ok(result);
@@ -60,7 +57,7 @@ namespace Publicator.Presentation.Controllers
         [HttpPost]
         [Route("register")]
         [ProducesResponseType(typeof(RegisterResult), 200)]
-        public async Task<IActionResult> Register([FromBody]Register model)
+        public async Task<IActionResult> Register([FromBody] Register model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -79,7 +76,7 @@ namespace Publicator.Presentation.Controllers
         [Route("confirm")]
         [HttpGet]
         [ProducesResponseType(typeof(RegistrationConfirmationResult), 200)]
-        public async Task<IActionResult> ConfirmAccount([FromQuery]ConfirmAccountRegistration model)
+        public async Task<IActionResult> ConfirmAccount([FromQuery] ConfirmAccountRegistration model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -99,7 +96,7 @@ namespace Publicator.Presentation.Controllers
         [ProducesResponseType(typeof(UserDTO), 200)]
         public async Task<IActionResult> CurrentUser()
         {
-            var user = await _mediator.Send(new LoggedInUser());
+            var user = await _mediator.Send(new());
 
             return Ok(user);
         }

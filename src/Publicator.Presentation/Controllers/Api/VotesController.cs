@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Publicator.Core.DTO;
-using Publicator.Core.Domains.Vote.Commands;
+using Microsoft.AspNetCore.Mvc;
 using Publicator.Core.Domains.Post.Queries;
+using Publicator.Core.Domains.Vote.Commands;
 using Publicator.Core.Domains.Vote.Queries;
+using Publicator.Core.DTO;
+using System.Threading.Tasks;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -23,7 +23,7 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpGet]
         [Route("current")]
         [ProducesResponseType(typeof(VoteDTO), 200)]
-        public async Task<IActionResult> GetCurrentUserVote([FromQuery]GetCurrentVote model)
+        public async Task<IActionResult> GetCurrentUserVote([FromQuery] GetCurrentVote model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -41,7 +41,7 @@ namespace Publicator.Presentation.Controllers.Api
         [Authorize]
         [HttpPut]
         [Route("vote")]
-        public async Task<IActionResult> VoteAsync([FromBody]VoteForPost model)
+        public async Task<IActionResult> VoteAsync([FromBody] VoteForPost model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -59,7 +59,7 @@ namespace Publicator.Presentation.Controllers.Api
         [HttpGet]
         [Route("rating")]// TODO: return type need to be reconsidered
         [ProducesResponseType(typeof(int), 200)]
-        public async Task<IActionResult> CurrentRating([FromQuery]GetPostById model)
+        public async Task<IActionResult> CurrentRating([FromQuery] GetPostById model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

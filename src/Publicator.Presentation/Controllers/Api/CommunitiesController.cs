@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Publicator.Core.DTO;
 using Publicator.Core.Domains.Community.Queries;
+using Publicator.Core.DTO;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Publicator.Presentation.Controllers.Api
 {
@@ -24,13 +24,13 @@ namespace Publicator.Presentation.Controllers.Api
         /// <returns>Community by id</returns>
         [HttpGet]
         [ProducesResponseType(typeof(CommunityDTO), 200)]
-        public async Task<IActionResult> GetById([FromRoute]GetCommunityById model)
+        public async Task<IActionResult> GetById([FromRoute] GetCommunityById model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var community = await _mediator.Send(model);
-            
+
             return Ok(community);
         }
         /// <summary>
