@@ -1,17 +1,17 @@
-﻿using System.Linq;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Publicator.Core.Exceptions;
+using Publicator.Core.Helpers;
+using Publicator.Infrastructure;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using Microsoft.IdentityModel.Tokens;
-using Publicator.Core.Helpers;
-using Publicator.Core.Exceptions;
-using Publicator.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Publicator.Core.Domains.User.Commands
 {
@@ -27,13 +27,14 @@ namespace Publicator.Core.Domains.User.Commands
         public async Task<string> Handle(LogIn request, CancellationToken cancellationToken)
         {
             var user = (from u in _context.Users.Include(x => x.Role)
-                        where (u.Email.Equals(request.Login) || 
-                               u.Nickname.Equals(request.Login)
-                               ) &&  u.EmailConfirmed
+                        where (u.Email.ToUpper() == request.Login.ToUpper() || u.Nickname.ToUpper() == request.Login.ToUpper())
+                               && u.EmailConfirmed
                         select u
                         ).FirstOrDefault();
 
-            if(user != null)
+            var users = await _context.Users.ToListAsync();
+
+            if (user != null)
             {
                 var isPasswordGood = CheckPassword(request.Password, user);
                 if (isPasswordGood)
@@ -44,6 +45,7 @@ namespace Publicator.Core.Domains.User.Commands
             }
             throw new FailedAuthenticationException();
         }
+
         private string GetAuthToken(Infrastructure.Models.User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -63,9 +65,10 @@ namespace Publicator.Core.Domains.User.Commands
             };
             var token = tokenHandler.CreateToken(tokendescriptor);
             var tokenkey = tokenHandler.WriteToken(token);
-            
+
             return tokenkey;
         }
+
         private bool CheckPassword(string password, Infrastructure.Models.User user)
         {
             using SHA256 algo = SHA256.Create();

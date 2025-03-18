@@ -26,6 +26,7 @@ namespace Publicator.Infrastructure.Seed
                 JoinDate = DateTime.Now,
                 BeginStateDate = DateTime.Now,
                 EndStateDate = new DateTime(2050, 12, 12),
+                EmailConfirmed = true,
                 StateId = stateActive.Id,
                 RoleId = roleSimple.Id,
                 PictureName = "https://res.cloudinary.com/dgepkksyl/image/upload/v1590192208/user_pics/IMG_0572_ut5cxl.jpg"
@@ -40,6 +41,7 @@ namespace Publicator.Infrastructure.Seed
                 JoinDate = DateTime.Now,
                 BeginStateDate = DateTime.Now,
                 EndStateDate = new DateTime(2050, 12, 13),
+                EmailConfirmed = true,
                 StateId = stateActive.Id,
                 RoleId = roleSimple.Id,
                 PictureName = "https://res.cloudinary.com/dgepkksyl/image/upload/v1590194554/user_pics/index_gz1sqk.jpg"

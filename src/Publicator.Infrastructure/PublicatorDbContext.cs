@@ -1,7 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Publicator.Infrastructure.Models;
+﻿using Microsoft.EntityFrameworkCore;
 using Publicator.Infrastructure.Configurations;
+using Publicator.Infrastructure.Models;
 using System.Threading.Tasks;
 
 namespace Publicator.Infrastructure
@@ -9,14 +8,18 @@ namespace Publicator.Infrastructure
     public class PublicatorDbContext : DbContext
     {
         public PublicatorDbContext() : base()
-        {}
+        { }
+
         public PublicatorDbContext(DbContextOptions<PublicatorDbContext> options) : base(options)
-        {}
+        {
+            Database.EnsureCreated();
+        }
+
         public DbSet<Post> Posts { get; set; }
         public DbSet<Bookmark> Bookmarks { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<PostTag> PostTags { get; set; }
-        public DbSet<UserTag> UserTags{ get; set; }
+        public DbSet<UserTag> UserTags { get; set; }
         public DbSet<SubscriptionNewPost> SubscriptionNewPosts { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<State> States { get; set; }
